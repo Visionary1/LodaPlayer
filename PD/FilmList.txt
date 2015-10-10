@@ -1,0 +1,14 @@
+Server/On@
+pVersion/1.2@
+UpdateURL/http://knowledgeisfree.tistory.com/105@
+InitURL/http://poooo.ml/@
+FilmCount/15@
+DramaCount/3@
+ShowCount/14@
+AniCount/11@
+EtcCount/14@
+OnAirFilm/16@
+OnAirAni/208@
+OnAirShow/372@
+OnAirEtc/579@
+OnAirDrama/664@
