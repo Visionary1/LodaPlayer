@@ -1,3 +1,4 @@
+;FileEncoding, UTF-8
 #NoEnv
 #NoTrayIcon
 #SingleInstance Off

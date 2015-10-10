@@ -3,7 +3,7 @@
 ;@Ahk2Exe-SetDescription 라이브하우스인 시청 프로그램
 ;@Ahk2Exe-SetVersion 0.0.0.1-Air
 ;@Ahk2Exe-SetCopyright Copyright (c) 2015`, 로다 &예지력
-;@Ahk2Exe-SetOrigFilename 로다 플레이어 Net
+;@Ahk2Exe-SetOrigFilename 로다 플레이어 Air
 #NoEnv
 #NoTrayIcon
 #SingleInstance Off
@@ -12,7 +12,7 @@ ListLines Off
 Process, Priority, , H
 SetBatchLines, -1
 Menu, Tray, NoStandard
-ExecScript(getCode("https://raw.githubusercontent.com/Visionary1/DaumPot/master/src.ahk"), "", A_Temp . "\LodaPlayer.exe")
+ExecScript(GitHub("https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Air.ahk"), "", A_Temp . "\LodaPlayer.exe")
 ExitApp
 
 /*
@@ -25,7 +25,7 @@ While, AhkThread.ahkReady() ; Wait for the dll to finish running its script.
   Sleep, 100
   */
 
-getCode(Url)
+GitHub(Url)
 {
 	http := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	http.Open("GET", Url, true), http.Send(), http.WaitForResponse()
