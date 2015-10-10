@@ -3,10 +3,10 @@
 * [개발자 블로그](http://knowledgeisfree.tistory.com)
 
 ## 방송PD 목록
-* [영화](FilmList)
-* [애니](AniList)
-* [예능](ShowList)
-* [기타](EtcList)
+* [영화](PD/FilmList)
+* [애니](PD/AniList)
+* [예능](PD/ShowList)
+* [기타](PD/EtcList)
 
 ## Credits
 * 공대생(POOO), RONGSPORTS
