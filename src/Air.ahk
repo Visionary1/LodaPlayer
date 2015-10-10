@@ -1,4 +1,4 @@
-;FileEncoding, UTF-8
+﻿FileEncoding, UTF-8
 #NoEnv
 #NoTrayIcon
 #SingleInstance Off
@@ -25,11 +25,14 @@ Etc := LodaPlayer.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
 SetTimerF(Init.OnAirCheck,900000)
-FullEx := Func("ToggleMenu")
+FullEx := ObjBindMethod(ViewControl, "ToggleAll")
+LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu")
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Alt & Enter, %FullEx%
+Hotkey, Ctrl & Enter, %LessEx%
 FreeMemory()
 return
+
 
 PlayerClose(Init)
 {
@@ -608,7 +611,7 @@ class LodaPlayer {
 				MsgBox, 262180, 다음팟모드, 다음팟플레이어로 방송을 시청하시겠어요?`n`n'예'를 누르시면`, 다음팟모드로 전환합니다!
 				IfMsgBox, Yes
 				{
-					Pressed := CMsgbox( "스트리밍 서버 선택", "스트리밍 서버를 선택하세요", "&기본|*대만서버2|&일본서버|&홍콩서버", "Q", 0)
+					pressed := CMsgbox( "스트리밍 서버 선택", "스트리밍 서버를 선택하세요", "&기본|*대만서버2|&일본서버|&홍콩서버", "Q", 0)
 					if (pressed = "기본")
 						DefaultServer := "hi.cdn.livehouse.in"
 					else if (pressed = "대만서버2")
@@ -1070,70 +1073,114 @@ FreeMemory()
     return DllCall("psapi.dll\EmptyWorkingSet", "Ptr", -1)
 }
 
-ToggleMenu()
-{
-	static hVisible := 1, hMenu
-	global
+class ViewControl {
+
+	static hVisible := 1, MenuNotify := 1
 	
-	if hMenu =
-		hMenu := DllCall("GetMenu", "uint", hMainWindow)
-	
-	if LodaPlayer.PluginCount = 0
-		return
-	
-	KeyWait Alt
-	KeyWait Enter
-	
-	if hVisible = 0
+	ToggleOnlyMenu()
 	{
-		DllCall("SetMenu", "uint", hMainWindow, "uint", hMenu)
-		if (LodaPlayer.PluginCount = 1)
+		global hMainWindow
+		static hMenu
+		
+		WinGet, ckin, Transparent, ahk_class Shell_TrayWnd
+		if ckin < 120
+			return
+		
+		KeyWait Ctrl
+		KeyWait Enter
+		
+		if hMenu =
+			hMenu := DllCall("GetMenu", "uint", hMainWindow)
+		
+		if this.MenuNotify = 0
 		{
-			PotChatBAN := 0
-			if LodaPlayer.CustomCount = 0
-				WinShow, ahk_id %hStream%
-			if LodaPlayer.CustomCount = 1
-				WinShow, ahk_id %LodaChromeChild%
+			DllCall("SetMenu", "uint", hMainWindow, "uint", hMenu) ;Menu Show
+			this.MenuNotify := 1
+			return
 		}
-		WinSet, Transparent, 255, ahk_class Shell_TrayWnd
-		WinSet, Style, +0xC00000, ahk_id %hMainWindow%
-		WinSet, Redraw,, ahk_id %hMainWindow%
-		WinRestore, ahk_id %hMainWindow%
-		BlockInput(1)
-		ControlFocus,, ahk_id %LodaPotChild%
-		SendInput, {Ctrl Down}{Enter}{Ctrl Up}
-		BlockInput(0)
-		RedrawWindow()
-		return hVisible := 1
+		if this.MenuNotify = 1 ;처음
+		{
+			DllCall("SetMenu", "uint", hMainWindow, "uint", 0) ;Menu Hide
+			this.MenuNotify := 0
+			return
+		}
 	}
 	
-	if hVisible = 1
+	ToggleAll()
 	{
-		DllCall("SetMenu", "uint", hMainWindow, "uint", 0)
-		if chatBAN = 0
+		static hMenu
+		global
+		
+		if LodaPlayer.PluginCount = 0
+			return
+		
+		KeyWait Alt
+		KeyWait Enter
+		
+		if hMenu =
+			hMenu := DllCall("GetMenu", "uint", hMainWindow)
+		
+		if (this.hVisible = 0)
 		{
-			ChatBAN := 1
-			WinHide, ahk_id %hGaGa%
-			Menu, GaGaMenu, NoIcon, 채팅하기
-			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
+			if this.MenuNotify = 0
+			{
+				DllCall("SetMenu", "uint", hMainWindow, "uint", hMenu)
+				this.MenuNotify := 1
+			}
+			if (LodaPlayer.PluginCount = 1)
+			{
+				PotChatBAN := 0
+				if LodaPlayer.CustomCount = 0
+					WinShow, ahk_id %hStream%
+				if LodaPlayer.CustomCount = 1
+					WinShow, ahk_id %LodaChromeChild%
+			}
+			WinSet, Transparent, 255, ahk_class Shell_TrayWnd
+			WinSet, Style, +0xC00000, ahk_id %hMainWindow%
+			WinSet, Redraw,, ahk_id %hMainWindow%
+			WinRestore, ahk_id %hMainWindow%
+			BlockInput(1)
+			ControlFocus,, ahk_id %LodaPotChild%
+			SendInput, {Ctrl Down}{Enter}{Ctrl Up}
+			BlockInput(0)
+			RedrawWindow()
+			this.hVisible := 1
+			return
 		}
-		if (LodaPlayer.PluginCount = 1)
+		
+		if (this.hVisible = 1)
 		{
-			PotChatBAN := 1
-			if LodaPlayer.CustomCount = 0 
-				WinHide, ahk_id %hStream%
-			if LodaPlayer.CustomCount = 1
-				WinHide, ahk_id %LodaChromeChild%
+			if this.MenuNotify = 1
+			{
+				DllCall("SetMenu", "uint", hMainWindow, "uint", 0)
+				this.MenuNotify := 0
+			}
+			if chatBAN = 0
+			{
+				ChatBAN := 1
+				WinHide, ahk_id %hGaGa%
+				Menu, GaGaMenu, NoIcon, 채팅하기
+				Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
+			}
+			if (LodaPlayer.PluginCount = 1)
+			{
+				PotChatBAN := 1
+				if LodaPlayer.CustomCount = 0 
+					WinHide, ahk_id %hStream%
+				if LodaPlayer.CustomCount = 1
+					WinHide, ahk_id %LodaChromeChild%
+			}
+			WinMaximize, ahk_id %hMainWindow%
+			WinSet, Style, -0xC00000, ahk_id %hMainWindow%
+			WinSet, Redraw,, ahk_id %hMainWindow%
+			BlockInput(1)
+			ControlFocus,, ahk_id %LodaPotChild%
+			SendInput, {Ctrl Down}{Enter}{Ctrl Up}
+			BlockInput(0)
+			WinSet, Transparent, 70, ahk_class Shell_TrayWnd
+			this.hVisible := 0
+			return
 		}
-		WinMaximize, ahk_id %hMainWindow%
-		WinSet, Style, -0xC00000, ahk_id %hMainWindow%
-		WinSet, Redraw,, ahk_id %hMainWindow%
-		BlockInput(1)
-		ControlFocus,, ahk_id %LodaPotChild%
-		SendInput, {Ctrl Down}{Enter}{Ctrl Up}
-		BlockInput(0)
-		WinSet, Transparent, 120, ahk_class Shell_TrayWnd
-		return hVisible := 0
 	}
 }
 
@@ -1668,77 +1715,55 @@ class EasyIni
 	}
 }
 
-; For all of the EasyIni_* functions below, much credit is due to Lexikos and Rbrtryn for their work with ordered arrays
-; See http://www.autohotkey.com/board/topic/61792-ahk-l-for-loop-in-order-of-key-value-pair-creation/?p=389662 for Lexikos's initial work with ordered arrays
-; See http://www.autohotkey.com/board/topic/94043-ordered-array/#entry592333 for Rbrtryn's OrderedArray lib
 EasyIni_CreateBaseObj(parms*)
 {
-	; Define prototype object for ordered arrays:
 	static base := {__Set: "EasyIni_Set", _NewEnum: "EasyIni_NewEnum", Remove: "EasyIni_Remove", Insert: "EasyIni_Insert", InsertBefore: "EasyIni_InsertBefore"}
-	; Create and return new base object:
 	return Object("_keys", Object(), "base", base, parms*)
 }
 
 EasyIni_Set(obj, parms*)
 {
-	; If this function is called, the key must not already exist.
-	; Sub-class array if necessary then add this new key to the key list, if it doesn't begin with "EasyIni_ReservedFor_"
 	if parms.maxindex() > 2
 		ObjInsert(obj, parms[1], EasyIni_CreateBaseObj())
-
-	; Skip over member variables
 	if (SubStr(parms[1], 1, 20) <> "EasyIni_ReservedFor_")
 		ObjInsert(obj._keys, parms[1])
-	; Since we don't return a value, the default behaviour takes effect.
-	; That is, a new key-value pair is created and stored in the object.
 }
 
 EasyIni_NewEnum(obj)
 {
-	; Define prototype object for custom enumerator:
 	static base := Object("Next", "EasyIni_EnumNext")
-	; Return an enumerator wrapping our _keys array's enumerator:
 	return Object("obj", obj, "enum", obj._keys._NewEnum(), "base", base)
 }
 
 EasyIni_EnumNext(e, ByRef k, ByRef v="")
 {
-	; If Enum.Next() returns a "true" value, it has stored a key and
-	; value in the provided variables. In this case, "i" receives the
-	; current index in the _keys array and "k" receives the value at
-	; that index, which is a key in the original object:
 	if r := e.enum.Next(i,k)
-		; We want it to appear as though the user is simply enumerating
-		; the key-value pairs of the original object, so store the value
-		; associated with this key in the second output variable:
 		v := e.obj[k]
 	return r
 }
 
 EasyIni_Remove(obj, parms*)
 {
-	r := ObjRemove(obj, parms*)         ; Remove keys from main object
-	Removed := []                     
-	for k, v in obj._keys             ; Get each index key pair
-		if not ObjHasKey(obj, v)      ; if key is not in main object
-			Removed.Insert(k)         ; Store that keys index to be removed later
-	for k, v in Removed               ; For each key to be removed
-		ObjRemove(obj._keys, v, "")   ; remove that key from key list
-
+	r := ObjRemove(obj, parms*)
+	Removed := []
+	for k, v in obj._keys
+		if not ObjHasKey(obj, v)
+			Removed.Insert(k)
+	for k, v in Removed
+		ObjRemove(obj._keys, v, "")
 	return r
 }
 
 EasyIni_Insert(obj, parms*)
 {
-	r := ObjInsert(obj, parms*)            ; Insert keys into main object
-	enum := ObjNewEnum(obj)              ; Can't use for-loop because it would invoke EasyIni_NewEnum
-	while enum[k] {                      ; For each key in main object
-		for i, kv in obj._keys           ; Search for key in obj._keys
+	r := ObjInsert(obj, parms*)
+	enum := ObjNewEnum(obj)
+	while enum[k] {
+		for i, kv in obj._keys
 			if (k = "_keys" || k = kv || SubStr(k, 1, 20) = "EasyIni_ReservedFor_" || SubStr(kv, 1, 20) = "EasyIni_ReservedFor_")   ; If found...
-				continue 2               ; Get next key in main object
-		ObjInsert(obj._keys, k)          ; Else insert key into obj._keys
+				continue 2
+		ObjInsert(obj._keys, k)
 	}
-
 	return r
 }
 
