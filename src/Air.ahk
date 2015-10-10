@@ -43,7 +43,7 @@ class LodaPlayer {
 	__New()
 	{
 		global
-		Title := "로다 플레이어 Air 1.2.3"
+		Title := "로다 플레이어 Air 1.2.2"
 		PotsuHome := "http://www.gagalive.kr/livechat1.swf?chatroom=~~~new_ForPotsu&fontlarge=true"
 		vIni := class_EasyIni("LodaPlayer.ini")
 		chatBAN := vIni.GaGaLive.ChatPreSet, PotChatBAN := 0, TopToggleCk := 0
