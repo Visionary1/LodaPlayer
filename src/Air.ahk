@@ -245,21 +245,23 @@ class LodaPlayer {
 		poo.Visible := false, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
-		this.DeleteMenu("Film"), Film:= "", FilmCount := ""
-		this.DeleteMenu("Ani"), Ani := "", AniCount := ""
-		this.DeleteMenu("Show"), Show := "", ShowCount := ""
-		this.DeleteMenu("Etc"), Etc := "", EtcCount := ""
-		Film := this.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
-		Ani := this.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
-		Show := this.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
-		Etc := this.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
+		LodaPlayer.DeleteMenu("Film"), Film:= "", FilmCount := ""
+		LodaPlayer.DeleteMenu("Ani"), Ani := "", AniCount := ""
+		LodaPlayer.DeleteMenu("Show"), Show := "", ShowCount := ""
+		LodaPlayer.DeleteMenu("Etc"), Etc := "", EtcCount := ""
+		Gui, Menu, MyMenuBar
+		Film := LodaPlayer.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
+		Ani := LodaPlayer.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
+		Show := LodaPlayer.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
+		Etc := LodaPlayer.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 
 		while !(poo.readyState=4 || poo.document.readyState="complete" || !poo.busy) 
 				continue
 
 		newcon := poo.document.getElementByID("main-content").InnerText, this.ParsePD()
+		Gui, Menu
 		try {
-			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
+			LodaPlayer.UpdateMenu("Film"), LodaPlayer.UpdateMenu("Ani"), LodaPlayer.UpdateMenu("Show"), LodaPlayer.UpdateMenu("Etc")
 		}
 		Gui, Menu, MyMenuBar
 		WinSet, Redraw,, ahk_id %hMainWindow%
