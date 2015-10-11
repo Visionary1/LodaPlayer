@@ -13,7 +13,6 @@ SetMouseDelay, 0
 SetDefaultMouseSpeed, 0
 SetWinDelay, 0
 SetControlDelay, 0
-SendMode Input
 Menu, Tray, NoStandard
 ComObjError(False)
 
@@ -25,14 +24,12 @@ Etc := LodaPlayer.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
 SetTimerF(Init.OnAirCheck,900000)
-FullEx := ObjBindMethod(ViewControl, "ToggleAll")
-LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu")
+FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu")
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Alt & Enter, %FullEx%
 Hotkey, Ctrl & Enter, %LessEx%
 FreeMemory()
 return
-
 
 PlayerClose(Init)
 {
@@ -47,37 +44,32 @@ class LodaPlayer {
 	__New()
 	{
 		global
-		Title := "로다 플레이어 Air 1.2.2"
-		PotsuHome := "http://www.gagalive.kr/livechat1.swf?chatroom=~~~new_ForPotsu&fontlarge=true"
-		vIni := class_EasyIni("LodaPlayer.ini")
-		chatBAN := vIni.GaGaLive.ChatPreSet, PotChatBAN := 0, TopToggleCk := 0
-		DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
-		PotIni := vIni.Player.PotLocation
-		
+		Title := "로다 플레이어 Air 1.2.2", vIni := class_EasyIni("LodaPlayer.ini")
+		PotIni := vIni.Player.PotLocation, chatBAN := vIni.GaGaLive.ChatPreSet
+		PotChatBAN := 0, TopToggleCk := 0, DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
 		SWP_NACT := 0x10, SWP_NSC := 0x400, SWP_NOZO := 0x0200
 		
 		Gui, New, +Resize -DPIScale +hWndhMainWindow +LastFound +0x2000000 ;WS_CLIPCHILDREN := 0x2000000
 		this.hMainWindow := hMainWindow
 		
-		Gui, Add, ActiveX, % " x" 0 " y" 0 " w" this.W*0.25 " h" this.H-10 " hwndhGaGa vChat", % PotsuHome
-		this.hGaGa := hGaGa
-		Chat.silent := true
+		Gui, Add, ActiveX, % " x" 0 " y" 0 " w" this.W*0.25 " h" this.H-10 " hwndhGaGa vChat", Shell.Explorer
+		Chat.Navigate("http://www.gagalive.kr/livechat1.swf?chatroom=~~~new_ForPotsu&fontlarge=true")
+		this.hGaGa := hGaGa, Chat.Silent := true
 		
 		Gui, Add, ActiveX, % " x" this.W *0.25 " y" 0 " w" this.W*0.75 " h" this.H-10 " hwndhStream vStream", Shell.Explorer
-		this.hStream := hStream
 		Stream.Navigate("http://poooo.ml/")
-		Stream.Silent := true
+		this.hStream := hStream, Stream.Silent := true
 		
 		this.Bound := []
 		this.Bound.OnMessage := this.OnMessage.Bind(this)
 		
 		Menu, GaGaMenu, Add, 채팅하기, LodaPlayer.GaGaMenu
 		if (vIni.GaGaLive.ChatPreSet = 0)
-			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\on.png,,0
+			Menu, GaGaMenu, Icon, 채팅하기, on.png,,0
 		if (vIni.GaGaLive.ChatPreSet = 1) {
 			GuiControl, Disable, chat
 			GuiControl, Hide, chat
-			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
+			Menu, GaGaMenu, Icon, 채팅하기, off.png,,0
 		}
 		Menu, GaGaMenu, Add, 새로고침, LodaPlayer.GaGaMenu
 		Menu, MyMenuBar, Add, 가가라이브:설정, :GaGaMenu
@@ -105,28 +97,15 @@ class LodaPlayer {
 		
 		while !(Stream.readyState=4 || Stream.document.readyState="complete" || !Stream.busy) 
 			continue
-		
 		Sleep, 0
-		newcon := Stream.document.getElementByID("main-content").InnerText
-		newcon := RegExReplace(newcon, "\R+\R", "`r`n")
-		newcon := RegExReplace(newcon, "\s+", " ")
-		RegExMatch(newcon,"영화(.*?)오프라인",OnlineFilm)
-		RegExMatch(newcon,"애니(.*?)오프라인",OnlineAni)
-		RegExMatch(newcon,"예능(.*?)오프라인",OnlineShow)
-		RegExMatch(newcon,"기타(.*?)오프라인",OnlineEtc)
+		newcon := Stream.document.getElementByID("main-content").InnerText, this.ParsePD()
 		
 		try 
 		{
-			this.UpdateMenu("Film")
+			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 			Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
-			
-			this.UpdateMenu("Ani")
 			Menu, MyMenuBar, Add, 애니:방송, :AniMenu
-			
-			this.UpdateMenu("Show")
 			Menu, MyMenuBar, Add, 예능:방송, :ShowMenu
-			
-			this.UpdateMenu("Etc")
 			Menu, MyMenuBar, Add, 기타:방송, :EtcMenu
 			
 			for SectionName, a in vIni
@@ -140,26 +119,26 @@ class LodaPlayer {
 		Menu, MyMenuBar, Add, 방송추가 ,LodaPlayer.PlayerMenu
 		Menu, MyMenuBar, Add, 도움말 ,LodaPlayer.PlayerMenu
 		
-		Menu, MyMenuBar, Icon, POOOO, %A_Temp%\pooq.png,, 0
-		Menu, MyMenuBar, Icon, 플레이어:설정, %A_Temp%\setting.png,, 0
-		Menu, MyMenuBar, Icon, 가가라이브:설정, %A_Temp%\chat.png,, 0
-		Menu, MyMenuBar, Icon, 주소로 이동, %A_Temp%\byaddr.png,, 0
-		Menu, MyMenuBar, Icon, 즐겨찾기, %A_Temp%\favorite.png,, 0
-		Menu, MyMenuBar, Icon, 방송추가, %A_Temp%\addpd.png,, 0
-		Menu, MyMenuBar, Icon, 도움말, %A_Temp%\help.png,, 0
-		Menu, MyMenuBar, Icon, 영화:방송, %A_Temp%\PD.png,, 0
-		Menu, MyMenuBar, Icon, 애니:방송, %A_Temp%\PD.png,, 0
-		Menu, MyMenuBar, Icon, 예능:방송, %A_Temp%\PD.png,, 0
-		Menu, MyMenuBar, Icon, 기타:방송, %A_Temp%\PD.png,, 0
-		Menu, GaGaMenu, Icon, 새로고침, %A_Temp%\refresh.png,, 0
-		Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\off.png,,0
-		Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\off.png,,0
-		Menu, SetMenu, Icon, 로다 플레이어를 항상위로, %A_Temp%\off.png,,0
-		Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\off.png,,0
-		Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\off.png,,0
-		Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
+		Menu, MyMenuBar, Icon, POOOO, pooq.png,, 0
+		Menu, MyMenuBar, Icon, 플레이어:설정, setting.png,, 0
+		Menu, MyMenuBar, Icon, 가가라이브:설정, chat.png,, 0
+		Menu, MyMenuBar, Icon, 주소로 이동, byaddr.png,, 0
+		Menu, MyMenuBar, Icon, 즐겨찾기, favorite.png,, 0
+		Menu, MyMenuBar, Icon, 방송추가, addpd.png,, 0
+		Menu, MyMenuBar, Icon, 도움말, help.png,, 0
+		Menu, MyMenuBar, Icon, 영화:방송, PD.png,, 0
+		Menu, MyMenuBar, Icon, 애니:방송, PD.png,, 0
+		Menu, MyMenuBar, Icon, 예능:방송, PD.png,, 0
+		Menu, MyMenuBar, Icon, 기타:방송, PD.png,, 0
+		Menu, GaGaMenu, Icon, 새로고침, refresh.png,, 0
+		Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, off.png,,0
+		Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, off.png,,0
+		Menu, SetMenu, Icon, 로다 플레이어를 항상위로, off.png,,0
+		Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, off.png,,0
+		Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, off.png,,0
+		Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, off.png,,0
 		try
-			Menu, MyMenuBar, Icon, 즐겨찾기:목록, %A_Temp%\PD.png,, 0
+			Menu, MyMenuBar, Icon, 즐겨찾기:목록, PD.png,, 0
 		Gui, Menu, MyMenuBar
 		
 		WinEvents.Register(this.hMainWindow, this)
@@ -182,44 +161,44 @@ class LodaPlayer {
 		global
 		IMAX := A_GuiWidth - ( this.W*0.25 )
 
-		if (chatBAN = 0 && LodaPlayer.PluginCount = 0 && PotChatBAN = 0) {
+		if (chatBAN = 0 && this.PluginCount = 0 && PotChatBAN = 0) {
 			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight+5
-			if (LodaPlayer.CustomCount = 0)
+			if (this.CustomCount = 0)
 				GuiControl, Move, % this.hStream, % " x" this.W*0.25 " y" 0 " w" IMAX " h" A_GuiHeight+5
-			else if (LodaPlayer.CustomCount = 1)
+			else if (this.CustomCount = 1)
 				DllCall("SetWindowPos", "ptr", LodaChromeChild, "uint", 0, "int", this.W*0.25, "int", 0, "int", IMAX, "int", A_GuiHeight + 5, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 		}
 		
-		if (chatBAN = 1 && LodaPlayer.PluginCount = 0 && PotChatBAN = 0) {
-			if (LodaPlayer.CustomCount = 0)
+		if (chatBAN = 1 && this.PluginCount = 0 && PotChatBAN = 0) {
+			if (this.CustomCount = 0)
 				GuiControl, Move, % this.hStream, % " x" 0 " y" 0 " w" A_GuiWidth " h" A_GuiHeight+5
-			else if (LodaPlayer.CustomCount = 1)
+			else if (this.CustomCount = 1)
 				DllCall("SetWindowPos", "ptr", LodaChromeChild, "uint", 0, "int", 0, "int", 0, "int", A_GuiWidth, "int", A_GuiHeight + 5, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 		}
 		
-		if (chatBAN = 0 && LodaPlayer.PluginCount = 1 && PotChatBAN = 0) {
-			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" LodaPlayer.W*0.25 " h" A_GuiHeight+5
+		if (chatBAN = 0 && this.PluginCount = 1 && PotChatBAN = 0) {
+			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight+5
 			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", this.W*0.25, "int", -24, "int", IMAX - 400, "int", A_GuiHeight + 29, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
-			if (LodaPlayer.CustomCount = 0)
+			if (this.CustomCount = 0)
 				GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
-			else if (LodaPlayer.CustomCount = 1)
+			else if (this.CustomCount = 1)
 				DllCall("SetWindowPos", "ptr", LodaChromeChild, "uint", 0, "int", A_GuiWidth - 400, "int", 0, "int", 400, "int", A_GuiHeight, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 		}
 		
-		if (chatBAN =1 && LodaPlayer.PluginCount = 1 && PotChatBAN = 0) {
+		if (chatBAN =1 && this.PluginCount = 1 && PotChatBAN = 0) {
 			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", -7, "int", -24, "int", A_GuiWidth - 393, "int", A_GuiHeight + 29, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
-			if (LodaPlayer.CustomCount = 0)
+			if (this.CustomCount = 0)
 				GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
-			else if (LodaPlayer.CustomCount = 1)
+			else if (this.CustomCount = 1)
 				DllCall("SetWindowPos", "ptr", LodaChromeChild, "uint", 0, "int", A_GuiWidth - 400, "int", 0, "int", 400, "int", A_GuiHeight, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 		}
 		
-		if (chatBAN = 0 && LodaPlayer.PluginCount = 1 && PotChatBAN = 1) {
+		if (chatBAN = 0 && this.PluginCount = 1 && PotChatBAN = 1) {
 			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight+5
 			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", this.W*0.25, "int", -24, "int", IMAX, "int", A_GuiHeight + 29, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 		}
 		
-		if (chatBAN = 1 && LodaPlayer.PluginCount = 1 && PotChatBAN = 1) {
+		if (chatBAN = 1 && this.PluginCount = 1 && PotChatBAN = 1) {
 			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", -7, "int", -24, "int", A_GuiWidth + 12, "int", A_GuiHeight + 29, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 		}
 	}
@@ -264,44 +243,29 @@ class LodaPlayer {
 	OnAirCheck()
 	{
 		global
-		
 		poo := ComObjCreate("InternetExplorer.Application")
-		poo.Visible := false
-		poo.Navigate("http://poooo.ml/")
+		poo.Visible := false, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
-		LodaPlayer.DeleteMenu("Film"), Film:= "", FilmCount := ""
-		LodaPlayer.DeleteMenu("Ani"), Ani := "", AniCount := ""
-		LodaPlayer.DeleteMenu("Show"), Show := "", ShowCount := ""
-		LodaPlayer.DeleteMenu("Etc"), Etc := "", EtcCount := ""
-		
-		Film := LodaPlayer.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
-		Ani := LodaPlayer.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
-		Show := LodaPlayer.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
-		Etc := LodaPlayer.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
+		this.DeleteMenu("Film"), Film:= "", FilmCount := ""
+		this.DeleteMenu("Ani"), Ani := "", AniCount := ""
+		this.DeleteMenu("Show"), Show := "", ShowCount := ""
+		this.DeleteMenu("Etc"), Etc := "", EtcCount := ""
+		Film := this.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
+		Ani := this.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
+		Show := this.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
+		Etc := this.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 
 		while !(poo.readyState=4 || poo.document.readyState="complete" || !poo.busy) 
 				continue
 
-		newcon := poo.document.getElementByID("main-content").InnerText
-		newcon := RegExReplace(newcon, "\R+\R", "`r`n")
-		newcon := RegExReplace(newcon, "\s+", " ")
-		RegExMatch(newcon,"영화(.*?)오프라인",OnlineFilm)
-		RegExMatch(newcon,"애니(.*?)오프라인",OnlineAni)
-		RegExMatch(newcon,"예능(.*?)오프라인",OnlineShow)
-		RegExMatch(newcon,"기타(.*?)오프라인",OnlineEtc)
-		Sleep, 100
-		poo.Quit()
-		
+		newcon := poo.document.getElementByID("main-content").InnerText, this.ParsePD()
 		try {
-			LodaPlayer.UpdateMenu("Film")
-			LodaPlayer.UpdateMenu("Ani")
-			LodaPlayer.UpdateMenu("Show")
-			LodaPlayer.UpdateMenu("Etc")
+			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 		}
 		Gui, Menu, MyMenuBar
 		WinSet, Redraw,, ahk_id %hMainWindow%
-		
+		poo.Quit()
 		VarSetCapacity(newcon, 0), VarSetCapacity(poo, 0), VarSetCapacity(whr, 0), VarSetCapacity(json, 0)
 		VarSetCapacity(OnlineFilm, 0), VarSetCapacity(OnlineAni, 0), VarSetCapacity(OnlineShow, 0), VarSetCapacity(OnlineEtc, 0)
 		VarSetCapacity(OnlineFilm1, 0), VarSetCapacity(OnlineAni1, 0), VarSetCapacity(OnlineShow1, 0), VarSetCapacity(OnlineEtc1, 0)
@@ -347,7 +311,7 @@ class LodaPlayer {
 			GuiControl, Disable, chat
 			GuiControl, Hide, chat
 			Menu, GaGaMenu, NoIcon, 채팅하기
-			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
+			Menu, GaGaMenu, Icon, 채팅하기, off.png,,0
 			RedrawWindow()
 			
 			if (LodaPlayer.CustomCount = 0 || LodaPlayer.PluginCount = 0)
@@ -369,7 +333,7 @@ class LodaPlayer {
 			GuiControl, Enable, chat
 			GuiControl, Show, chat
 			Menu, GaGaMenu, NoIcon, 채팅하기
-			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\on.png,,0
+			Menu, GaGaMenu, Icon, 채팅하기, on.png,,0
 			RedrawWindow()
 			
 			if (LodaPlayer.CustomCount = 0 || LodaPlayer.PluginCount = 0)
@@ -404,9 +368,8 @@ class LodaPlayer {
 				WinHide, ahk_id %LodaChromeChild%
 			
 			Menu, SetMenu, NoIcon, 다음팟플레이어전용 : 채팅창숨기기
-			Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\on.png,,0
-			PotChatBAN := 1
-			RedrawWindow()
+			Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, on.png,,0
+			PotChatBAN := 1, RedrawWindow()
 			return
 		}
 		
@@ -420,9 +383,8 @@ class LodaPlayer {
 				WinShow, ahk_id %LodaChromeChild%
 			
 			Menu, SetMenu, NoIcon, 다음팟플레이어전용 : 채팅창숨기기
-			Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
-			PotChatBAN := 0
-			RedrawWindow()
+			Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, off.png,,0
+			PotChatBAN := 0, RedrawWindow()
 			return
 		}
 		
@@ -450,8 +412,7 @@ class LodaPlayer {
 				Sleep, 30
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
 				Sleep, 30
-				Clipboard := ClipHistory
-				RedrawWindow()
+				Clipboard := ClipHistory, RedrawWindow()
 			}
 			return
 		}
@@ -463,9 +424,8 @@ class LodaPlayer {
 				IfMsgBox, Yes
 				{
 					Menu, SetMenu, NoIcon, UI 인터페이스 : 태그 형식으로 전환
-					Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\on.png,,0
-					LodaPlayer.BaseAddr := "https://livehouse.in/en/embed/channel/"
-					LoNumber := ReservedAddr
+					Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, on.png,,0
+					LodaPlayer.BaseAddr := "https://livehouse.in/en/embed/channel/", LoNumber := ReservedAddr
 					return LodaPlayer.StartTrans(LoNumber)
 				}
 			}
@@ -476,9 +436,8 @@ class LodaPlayer {
 				IfMsgBox, Yes
 				{
 					Menu, SetMenu, NoIcon, UI 인터페이스 : 태그 형식으로 전환
-					Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\off.png,,0
-					LodaPlayer.BaseAddr := "https://livehouse.in/en/channel/"
-					LoNumber := ReservedAddr
+					Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, off.png,,0
+					LodaPlayer.BaseAddr := "https://livehouse.in/en/channel/", LoNumber := ReservedAddr
 					return LodaPlayer.StartTrans(LoNumber)
 				}
 			}
@@ -498,7 +457,7 @@ class LodaPlayer {
 				{
 					LodaPlayer.InternalCount := 0, LodaPlayer.ExternalCount := 1
 					Menu, SetMenu, NoIcon, 익스플로러 전용 : 팝업으로 보기
-					Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\on.png,,0
+					Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, on.png,,0
 				}
 				return
 			}
@@ -510,7 +469,7 @@ class LodaPlayer {
 				{
 					LodaPlayer.InternalCount := 1, LodaPlayer.ExternalCount := 0
 					Menu, SetMenu, NoIcon, 익스플로러 전용 : 팝업으로 보기
-					Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\off.png,,0
+					Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, off.png,,0
 				}
 				return
 			}
@@ -521,13 +480,13 @@ class LodaPlayer {
 			if TopToggleCk = 0
 			{
 				Menu, SetMenu, NoIcon, 로다 플레이어를 항상위로
-				Menu, SetMenu, Icon, 로다 플레이어를 항상위로, %A_Temp%\on.png,,0
+				Menu, SetMenu, Icon, 로다 플레이어를 항상위로, on.png,,0
 				return TopToggleCk := 1
 			}
 			if TopToggleCk = 1
 			{
 				Menu, SetMenu, NoIcon, 로다 플레이어를 항상위로
-				Menu, SetMenu, Icon, 로다 플레이어를 항상위로, %A_Temp%\off.png,,0
+				Menu, SetMenu, Icon, 로다 플레이어를 항상위로, off.png,,0
 				return TopToggleCk := 0
 			}
 		}
@@ -544,7 +503,7 @@ class LodaPlayer {
 					GuiControl, Disable, Stream
 					GuiControl, Hide, Stream
 					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
-					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\on.png,,0
+					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, on.png,,0
 					
 					Process, Exist, chrome.exe
 					if ErrorLevel != 0
@@ -598,7 +557,7 @@ class LodaPlayer {
 					WinWaitClose, ahk_id %LodaChromeChild%
 					
 					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
-					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\off.png,,0
+					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, off.png,,0
 					RedrawWindow()
 					return
 				}
@@ -624,7 +583,7 @@ class LodaPlayer {
 					if (LodaPlayer.InternalCount = 0 && LodaPlayer.ExternalCount = 1)
 					{
 						Menu, SetMenu, NoIcon, 익스플로러 전용 : 팝업으로 보기
-						Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\off.png,,0
+						Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, off.png,,0
 						Menu, SetMenu, Disable, 익스플로러 전용 : 팝업으로 보기
 					}
 					else
@@ -633,7 +592,7 @@ class LodaPlayer {
 					if (LodaPlayer.BaseAddr = "https://livehouse.in/en/embed/channel/")
 					{
 						Menu, SetMenu, NoIcon, UI 인터페이스 : 태그 형식으로 전환
-						Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\off.png,,0
+						Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, off.png,,0
 						Menu, SetMenu, Disable, UI 인터페이스 : 태그 형식으로 전환
 					}
 					else
@@ -642,7 +601,7 @@ class LodaPlayer {
 					Menu, SetMenu, Enable, 다음팟플레이어전용 : 채팅창숨기기
 					LodaPlayer.PluginCount := 1, LodaPlayer.InternalCount := 1, LodaPlayer.ExternalCount := 0, LodaPlayer.BaseAddr := "https://livehouse.in/en/channel/"
 					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
-					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\on.png,,0
+					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, on.png,,0
 					
 					if LodaPlayer.CustomCount = 0
 					{
@@ -706,9 +665,7 @@ class LodaPlayer {
 						Control, Hide,, % "AfxWnd120su" A_Index + 4, % "ahk_id " LodaPotChild
 						Control, Hide,, % "Afx:56A50000:8:00010003:01900011:00000000" A_Index, % "ahk_id " LodaPotChild
 					}
-					
-					LodaPlayer.SetChildWindow(LodaPotChild, hMainWindow)
-					RedrawWindow(), FreeMemory()
+					LodaPlayer.SetChildWindow(LodaPotChild, hMainWindow), RedrawWindow(), FreeMemory()
 				}
 				return
 			}
@@ -739,9 +696,9 @@ class LodaPlayer {
 					Menu, SetMenu, Enable, UI 인터페이스 : 태그 형식으로 전환
 					Menu, SetMenu, Enable, 익스플로러 전용 : 팝업으로 보기
 					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
-					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\off.png,,0
+					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, off.png,,0
 					Menu, SetMenu, NoIcon, 다음팟플레이어전용 : 채팅창숨기기
-					Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
+					Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, off.png,,0
 					WinKill, ahk_id %LodaPotChild%
 					WinWaitClose, ahk_id %LodaPotChild%
 					RedrawWindow(), FreeMemory()
@@ -823,8 +780,7 @@ class LodaPlayer {
 			MsgBox, 262180, 즐겨찾기 추가, % ReservedBanner "`n`n방송을 자주 시청하시나봐요!`n`n이 방송을 즐겨찾는 방송으로 설정할까요?"
 			IfMsgBox, Yes
 			{
-				vIni.Favorite[ReservedBanner] := ReservedAddr
-				vIni.Save()
+				vIni.Favorite[ReservedBanner] := ReservedAddr, vIni.Save()
 				FileSetAttrib, +H, LodaPlayer.ini
 				MsgBox, 262208, 완료, 즐겨찾기에 추가하였습니다`n`n다음 실행부터 메뉴의 '즐겨찾기:목록' 에서 볼 수 있어요!
 				return
@@ -990,6 +946,17 @@ class LodaPlayer {
 		return JSON_ToObj(whr.ResponseText)
 	}
 	
+	ParsePD() 
+	{
+		global
+		newcon := RegExReplace(newcon, "\R+\R", "`r`n")
+		newcon := RegExReplace(newcon, "\s+", " ")
+		RegExMatch(newcon,"영화(.*?)오프라인",OnlineFilm)
+		RegExMatch(newcon,"애니(.*?)오프라인",OnlineAni)
+		RegExMatch(newcon,"예능(.*?)오프라인",OnlineShow)
+		RegExMatch(newcon,"기타(.*?)오프라인",OnlineEtc)
+	}
+	
 	DeleteMenu(Desire)
 	{
 		global
@@ -1003,9 +970,9 @@ class LodaPlayer {
 		Loop, % %Category%Count {
 			Menu, % Category . "Menu", Add, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], LodaPlayer.PDMenu
 			if InStr(Online%Category%1, %Category%[A_Index]["PD"])
-				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\on.png,,0
+				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], on.png,,0
 			else
-				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\off.png,,0
+				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], off.png,,0
 			Sleep, 0
 		}
 	}
@@ -1143,8 +1110,7 @@ class ViewControl {
 			ControlFocus,, ahk_id %LodaPotChild%
 			SendInput, {Ctrl Down}{Enter}{Ctrl Up}
 			BlockInput(0)
-			RedrawWindow()
-			this.hVisible := 1
+			RedrawWindow(), this.hVisible := 1
 			return
 		}
 		
@@ -1160,7 +1126,7 @@ class ViewControl {
 				ChatBAN := 1
 				WinHide, ahk_id %hGaGa%
 				Menu, GaGaMenu, NoIcon, 채팅하기
-				Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
+				Menu, GaGaMenu, Icon, 채팅하기, off.png,,0
 			}
 			if (LodaPlayer.PluginCount = 1)
 			{
