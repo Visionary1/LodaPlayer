@@ -1,8 +1,8 @@
 ﻿FileEncoding, UTF-8
 ;@Ahk2Exe-SetName 로다 플레이어 Air
 ;@Ahk2Exe-SetDescription 라이브하우스인 시청 프로그램
-;@Ahk2Exe-SetVersion 0.0.0.0
 ;@Ahk2Exe-SetCopyright Copyright (c) 2015`, 로다 &예지력
+/*
 FileInstall, addpd.png, %A_Temp%\addpd.png
 FileInstall, byaddr.png, %A_Temp%\byaddr.png
 FileInstall, chat.png, %A_Temp%\chat.png
@@ -16,6 +16,7 @@ FileInstall, refresh.png, %A_Temp%\refresh.png
 FileInstall, setting.png, %A_Temp%\setting.png
 FileInstall, LodaPlayer.ini, LodaPlayer.ini
 FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe, 1
+*/
 #NoEnv
 #NoTrayIcon
 #SingleInstance Off
