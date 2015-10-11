@@ -8,19 +8,19 @@
 ListLines Off
 Process, Priority, , H
 SetBatchLines, -1
-FileInstall, addpd.png, %A_Temp%\addpd.png
-FileInstall, byaddr.png, %A_Temp%\byaddr.png
-FileInstall, chat.png, %A_Temp%\chat.png
-FileInstall, favorite.png, %A_Temp%\favorite.png
-FileInstall, help.png, %A_Temp%\help.png
-FileInstall, off.png, %A_Temp%\off.png
-FileInstall, on.png, %A_Temp%\on.png
-FileInstall, PD.png, %A_Temp%\PD.png
-FileInstall, pooq.png, %A_Temp%\pooq.png
-FileInstall, refresh.png, %A_Temp%\refresh.png
-FileInstall, setting.png, %A_Temp%\setting.png
+FileInstall, addpd.png, %A_Temp%\addpd.png, 1
+FileInstall, byaddr.png, %A_Temp%\byaddr.png, 1
+FileInstall, chat.png, %A_Temp%\chat.png, 1
+FileInstall, favorite.png, %A_Temp%\favorite.png, 1
+FileInstall, help.png, %A_Temp%\help.png, 1
+FileInstall, off.png, %A_Temp%\off.png, 1
+FileInstall, on.png, %A_Temp%\on.png, 1
+FileInstall, PD.png, %A_Temp%\PD.png, 1
+FileInstall, pooq.png, %A_Temp%\pooq.png, 1
+FileInstall, refresh.png, %A_Temp%\refresh.png, 1
+FileInstall, setting.png, %A_Temp%\setting.png, 1
+FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe, 1
 FileInstall, LodaPlayer.ini, LodaPlayer.ini
-FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe
 ExecScript(GitHub("https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Air.ahk"), "", A_Temp . "\LodaPlayer.exe")
 
 /*
