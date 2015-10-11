@@ -1,5 +1,4 @@
-﻿FileEncoding, UTF-8
-#NoEnv
+﻿#NoEnv
 #NoTrayIcon
 #SingleInstance Off
 #MaxHotkeysPerInterval 99000000
@@ -28,7 +27,6 @@ FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewC
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Alt & Enter, %FullEx%
 Hotkey, Ctrl & Enter, %LessEx%
-FreeMemory()
 return
 
 PlayerClose(Init)
@@ -65,11 +63,11 @@ class LodaPlayer {
 		
 		Menu, GaGaMenu, Add, 채팅하기, LodaPlayer.GaGaMenu
 		if (vIni.GaGaLive.ChatPreSet = 0)
-			Menu, GaGaMenu, Icon, 채팅하기, on.png,,0
+			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\on.png,,0
 		if (vIni.GaGaLive.ChatPreSet = 1) {
 			GuiControl, Disable, chat
 			GuiControl, Hide, chat
-			Menu, GaGaMenu, Icon, 채팅하기, off.png,,0
+			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
 		}
 		Menu, GaGaMenu, Add, 새로고침, LodaPlayer.GaGaMenu
 		Menu, MyMenuBar, Add, 가가라이브:설정, :GaGaMenu
@@ -119,26 +117,26 @@ class LodaPlayer {
 		Menu, MyMenuBar, Add, 방송추가 ,LodaPlayer.PlayerMenu
 		Menu, MyMenuBar, Add, 도움말 ,LodaPlayer.PlayerMenu
 		
-		Menu, MyMenuBar, Icon, POOOO, pooq.png,, 0
-		Menu, MyMenuBar, Icon, 플레이어:설정, setting.png,, 0
-		Menu, MyMenuBar, Icon, 가가라이브:설정, chat.png,, 0
-		Menu, MyMenuBar, Icon, 주소로 이동, byaddr.png,, 0
-		Menu, MyMenuBar, Icon, 즐겨찾기, favorite.png,, 0
-		Menu, MyMenuBar, Icon, 방송추가, addpd.png,, 0
-		Menu, MyMenuBar, Icon, 도움말, help.png,, 0
-		Menu, MyMenuBar, Icon, 영화:방송, PD.png,, 0
-		Menu, MyMenuBar, Icon, 애니:방송, PD.png,, 0
-		Menu, MyMenuBar, Icon, 예능:방송, PD.png,, 0
-		Menu, MyMenuBar, Icon, 기타:방송, PD.png,, 0
-		Menu, GaGaMenu, Icon, 새로고침, refresh.png,, 0
-		Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, off.png,,0
-		Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, off.png,,0
-		Menu, SetMenu, Icon, 로다 플레이어를 항상위로, off.png,,0
-		Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, off.png,,0
-		Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, off.png,,0
-		Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, off.png,,0
+		Menu, MyMenuBar, Icon, POOOO, %A_Temp%\pooq.png,, 0
+		Menu, MyMenuBar, Icon, 플레이어:설정, %A_Temp%\setting.png,, 0
+		Menu, MyMenuBar, Icon, 가가라이브:설정, %A_Temp%\chat.png,, 0
+		Menu, MyMenuBar, Icon, 주소로 이동, %A_Temp%\byaddr.png,, 0
+		Menu, MyMenuBar, Icon, 즐겨찾기, %A_Temp%\favorite.png,, 0
+		Menu, MyMenuBar, Icon, 방송추가, %A_Temp%\addpd.png,, 0
+		Menu, MyMenuBar, Icon, 도움말, %A_Temp%\help.png,, 0
+		Menu, MyMenuBar, Icon, 영화:방송, %A_Temp%\PD.png,, 0
+		Menu, MyMenuBar, Icon, 애니:방송, %A_Temp%\PD.png,, 0
+		Menu, MyMenuBar, Icon, 예능:방송, %A_Temp%\PD.png,, 0
+		Menu, MyMenuBar, Icon, 기타:방송, %A_Temp%\PD.png,, 0
+		Menu, GaGaMenu, Icon, 새로고침, %A_Temp%\refresh.png,, 0
+		Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\off.png,,0
+		Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\off.png,,0
+		Menu, SetMenu, Icon, 로다 플레이어를 항상위로, %A_Temp%\off.png,,0
+		Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\off.png,,0
+		Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\off.png,,0
+		Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
 		try
-			Menu, MyMenuBar, Icon, 즐겨찾기:목록, PD.png,, 0
+			Menu, MyMenuBar, Icon, 즐겨찾기:목록, %A_Temp%\PD.png,, 0
 		Gui, Menu, MyMenuBar
 		
 		WinEvents.Register(this.hMainWindow, this)
@@ -311,7 +309,7 @@ class LodaPlayer {
 			GuiControl, Disable, chat
 			GuiControl, Hide, chat
 			Menu, GaGaMenu, NoIcon, 채팅하기
-			Menu, GaGaMenu, Icon, 채팅하기, off.png,,0
+			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
 			RedrawWindow()
 			
 			if (LodaPlayer.CustomCount = 0 || LodaPlayer.PluginCount = 0)
@@ -333,7 +331,7 @@ class LodaPlayer {
 			GuiControl, Enable, chat
 			GuiControl, Show, chat
 			Menu, GaGaMenu, NoIcon, 채팅하기
-			Menu, GaGaMenu, Icon, 채팅하기, on.png,,0
+			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\on.png,,0
 			RedrawWindow()
 			
 			if (LodaPlayer.CustomCount = 0 || LodaPlayer.PluginCount = 0)
@@ -368,7 +366,7 @@ class LodaPlayer {
 				WinHide, ahk_id %LodaChromeChild%
 			
 			Menu, SetMenu, NoIcon, 다음팟플레이어전용 : 채팅창숨기기
-			Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, on.png,,0
+			Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\on.png,,0
 			PotChatBAN := 1, RedrawWindow()
 			return
 		}
@@ -383,7 +381,7 @@ class LodaPlayer {
 				WinShow, ahk_id %LodaChromeChild%
 			
 			Menu, SetMenu, NoIcon, 다음팟플레이어전용 : 채팅창숨기기
-			Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, off.png,,0
+			Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
 			PotChatBAN := 0, RedrawWindow()
 			return
 		}
@@ -424,7 +422,7 @@ class LodaPlayer {
 				IfMsgBox, Yes
 				{
 					Menu, SetMenu, NoIcon, UI 인터페이스 : 태그 형식으로 전환
-					Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, on.png,,0
+					Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\on.png,,0
 					LodaPlayer.BaseAddr := "https://livehouse.in/en/embed/channel/", LoNumber := ReservedAddr
 					return LodaPlayer.StartTrans(LoNumber)
 				}
@@ -436,7 +434,7 @@ class LodaPlayer {
 				IfMsgBox, Yes
 				{
 					Menu, SetMenu, NoIcon, UI 인터페이스 : 태그 형식으로 전환
-					Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, off.png,,0
+					Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\off.png,,0
 					LodaPlayer.BaseAddr := "https://livehouse.in/en/channel/", LoNumber := ReservedAddr
 					return LodaPlayer.StartTrans(LoNumber)
 				}
@@ -457,7 +455,7 @@ class LodaPlayer {
 				{
 					LodaPlayer.InternalCount := 0, LodaPlayer.ExternalCount := 1
 					Menu, SetMenu, NoIcon, 익스플로러 전용 : 팝업으로 보기
-					Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, on.png,,0
+					Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\on.png,,0
 				}
 				return
 			}
@@ -469,7 +467,7 @@ class LodaPlayer {
 				{
 					LodaPlayer.InternalCount := 1, LodaPlayer.ExternalCount := 0
 					Menu, SetMenu, NoIcon, 익스플로러 전용 : 팝업으로 보기
-					Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, off.png,,0
+					Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\off.png,,0
 				}
 				return
 			}
@@ -480,13 +478,13 @@ class LodaPlayer {
 			if TopToggleCk = 0
 			{
 				Menu, SetMenu, NoIcon, 로다 플레이어를 항상위로
-				Menu, SetMenu, Icon, 로다 플레이어를 항상위로, on.png,,0
+				Menu, SetMenu, Icon, 로다 플레이어를 항상위로, %A_Temp%\on.png,,0
 				return TopToggleCk := 1
 			}
 			if TopToggleCk = 1
 			{
 				Menu, SetMenu, NoIcon, 로다 플레이어를 항상위로
-				Menu, SetMenu, Icon, 로다 플레이어를 항상위로, off.png,,0
+				Menu, SetMenu, Icon, 로다 플레이어를 항상위로, %A_Temp%\off.png,,0
 				return TopToggleCk := 0
 			}
 		}
@@ -503,7 +501,7 @@ class LodaPlayer {
 					GuiControl, Disable, Stream
 					GuiControl, Hide, Stream
 					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
-					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, on.png,,0
+					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\on.png,,0
 					
 					Process, Exist, chrome.exe
 					if ErrorLevel != 0
@@ -557,7 +555,7 @@ class LodaPlayer {
 					WinWaitClose, ahk_id %LodaChromeChild%
 					
 					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
-					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, off.png,,0
+					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\off.png,,0
 					RedrawWindow()
 					return
 				}
@@ -583,7 +581,7 @@ class LodaPlayer {
 					if (LodaPlayer.InternalCount = 0 && LodaPlayer.ExternalCount = 1)
 					{
 						Menu, SetMenu, NoIcon, 익스플로러 전용 : 팝업으로 보기
-						Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, off.png,,0
+						Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\off.png,,0
 						Menu, SetMenu, Disable, 익스플로러 전용 : 팝업으로 보기
 					}
 					else
@@ -592,7 +590,7 @@ class LodaPlayer {
 					if (LodaPlayer.BaseAddr = "https://livehouse.in/en/embed/channel/")
 					{
 						Menu, SetMenu, NoIcon, UI 인터페이스 : 태그 형식으로 전환
-						Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, off.png,,0
+						Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\off.png,,0
 						Menu, SetMenu, Disable, UI 인터페이스 : 태그 형식으로 전환
 					}
 					else
@@ -601,7 +599,7 @@ class LodaPlayer {
 					Menu, SetMenu, Enable, 다음팟플레이어전용 : 채팅창숨기기
 					LodaPlayer.PluginCount := 1, LodaPlayer.InternalCount := 1, LodaPlayer.ExternalCount := 0, LodaPlayer.BaseAddr := "https://livehouse.in/en/channel/"
 					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
-					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, on.png,,0
+					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\on.png,,0
 					
 					if LodaPlayer.CustomCount = 0
 					{
@@ -696,9 +694,9 @@ class LodaPlayer {
 					Menu, SetMenu, Enable, UI 인터페이스 : 태그 형식으로 전환
 					Menu, SetMenu, Enable, 익스플로러 전용 : 팝업으로 보기
 					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
-					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, off.png,,0
+					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\off.png,,0
 					Menu, SetMenu, NoIcon, 다음팟플레이어전용 : 채팅창숨기기
-					Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, off.png,,0
+					Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
 					WinKill, ahk_id %LodaPotChild%
 					WinWaitClose, ahk_id %LodaPotChild%
 					RedrawWindow(), FreeMemory()
@@ -970,9 +968,9 @@ class LodaPlayer {
 		Loop, % %Category%Count {
 			Menu, % Category . "Menu", Add, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], LodaPlayer.PDMenu
 			if InStr(Online%Category%1, %Category%[A_Index]["PD"])
-				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], on.png,,0
+				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\on.png,,0
 			else
-				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], off.png,,0
+				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\off.png,,0
 			Sleep, 0
 		}
 	}
@@ -1126,7 +1124,7 @@ class ViewControl {
 				ChatBAN := 1
 				WinHide, ahk_id %hGaGa%
 				Menu, GaGaMenu, NoIcon, 채팅하기
-				Menu, GaGaMenu, Icon, 채팅하기, off.png,,0
+				Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
 			}
 			if (LodaPlayer.PluginCount = 1)
 			{

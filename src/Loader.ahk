@@ -1,8 +1,13 @@
-﻿FileEncoding, UTF-8
-;@Ahk2Exe-SetName 로다 플레이어 Air
+﻿;@Ahk2Exe-SetName 로다 플레이어 Air
 ;@Ahk2Exe-SetDescription 라이브하우스인 시청 프로그램
 ;@Ahk2Exe-SetCopyright Copyright (c) 2015`, 로다 &예지력
-/*
+#NoEnv
+#NoTrayIcon
+#SingleInstance force
+#KeyHistory 0
+ListLines Off
+Process, Priority, , H
+SetBatchLines, -1
 FileInstall, addpd.png, %A_Temp%\addpd.png
 FileInstall, byaddr.png, %A_Temp%\byaddr.png
 FileInstall, chat.png, %A_Temp%\chat.png
@@ -15,16 +20,7 @@ FileInstall, pooq.png, %A_Temp%\pooq.png
 FileInstall, refresh.png, %A_Temp%\refresh.png
 FileInstall, setting.png, %A_Temp%\setting.png
 FileInstall, LodaPlayer.ini, LodaPlayer.ini
-FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe, 1
-*/
-#NoEnv
-#NoTrayIcon
-#SingleInstance Off
-#KeyHistory 0
-ListLines Off
-Process, Priority, , H
-SetBatchLines, -1
-Menu, Tray, NoStandard
+FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe
 ExecScript(GitHub("https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Air.ahk"), "", A_Temp . "\LodaPlayer.exe")
 
 /*
@@ -47,7 +43,7 @@ GitHub(Url)
 
 ExecScript(Script, Params="", Path="")
 {
-	Name := "LodaPlayer.exe"
+	Name := "Air"
 	Pipe := []
 	Loop, 2
 	{
