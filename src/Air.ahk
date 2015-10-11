@@ -242,13 +242,14 @@ class LodaPlayer {
 	{
 		global
 		poo := ComObjCreate("InternetExplorer.Application")
-		poo.Visible := true, poo.Navigate("http://poooo.ml/")
+		poo.Visible := false, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
 		LodaPlayer.DeleteMenu("Film"), Film:= "", FilmCount := ""
 		LodaPlayer.DeleteMenu("Ani"), Ani := "", AniCount := ""
 		LodaPlayer.DeleteMenu("Show"), Show := "", ShowCount := ""
 		LodaPlayer.DeleteMenu("Etc"), Etc := "", EtcCount := ""
+		Gui, Menu, MyMenuBar
 		Film := LodaPlayer.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
 		Ani := LodaPlayer.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
 		Show := LodaPlayer.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
@@ -258,6 +259,7 @@ class LodaPlayer {
 				continue
 
 		newcon := poo.document.getElementByID("main-content").InnerText, LodaPlayer.ParsePD()
+		Gui, Menu
 		try {
 			LodaPlayer.UpdateMenu("Film"), LodaPlayer.UpdateMenu("Ani"), LodaPlayer.UpdateMenu("Show"), LodaPlayer.UpdateMenu("Etc")
 		}
