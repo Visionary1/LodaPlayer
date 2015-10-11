@@ -16,14 +16,14 @@ Menu, Tray, NoStandard
 ComObjError(False)
 
 fbe()
-Film := LodaPlayer.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
-Ani := LodaPlayer.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
-Show := LodaPlayer.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
-Etc := LodaPlayer.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
+Film := ServerInfo.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
+Ani := ServerInfo.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
+Show := ServerInfo.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
+Etc := ServerInfo.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
-SetTimerF(Init.OnAirCheck,900000) ; 900000
-FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu")
+FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
+SetTimer, %CheckPoo%, 900000  ;SetTimerF(ServerInfo.OnAirCheck,900000) ; 900000
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Alt & Enter, %FullEx%
 Hotkey, Ctrl & Enter, %LessEx%
@@ -31,7 +31,6 @@ return
 
 PlayerClose(Init)
 {
-	SetTimerF(Init.OnAirCheck,0)
 	ExitApp
 }
 
@@ -96,7 +95,7 @@ class LodaPlayer {
 		while !(Stream.readyState=4 || Stream.document.readyState="complete" || !Stream.busy) 
 			continue
 		Sleep, 0
-		newcon := Stream.document.getElementByID("main-content").InnerText, this.ParsePD()
+		newcon := Stream.document.getElementByID("main-content").InnerText, ServerInfo.ParsePD()
 		
 		try 
 		{
@@ -205,6 +204,7 @@ class LodaPlayer {
 	{
 		global
 		
+		SetTimer, %CheckPoo%, Off
 		fbe_cleanup()
 		
 		vIni.GaGaLive.ChatPreSet := chatBAN
@@ -236,40 +236,6 @@ class LodaPlayer {
 	RegisterCloseCallback(CloseCallback)
 	{
 		this.CloseCallback := CloseCallback
-	}
-	
-	OnAirCheck()
-	{
-		global
-		poo := ComObjCreate("InternetExplorer.Application")
-		poo.Visible := false, poo.Navigate("http://poooo.ml/")
-		
-		Gui, Menu
-		LodaPlayer.DeleteMenu("Film"), Film:= "", FilmCount := ""
-		LodaPlayer.DeleteMenu("Ani"), Ani := "", AniCount := ""
-		LodaPlayer.DeleteMenu("Show"), Show := "", ShowCount := ""
-		LodaPlayer.DeleteMenu("Etc"), Etc := "", EtcCount := ""
-		Gui, Menu, MyMenuBar
-		Film := LodaPlayer.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
-		Ani := LodaPlayer.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
-		Show := LodaPlayer.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
-		Etc := LodaPlayer.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
-
-		while !(poo.readyState=4 || poo.document.readyState="complete" || !poo.busy) 
-				continue
-
-		newcon := poo.document.getElementByID("main-content").InnerText, LodaPlayer.ParsePD()
-		Gui, Menu
-		try {
-			LodaPlayer.UpdateMenu("Film"), LodaPlayer.UpdateMenu("Ani"), LodaPlayer.UpdateMenu("Show"), LodaPlayer.UpdateMenu("Etc")
-		}
-		Gui, Menu, MyMenuBar
-		WinSet, Redraw,, ahk_id %hMainWindow%
-		poo.Quit()
-		VarSetCapacity(newcon, 0), VarSetCapacity(poo, 0), VarSetCapacity(whr, 0), VarSetCapacity(json, 0)
-		VarSetCapacity(OnlineFilm, 0), VarSetCapacity(OnlineAni, 0), VarSetCapacity(OnlineShow, 0), VarSetCapacity(OnlineEtc, 0)
-		VarSetCapacity(OnlineFilm1, 0), VarSetCapacity(OnlineAni1, 0), VarSetCapacity(OnlineShow1, 0), VarSetCapacity(OnlineEtc1, 0)
-		FreeMemory()
 	}
 	
 	OnMessage(wParam, lParam, Msg, hWnd)
@@ -877,6 +843,7 @@ class LodaPlayer {
 		}
 		
 		if (LodaPlayer.PluginCount = 1 && LodaPlayer.ExternalCount = 0 && LodaPlayer.InternalCount = 1) {
+			Critical
 			InputURL := "http://" . DefaultServer "/" . Para1 . "/video/playlist.m3u8"
 			ControlFocus,, ahk_id %LodaPotChild%
 			ControlSend,, {Ctrl Down}u{Ctrl Up}, ahk_id %LodaPotChild%
@@ -896,11 +863,13 @@ class LodaPlayer {
 			
 			Sleep, 0
 			ControlClick, Button7, ahk_id %Teleport%,,,, NA   ; 확인(&O)
+			Critical, Off
 			
 			if LodaPlayer.CustomCount = 0
 				Stream.Navigate("https://livehouse.in/en/channel/" . Para1 . "/chatroom")
 			if LodaPlayer.CustomCount = 1
 			{
+				Critical
 				ClipHistory := Clipboard
 				Clipboard := "https://livehouse.in/en/channel/" . Para1 . "/chatroom"
 				ControlFocus,, ahk_id %LodaChromeChild%
@@ -914,6 +883,7 @@ class LodaPlayer {
 				Sleep, 30
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
 				Sleep, 30
+				Critical, Off
 				Clipboard := ClipHistory
 				RedrawWindow()
 			}
@@ -934,27 +904,6 @@ class LodaPlayer {
 			RedrawWindow(), FreeMemory()
 		}
 		return
-	}
-	
-	getList(Which) 
-	{
-		global
-		From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
-		whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-		whr.Open("GET", From . Which, True), whr.Send(), whr.WaitForResponse()
-		json := "[" RegExReplace(whr.ResponseText, "\R+", ",") "]"
-		return JSON_ToObj(whr.ResponseText)
-	}
-	
-	ParsePD() 
-	{
-		global
-		newcon := RegExReplace(newcon, "\R+\R", "`r`n")
-		newcon := RegExReplace(newcon, "\s+", " ")
-		RegExMatch(newcon,"영화(.*?)오프라인",OnlineFilm)
-		RegExMatch(newcon,"애니(.*?)오프라인",OnlineAni)
-		RegExMatch(newcon,"예능(.*?)오프라인",OnlineShow)
-		RegExMatch(newcon,"기타(.*?)오프라인",OnlineEtc)
 	}
 	
 	DeleteMenu(Desire)
@@ -986,61 +935,67 @@ class LodaPlayer {
 	}
 }
 
-fbe() {
-	RegRead FBE, HKCU,
-	(Join\ LTrim
-	Software\Microsoft\Internet Explorer\Main
-	FeatureControl\FEATURE_BROWSER_EMULATION
-	), LodaPlayer.exe
-	
-	if (FBE == "")
+class ServerInfo extends LodaPlayer {
+
+	OnAirCheck()
 	{
-		RegWrite REG_DWORD, HKCU,
-		(Join\ LTrim C Q
-		Software\Microsoft\Internet Explorer\Main
-		FeatureControl\FEATURE_BROWSER_EMULATION
-		), LodaPlayer.exe, % ie_version()*1000 ; {7:0x1B58, 8:0x1F40, 9:0x2328, 10:0x02710, 11:0x2AF8}
+		global
+		poo := ComObjCreate("InternetExplorer.Application")
+		poo.Visible := false, poo.Navigate("http://poooo.ml/")
+		
+		Gui, Menu
+		this.DeleteMenu("Film"), Film:= "", FilmCount := ""
+		this.DeleteMenu("Ani"), Ani := "", AniCount := ""
+		this.DeleteMenu("Show"), Show := "", ShowCount := ""
+		this.DeleteMenu("Etc"), Etc := "", EtcCount := ""
+		Gui, Menu, MyMenuBar
+		
+		Film := this.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
+		Ani := this.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
+		Show := this.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
+		Etc := this.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
+
+		while !(poo.readyState=4 || poo.document.readyState="complete" || !poo.busy) 
+				continue
+
+		newcon := poo.document.getElementByID("main-content").InnerText, this.ParsePD()
+		
+		Gui, Menu
+		try {
+			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
+		}
+		Gui, Menu, MyMenuBar
+		WinSet, Redraw,, ahk_id %hMainWindow%
+		poo.Quit()
+		VarSetCapacity(newcon, 0), VarSetCapacity(poo, 0), VarSetCapacity(whr, 0), VarSetCapacity(json, 0)
+		VarSetCapacity(OnlineFilm, 0), VarSetCapacity(OnlineAni, 0), VarSetCapacity(OnlineShow, 0), VarSetCapacity(OnlineEtc, 0)
+		VarSetCapacity(OnlineFilm1, 0), VarSetCapacity(OnlineAni1, 0), VarSetCapacity(OnlineShow1, 0), VarSetCapacity(OnlineEtc1, 0)
+		FreeMemory()
+	}
+	
+	getList(Which)
+	{
+		global
+		From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
+		whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+		whr.Open("GET", From . Which, True), whr.Send(), whr.WaitForResponse()
+		json := "[" RegExReplace(whr.ResponseText, "\R+", ",") "]"
+		return JSON_ToObj(whr.ResponseText)
+	}
+	
+	ParsePD()
+	{
+		global
+		newcon := RegExReplace(newcon, "\R+\R", "`r`n")
+		newcon := RegExReplace(newcon, "\s+", " ")
+		RegExMatch(newcon,"영화(.*?)오프라인",OnlineFilm)
+		RegExMatch(newcon,"애니(.*?)오프라인",OnlineAni)
+		RegExMatch(newcon,"예능(.*?)오프라인",OnlineShow)
+		RegExMatch(newcon,"기타(.*?)오프라인",OnlineEtc)
 	}
 }
-	
-fbe_cleanup() {
-	RegRead FBE, HKCU,
-	(Join\ LTrim
-	Software\Microsoft\Internet Explorer\Main
-	FeatureControl\FEATURE_BROWSER_EMULATION
-	), LodaPlayer.exe
-	
-	if (FBE != "")
-		RegDelete HKCU,
-		(Join\ LTrim
-		Software\Microsoft\Internet Explorer\Main
-		FeatureControl\FEATURE_BROWSER_EMULATION
-		), LodaPlayer.exe
-}
 
-ie_version() {
-	RegRead ver, HKLM, SOFTWARE\Microsoft\Internet Explorer, svcVersion
-	return SubStr(ver, 1, InStr(ver, ".")-1)
-}
-
-ClearMemory()
-{
-    for objItem in ComObjGet("winmgmts:").ExecQuery("SELECT * FROM Win32_Process")
-    {
-        hProcess := DllCall("kernel32.dll\OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "UInt", objItem.ProcessID)
-        , DllCall("kernel32.dll\SetProcessWorkingSetSize", "Ptr", hProcess, "UPtr", -1, "UPtr", -1)
-        , DllCall("psapi.dll\EmptyWorkingSet", "Ptr", hProcess)
-        , DllCall("kernel32.dll\CloseHandle", "Ptr", hProcess)
-    }
-    return
-}
-
-FreeMemory()
-{
-    return DllCall("psapi.dll\EmptyWorkingSet", "Ptr", -1)
-}
-
-class ViewControl {
+class ViewControl extends LodaPlayer {
 
 	static hVisible := 1, MenuNotify := 1
 	
@@ -1078,7 +1033,7 @@ class ViewControl {
 		static hMenu
 		global
 		
-		if LodaPlayer.PluginCount = 0
+		if this.PluginCount = 0
 			return
 		
 		KeyWait Alt
@@ -1091,12 +1046,12 @@ class ViewControl {
 		{
 			DllCall("SetMenu", "uint", hMainWindow, "uint", hMenu)
 			this.MenuNotify := 1
-			if (LodaPlayer.PluginCount = 1)
+			if (this.PluginCount = 1)
 			{
 				PotChatBAN := 0
-				if LodaPlayer.CustomCount = 0
+				if this.CustomCount = 0
 					WinShow, ahk_id %hStream%
-				if LodaPlayer.CustomCount = 1
+				if this.CustomCount = 1
 					WinShow, ahk_id %LodaChromeChild%
 			}
 			WinSet, Transparent, 255, ahk_class Shell_TrayWnd
@@ -1144,8 +1099,59 @@ class ViewControl {
 	}
 }
 
-RedrawWindow()
-{
+fbe() {
+	RegRead FBE, HKCU,
+	(Join\ LTrim
+	Software\Microsoft\Internet Explorer\Main
+	FeatureControl\FEATURE_BROWSER_EMULATION
+	), LodaPlayer.exe
+	
+	if (FBE == "")
+	{
+		RegWrite REG_DWORD, HKCU,
+		(Join\ LTrim C Q
+		Software\Microsoft\Internet Explorer\Main
+		FeatureControl\FEATURE_BROWSER_EMULATION
+		), LodaPlayer.exe, % ie_version()*1000 ; {7:0x1B58, 8:0x1F40, 9:0x2328, 10:0x02710, 11:0x2AF8}
+	}
+}
+	
+fbe_cleanup() {
+	RegRead FBE, HKCU,
+	(Join\ LTrim
+	Software\Microsoft\Internet Explorer\Main
+	FeatureControl\FEATURE_BROWSER_EMULATION
+	), LodaPlayer.exe
+	
+	if (FBE != "")
+		RegDelete HKCU,
+		(Join\ LTrim
+		Software\Microsoft\Internet Explorer\Main
+		FeatureControl\FEATURE_BROWSER_EMULATION
+		), LodaPlayer.exe
+}
+
+ie_version() {
+	RegRead ver, HKLM, SOFTWARE\Microsoft\Internet Explorer, svcVersion
+	return SubStr(ver, 1, InStr(ver, ".")-1)
+}
+
+ClearMemory() {
+    for objItem in ComObjGet("winmgmts:").ExecQuery("SELECT * FROM Win32_Process")
+    {
+        hProcess := DllCall("kernel32.dll\OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "UInt", objItem.ProcessID)
+        , DllCall("kernel32.dll\SetProcessWorkingSetSize", "Ptr", hProcess, "UPtr", -1, "UPtr", -1)
+        , DllCall("psapi.dll\EmptyWorkingSet", "Ptr", hProcess)
+        , DllCall("kernel32.dll\CloseHandle", "Ptr", hProcess)
+    }
+    return
+}
+
+FreeMemory() {
+    return DllCall("psapi.dll\EmptyWorkingSet", "Ptr", -1)
+}
+
+RedrawWindow() {
 	global hMainWindow
 	
 	WinGetPos, MoveX, MoveY, MoveW, MoveH, ahk_id %hMainWindow%
@@ -1163,8 +1169,7 @@ RedrawWindow()
 	}
 }
 
-BlockInput(BlockIt := 0)
-{
+BlockInput(BlockIt := 0) {
     if !(DllCall("user32.dll\BlockInput", "UInt", BlockIt))
         return DllCall("kernel32.dll\GetLastError")
     return 1
@@ -1222,42 +1227,6 @@ Return
 CMsgButton:
   StringReplace _CMsg_Result, A_GuiControl, &,, All
 Return
-
-SetTimerF( Function, Period=0, ParmObject=0, Priority=0 ) { 
- Static current,tmrs:=[] ;current will hold timer that is currently running
- If IsFunc( Function ) {
-    if IsObject(tmr:=tmrs[Function]) ;destroy timer before creating a new one
-       ret := DllCall( "KillTimer", UInt,0, PTR, tmr.tmr)
-       , DllCall("GlobalFree", PTR, tmr.CBA)
-       , tmrs.Remove(Function) 
-    if (Period = 0 || Period = "off")
-       return ret ;Return as we want to turn off timer
-	 ; create object that will hold information for timer, it will be passed trough A_EventInfo when Timer is launched
-    tmr:=tmrs[Function]:={func:Function,Period:Period="on" ? 250 : Period,Priority:Priority
-								,OneTime:Period<0,params:IsObject(ParmObject)?ParmObject:Object()
-								,Tick:A_TickCount}
-    tmr.CBA := RegisterCallback(A_ThisFunc,"F",4,&tmr)
-    return !!(tmr.tmr  := DllCall("SetTimer", PTR,0, PTR,0, UInt
-								, (Period && Period!="On") ? Abs(Period) : (Period := 250)
-								, PTR,tmr.CBA,"PTR")) ;Create Timer and return true if a timer was created
-				, tmr.Tick:=A_TickCount
- }
- tmr := Object(A_EventInfo) ;A_Event holds object which contains timer information
- if IsObject(tmr) {
-	 DllCall("KillTimer", PTR,0, PTR,tmr.tmr) ;deactivate timer so it does not run again while we are processing the function
-	 If (current && tmr.Priority<current.priority) ;Timer with higher priority is already current so return
-		 Return (tmr.tmr:=DllCall("SetTimer", PTR,0, PTR,0, UInt, 100, PTR,tmr.CBA,"PTR")) ;call timer again asap
-	 current:=tmr
-	 ,tmr.tick:=ErrorLevel :=Priority ;update tick to launch function on time
-	 ,tmr.func(tmr.params*) ;call function
-    if (tmr.OneTime) ;One time timer, deactivate and delete it
-       return DllCall("GlobalFree", PTR,tmr.CBA)
-				 ,tmrs.Remove(tmr.func)
-	 tmr.tmr:= DllCall("SetTimer", PTR,0, PTR,0, UInt ;reset timer
-				,((A_TickCount-tmr.Tick) > tmr.Period) ? 0 : (tmr.Period-(A_TickCount-tmr.Tick)), PTR,tmr.CBA,"PTR")
-	 current= ;reset timer
- }
-}
 
 class_EasyIni(sFile="", sLoadFromStr="")
 {
