@@ -1,9 +1,21 @@
-﻿; FileEncoding, UTF-8
+﻿FileEncoding, UTF-8
 ;@Ahk2Exe-SetName 로다 플레이어 Air
 ;@Ahk2Exe-SetDescription 라이브하우스인 시청 프로그램
-;@Ahk2Exe-SetVersion 0.0.0.1-Air
+;@Ahk2Exe-SetVersion 0.0.0.0
 ;@Ahk2Exe-SetCopyright Copyright (c) 2015`, 로다 &예지력
-;@Ahk2Exe-SetOrigFilename 로다 플레이어 Air
+FileInstall, addpd.png, %A_Temp%\addpd.png
+FileInstall, byaddr.png, %A_Temp%\byaddr.png
+FileInstall, chat.png, %A_Temp%\chat.png
+FileInstall, favorite.png, %A_Temp%\favorite.png
+FileInstall, help.png, %A_Temp%\help.png
+FileInstall, off.png, %A_Temp%\off.png
+FileInstall, on.png, %A_Temp%\on.png
+FileInstall, PD.png, %A_Temp%\PD.png
+FileInstall, pooq.png, %A_Temp%\pooq.png
+FileInstall, refresh.png, %A_Temp%\refresh.png
+FileInstall, setting.png, %A_Temp%\setting.png
+FileInstall, LodaPlayer.ini, LodaPlayer.ini
+FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe, 1
 #NoEnv
 #NoTrayIcon
 #SingleInstance Off
@@ -13,7 +25,6 @@ Process, Priority, , H
 SetBatchLines, -1
 Menu, Tray, NoStandard
 ExecScript(GitHub("https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Air.ahk"), "", A_Temp . "\LodaPlayer.exe")
-ExitApp
 
 /*
 AhkThread := AhkDllThread(A_ScriptDir . "\AutoHotkey.dll") ; Creates an additional AutoHotkey thread using AutoHotkey.dll.
