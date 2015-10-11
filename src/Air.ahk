@@ -1089,11 +1089,8 @@ class ViewControl {
 		
 		if (this.hVisible = 0)
 		{
-			if this.MenuNotify = 0
-			{
-				DllCall("SetMenu", "uint", hMainWindow, "uint", hMenu)
-				this.MenuNotify := 1
-			}
+			DllCall("SetMenu", "uint", hMainWindow, "uint", hMenu)
+			this.MenuNotify := 1
 			if (LodaPlayer.PluginCount = 1)
 			{
 				PotChatBAN := 0
@@ -1116,11 +1113,8 @@ class ViewControl {
 		
 		if (this.hVisible = 1)
 		{
-			if this.MenuNotify = 1
-			{
-				DllCall("SetMenu", "uint", hMainWindow, "uint", 0)
-				this.MenuNotify := 0
-			}
+			DllCall("SetMenu", "uint", hMainWindow, "uint", 0)
+			this.MenuNotify := 0
 			if chatBAN = 0
 			{
 				ChatBAN := 1
