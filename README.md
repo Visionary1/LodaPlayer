@@ -32,4 +32,4 @@
  - [메인 클래스 소스코드](src/Air.ahk)
  - [방송리스트](PD)
  
-* GitHub를 이용합니다. 개발에 참여하고 싶다면, GitHub의 issues나 [블로그]("http://knowledgeisfree.tistory.com/guestbook")로 글을 남겨주세요
+* 개발에 함께하고 싶다면 [이슈](https://github.com/Visionary1/LodaPlayer/issues/new) 또는 [블로그](http://knowledgeisfree.tistory.com/guestbook)로 글을 남겨주세요
