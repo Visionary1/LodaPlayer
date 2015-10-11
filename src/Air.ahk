@@ -22,7 +22,7 @@ Show := LodaPlayer.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSi
 Etc := LodaPlayer.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
-SetTimerF(Init.OnAirCheck,900000)
+SetTimerF(Init.OnAirCheck,900000) ; 900000
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu")
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Alt & Enter, %FullEx%
@@ -242,14 +242,13 @@ class LodaPlayer {
 	{
 		global
 		poo := ComObjCreate("InternetExplorer.Application")
-		poo.Visible := false, poo.Navigate("http://poooo.ml/")
+		poo.Visible := true, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
 		LodaPlayer.DeleteMenu("Film"), Film:= "", FilmCount := ""
 		LodaPlayer.DeleteMenu("Ani"), Ani := "", AniCount := ""
 		LodaPlayer.DeleteMenu("Show"), Show := "", ShowCount := ""
 		LodaPlayer.DeleteMenu("Etc"), Etc := "", EtcCount := ""
-		Gui, Menu, MyMenuBar
 		Film := LodaPlayer.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
 		Ani := LodaPlayer.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
 		Show := LodaPlayer.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
@@ -258,8 +257,7 @@ class LodaPlayer {
 		while !(poo.readyState=4 || poo.document.readyState="complete" || !poo.busy) 
 				continue
 
-		newcon := poo.document.getElementByID("main-content").InnerText, this.ParsePD()
-		Gui, Menu
+		newcon := poo.document.getElementByID("main-content").InnerText, LodaPlayer.ParsePD()
 		try {
 			LodaPlayer.UpdateMenu("Film"), LodaPlayer.UpdateMenu("Ani"), LodaPlayer.UpdateMenu("Show"), LodaPlayer.UpdateMenu("Etc")
 		}
