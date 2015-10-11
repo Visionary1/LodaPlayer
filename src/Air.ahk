@@ -42,7 +42,7 @@ class LodaPlayer {
 	__New()
 	{
 		global
-		Title := "로다 플레이어 Air 1.2.2", vIni := class_EasyIni("LodaPlayer.ini")
+		Title := "로다 플레이어 Air 1.2.3", vIni := class_EasyIni("LodaPlayer.ini")
 		PotIni := vIni.Player.PotLocation, chatBAN := vIni.GaGaLive.ChatPreSet
 		PotChatBAN := 0, TopToggleCk := 0, DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
 		SWP_NACT := 0x10, SWP_NSC := 0x400, SWP_NOZO := 0x0200
