@@ -11,6 +11,7 @@
 {PD: "키메", Channel: "시간탐험대>지니어스", Addr: "318215"},
 {PD: "실제상황기막힌이야기", Channel: "SNL/냉장고/기막힌이야기", Addr: "324391"},
 {PD: "친절한상근씨", Channel: "삼시세끼 어촌편", Addr: "334645"},
+{PD: "사공TV", Channel: "예능 방송", Addr: "345602"},
 {PD: "pengs", Channel: "hkt48/akb48/ske48", Addr: "316825"},
 {PD: "호,뭐?!심슨!!", Channel: "백종원의 3대천왕 ＆ 집밥백선생", Addr: "319046"},
 {PD: "hjk", Channel: "식극의 소마 ＆ 코미디빅리그", Addr: "322257"},
