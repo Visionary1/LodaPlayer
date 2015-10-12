@@ -15,7 +15,7 @@ SetControlDelay, 0
 Menu, Tray, NoStandard
 ComObjError(False)
 
-fbe()
+BrowserEmulation(1)
 Film := ServerInfo.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
 Ani := ServerInfo.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
 Show := ServerInfo.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
@@ -25,12 +25,13 @@ Init.RegisterCloseCallback(Func("PlayerClose"))
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
 SetTimer, %CheckPoo%, 900000  ;SetTimerF(ServerInfo.OnAirCheck,900000) ; 900000
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
-Hotkey, Alt & Enter, %FullEx%
 Hotkey, Ctrl & Enter, %LessEx%
+Hotkey, Alt & Enter, %FullEx%
 return
 
 PlayerClose(Init)
 {
+	BrowserEmulation(0)
 	ExitApp
 }
 
@@ -205,14 +206,10 @@ class LodaPlayer {
 		global
 		
 		SetTimer, %CheckPoo%, Off
-		fbe_cleanup()
-		
-		vIni.GaGaLive.ChatPreSet := chatBAN
 		VarSetCapacity( rect, 16, 0 )
 		DllCall("GetClientRect", uint, hMainWindow, uint, &rect )
 		ClientW := NumGet( rect, 8, "int" ), ClientH := NumGet( rect, 12, "int" )
-		vIni.Player["Width"] := ClientW, vIni.Player["Height"] := ClientH
-		vIni.Save()
+		vIni.GaGaLive.ChatPreSet := chatBAN, vIni.Player["Width"] := ClientW, vIni.Player["Height"] := ClientH, vIni.Save()
 		FileSetAttrib, +H, LodaPlayer.ini
 		
 		if (LodaPlayer.CustomCount = 1) {
@@ -1002,7 +999,7 @@ class ViewControl extends LodaPlayer {
 	ToggleOnlyMenu()
 	{
 		global hMainWindow
-		static hMenu
+		static hMenu := ""
 		
 		WinGet, ckin, Transparent, ahk_class Shell_TrayWnd
 		if ckin < 120
@@ -1030,7 +1027,7 @@ class ViewControl extends LodaPlayer {
 	
 	ToggleAll()
 	{
-		static hMenu
+		static hMenu := ""
 		global
 		
 		if this.PluginCount = 0
@@ -1099,41 +1096,24 @@ class ViewControl extends LodaPlayer {
 	}
 }
 
-fbe() {
-	RegRead FBE, HKCU,
-	(Join\ LTrim
-	Software\Microsoft\Internet Explorer\Main
-	FeatureControl\FEATURE_BROWSER_EMULATION
-	), LodaPlayer.exe
+BrowserEmulation(Level) {
+	static key := "Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", ieversion := ""
 	
-	if (FBE == "")
+	if ieversion = 
 	{
-		RegWrite REG_DWORD, HKCU,
-		(Join\ LTrim C Q
-		Software\Microsoft\Internet Explorer\Main
-		FeatureControl\FEATURE_BROWSER_EMULATION
-		), LodaPlayer.exe, % ie_version()*1000 ; {7:0x1B58, 8:0x1F40, 9:0x2328, 10:0x02710, 11:0x2AF8}
+		try {
+			RegRead ver, HKLM, SOFTWARE\Microsoft\Internet Explorer, svcVersion
+			ieversion :=  SubStr(ver, 1, InStr(ver, ".")-1)
+		}
+		catch e {
+			MsgBox, 262160, Exception, 익스플로러 11을 설치하세요
+			ExitApp
+		}
 	}
-}
-	
-fbe_cleanup() {
-	RegRead FBE, HKCU,
-	(Join\ LTrim
-	Software\Microsoft\Internet Explorer\Main
-	FeatureControl\FEATURE_BROWSER_EMULATION
-	), LodaPlayer.exe
-	
-	if (FBE != "")
-		RegDelete HKCU,
-		(Join\ LTrim
-		Software\Microsoft\Internet Explorer\Main
-		FeatureControl\FEATURE_BROWSER_EMULATION
-		), LodaPlayer.exe
-}
-
-ie_version() {
-	RegRead ver, HKLM, SOFTWARE\Microsoft\Internet Explorer, svcVersion
-	return SubStr(ver, 1, InStr(ver, ".")-1)
+	if Level = 1
+		RegWrite, REG_DWORD, HKCU, %key%, LodaPlayer.exe, % ieversion * 1000
+	else if Level = 0
+		RegDelete HKCU, %key%, LodaPlayer.exe
 }
 
 ClearMemory() {
