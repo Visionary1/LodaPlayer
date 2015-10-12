@@ -45,7 +45,7 @@ PlayerClose(Init)
 
 class LodaPlayer {
 
-	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.3", PotChatBAN := 0, TopToggleCk := 0
+	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.5", PotChatBAN := 0, TopToggleCk := 0
 	
 	__New()
 	{
@@ -1282,15 +1282,14 @@ class_EasyIni(sFile="", sLoadFromStr="")
 
 class EasyIni
 {
-	__New(sFile="", sLoadFromStr="") ; Loads ths file into memory.
+	__New(sFile="", sLoadFromStr="")
 	{
 		this := this.CreateIniObj("EasyIni_ReservedFor_m_sFile", sFile
-			, "EasyIni_ReservedFor_TopComments", Object()) ; Top comments can be stored in linear array because order will simply be numeric
+			, "EasyIni_ReservedFor_TopComments", Object())
 
 		if (sFile == A_Blank && sLoadFromStr == A_Blank)
 			return this
-
-		; Append ".ini" if it is not already there.
+		
 		if (SubStr(sFile, StrLen(sFile)-3, 4) != ".ini")
 			this.EasyIni_ReservedFor_m_sFile := sFile := (sFile . ".ini")
 
@@ -1301,18 +1300,15 @@ class EasyIni
 		Loop, Parse, sIni, `n, `r
 		{
 			sTrimmedLine := Trim(A_LoopField)
-
-			; Comments or newlines within the ini
-			if (SubStr(sTrimmedLine, 1, 1) == ";" || sTrimmedLine == A_Blank) ; A_Blank would be a newline
+			if (SubStr(sTrimmedLine, 1, 1) == ";" || sTrimmedLine == A_Blank)
 			{
-				; Chr(14) is just the magical char to indicate that this line should only be a newline "`n"
 				LoopField := A_LoopField == A_Blank ? Chr(14) : A_LoopField
 
 				if (sCurSec == A_Blank)
-					this.EasyIni_ReservedFor_TopComments.Insert(A_Index, LoopField) ; not using sTrimmedLine so as to keep comment formatting
+					this.EasyIni_ReservedFor_TopComments.Insert(A_Index, LoopField)
 				else
 				{
-					if (sPrevKeyForThisSec == A_Blank) ; This happens when there is a comment in the section before the first key, if any
+					if (sPrevKeyForThisSec == A_Blank)
 						sPrevKeyForThisSec := "SectionComment"
 
 					if (IsObject(this[sCurSec].EasyIni_ReservedFor_Comments))
@@ -1330,34 +1326,31 @@ class EasyIni
 				}
 				continue
 			}
-
-			; [Section]
-			if (SubStr(sTrimmedLine, 1, 1) = "[" && InStr(sTrimmedLine, "]")) ; need to be sure that this isn't just a key starting with "["
+			
+			if (SubStr(sTrimmedLine, 1, 1) = "[" && InStr(sTrimmedLine, "]"))
 			{
 				if (sCurSec != A_Blank && !this.HasKey(sCurSec))
 					this[sCurSec] := EasyIni_CreateBaseObj()
-				sCurSec := SubStr(sTrimmedLine, 2, InStr(sTrimmedLine, "]", false, 0) - 2) ; 0 search right to left. We want to trim the *last* occurence of "]"
+				sCurSec := SubStr(sTrimmedLine, 2, InStr(sTrimmedLine, "]", false, 0) - 2)
 				sPrevKeyForThisSec := ""
 				continue
 			}
-
-			; key=val
+			
 			iPosOfEquals := InStr(sTrimmedLine, "=")
 			if (iPosOfEquals)
 			{
-				sPrevKeyForThisSec := SubStr(sTrimmedLine, 1, iPosOfEquals - 1) ; so it's not the previous key yet...but it will be on next iteration :P
+				sPrevKeyForThisSec := SubStr(sTrimmedLine, 1, iPosOfEquals - 1)
 				val := SubStr(sTrimmedLine, iPosOfEquals + 1)
 				StringReplace, val, val , `%A_ScriptDir`%, %A_ScriptDir%, All
 				StringReplace, val, val , `%A_WorkingDir`%, %A_ScriptDir%, All
 				this[sCurSec, sPrevKeyForThisSec] := val
 			}
-			else ; at this point, we know it isn't a comment, or newline, it isn't a section, and it isn't a conventional key-val pair. Treat this line as a key with no val
+			else
 			{
 				sPrevKeyForThisSec := sTrimmedLine
 				this[sCurSec, sPrevKeyForThisSec] := ""
 			}
 		}
-		; if there is a section with no keys and it is at the bottom of the file, then we missed it
 		if (sCurSec != A_Blank && !this.HasKey(sCurSec))
 			this[sCurSec] := EasyIni_CreateBaseObj()
 
@@ -1366,9 +1359,7 @@ class EasyIni
 
 	CreateIniObj(parms*)
 	{
-		; Define prototype object for ini arrays:
 		static base := {__Set: "EasyIni_Set", _NewEnum: "EasyIni_NewEnum", Remove: "EasyIni_Remove", Insert: "EasyIni_Insert", InsertBefore: "EasyIni_InsertBefore", AddSection: "EasyIni.AddSection", RenameSection: "EasyIni.RenameSection", DeleteSection: "EasyIni.DeleteSection", GetSections: "EasyIni.GetSections", FindSecs: "EasyIni.FindSecs", AddKey: "EasyIni.AddKey", RenameKey: "EasyIni.RenameKey", DeleteKey: "EasyIni.DeleteKey", GetKeys: "EasyIni.GetKeys", FindKeys: "EasyIni.FindKeys", GetVals: "EasyIni.GetVals", FindVals: "EasyIni.FindVals", HasVal: "EasyIni.HasVal", Copy: "EasyIni.Copy", Merge: "EasyIni.Merge", GetFileName: "EasyIni.GetFileName", GetOnlyIniFileName:"EasyIni.GetOnlyIniFileName", IsEmpty:"EasyIni.IsEmpty", Reload: "EasyIni.Reload", GetIsSaved: "EasyIni.GetIsSaved", Save: "EasyIni.Save", ToVar: "EasyIni.ToVar"}
-		; Create and return new object:
 		return Object("_keys", Object(), "base", base, parms*)
 	}
 
@@ -1559,7 +1550,7 @@ class EasyIni
 		{
 			if (bCopyFileName)
 				sOldFileName := this.GetFileName()
-			this := A_Blank ; avoid any copy constructor issues.
+			this := A_Blank
 
 			this := class_EasyIni(SourceIni.GetFileName(), sIniString)
 
@@ -1613,14 +1604,14 @@ class EasyIni
 	
 	IsEmpty()
 	{
-		return (this.GetSections() == A_Blank ; No sections.
-			&& !this.EasyIni_ReservedFor_TopComments.HasKey(1)) ; and no comments.
+		return (this.GetSections() == A_Blank
+			&& !this.EasyIni_ReservedFor_TopComments.HasKey(1))
 	}
 	
 	Reload()
 	{
 		if (FileExist(this.GetFileName()))
-			this := class_EasyIni(this.GetFileName()) ; else nothing to reload.
+			this := class_EasyIni(this.GetFileName())
 		return this
 	}
 	
@@ -1631,8 +1622,6 @@ class EasyIni
 		else
 		{
 			sFile := sSaveAs
-
-			; Append ".ini" if it is not already there.
 			if (SubStr(sFile, StrLen(sFile)-3, 4) != ".ini")
 				sFile .= ".ini"
 
@@ -1643,8 +1632,6 @@ class EasyIni
 					return false
 			}
 		}
-
-		; Formatting is preserved in ini object.
 		FileDelete, %sFile%
 
 		bIsFirstLine := true
@@ -1664,15 +1651,12 @@ class EasyIni
 			{
 				bEmptySection := false
 				FileAppend, `n%key%=%val%, %sFile%
-
-				; Add the comment(s) for this key
 				sComments := this[section].EasyIni_ReservedFor_Comments[key]
 				Loop, Parse, sComments, `n
 					FileAppend, % "`n" (A_LoopField == Chr(14) ? "" : A_LoopField), %sFile%
 			}
 			if (bEmptySection)
 			{
-				; An empy section may contain comments...
 				sComments := this[section].EasyIni_ReservedFor_Comments["SectionComment"]
 				Loop, Parse, sComments, `n
 					FileAppend, % "`n" (A_LoopField == Chr(14) ? "" : A_LoopField), %sFile%
@@ -1745,25 +1729,25 @@ EasyIni_Insert(obj, parms*)
 
 EasyIni_InsertBefore(obj, key, parms*)
 {
-	OldKeys := obj._keys                 ; Save key list
-	obj._keys := []                      ; Clear key list
-	for idx, k in OldKeys {              ; Put the keys before key
-		if (k = key)                     ; back into key list
+	OldKeys := obj._keys
+	obj._keys := []
+	for idx, k in OldKeys {
+		if (k = key)
 			break
 		obj._keys.Insert(k)
 	}
 
-	r := ObjInsert(obj, parms*)            ; Insert keys into main object
-	enum := ObjNewEnum(obj)              ; Can't use for-loop because it would invoke EasyIni_NewEnum
-	while enum[k] {                      ; For each key in main object
-		for i, kv in OldKeys             ; Search for key in OldKeys
-			if (k = "_keys" || k = kv)   ; If found...
-				continue 2               ; Get next key in main object
-		ObjInsert(obj._keys, k)          ; Else insert key into obj._keys
+	r := ObjInsert(obj, parms*)
+	enum := ObjNewEnum(obj)
+	while enum[k] {
+		for i, kv in OldKeys
+			if (k = "_keys" || k = kv)
+				continue 2
+		ObjInsert(obj._keys, k)
 	}
 
-	for i, k in OldKeys {                ; Put the keys after key
-		if (i < idx)                     ; back into key list
+	for i, k in OldKeys {
+		if (i < idx)
 			continue
 		obj._keys.Insert(k)
 	}
