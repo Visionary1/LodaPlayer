@@ -91,8 +91,6 @@ class LodaPlayer {
 		Menu, SetMenu, Add, 에러수정＆기타설정, :ErrorFixMenu
 		Menu, MyMenuBar, Add, 플레이어:설정, :SetMenu
 		
-		Menu, MyMenuBar, Add, POOOO ,LodaPlayer.PlayerMenu
-		
 		while !(Stream.readyState=4 || Stream.document.readyState="complete" || !Stream.busy) 
 			continue
 		Sleep, 0
@@ -113,6 +111,7 @@ class LodaPlayer {
 			Menu, MyMenuBar, Add, 즐겨찾기:목록, :FavoriteMenu
 		}
 		Menu, MyMenuBar, Add, 주소로 이동 ,LodaPlayer.PlayerMenu
+		Menu, MyMenuBar, Add, POOOO ,LodaPlayer.PlayerMenu
 		Menu, MyMenuBar, Add, 즐겨찾기, LodaPlayer.PlayerMenu
 		Menu, MyMenuBar, Add, 방송추가 ,LodaPlayer.PlayerMenu
 		Menu, MyMenuBar, Add, 도움말 ,LodaPlayer.PlayerMenu
@@ -176,7 +175,7 @@ class LodaPlayer {
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && PotChatBAN = 0) {
 			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight+5
-			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", this.W*0.25, "int", -24, "int", IMAX - 400, "int", A_GuiHeight + 29, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
+			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", (this.W*0.25) - 2, "int", -2, "int", IMAX - 394, "int", A_GuiHeight+7, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 			if (this.CustomCount = 0)
 				GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
 			else if (this.CustomCount = 1)
@@ -184,7 +183,7 @@ class LodaPlayer {
 		}
 		
 		if (chatBAN =1 && this.PluginCount = 1 && PotChatBAN = 0) {
-			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", -7, "int", -24, "int", A_GuiWidth - 393, "int", A_GuiHeight + 29, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
+			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", -2, "int", -2, "int", A_GuiWidth - 394, "int", A_GuiHeight+7, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 			if (this.CustomCount = 0)
 				GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
 			else if (this.CustomCount = 1)
@@ -193,11 +192,11 @@ class LodaPlayer {
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && PotChatBAN = 1) {
 			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight+5
-			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", this.W*0.25, "int", -24, "int", IMAX, "int", A_GuiHeight + 29, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
+			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", (this.W*0.25) - 2, "int", -2, "int", IMAX+7, "int", A_GuiHeight+7, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 		}
 		
 		if (chatBAN = 1 && this.PluginCount = 1 && PotChatBAN = 1) {
-			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", -7, "int", -24, "int", A_GuiWidth + 12, "int", A_GuiHeight + 29, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
+			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", -2, "int", -2, "int", A_GuiWidth+7, "int", A_GuiHeight+7, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 		}
 	}
 	
@@ -226,6 +225,7 @@ class LodaPlayer {
 			OnMessage(Msg, this.Bound.OnMessage, 0)
 		this.Delete("Bound")
 		WinEvents.Unregister(this.hMainWindow)
+		DaumPotSet(0)
 		Gui, Destroy
 		this.CloseCallback()
 	}
@@ -572,15 +572,7 @@ class LodaPlayer {
 							Stream.Navigate("about:blank")
 					}
 					
-					RegRead, PotSetting, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, UseStreamTimeShift
-					if ErrorLevel = 1
-					{
-						RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, UseStreamTimeShift, 1
-						RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, StreamTimeShiftTime, 5
-						RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini64\Settings, UseStreamTimeShift, 1
-						RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini64\Settings, StreamTimeShiftTime, 5
-					}
-					
+					DaumPotSet(1)
 					RegRead, PotLocation, HKCU, SOFTWARE\DAUM\PotPlayer, ProgramFolder
 					if ErrorLevel = 0
 					{
@@ -617,18 +609,9 @@ class LodaPlayer {
 							}
 						}
 					}
-					
 					WinWait ahk_pid %ChildPID%
-					Sleep, 0
 					LodaPotChild := WinExist("ahk_pid " ChildPID)
-					VarSetCapacity(ChildPID, 0)
-					Loop, 4 {
-						Control, Disable,, % "AfxWnd120su" A_Index + 4, % "ahk_id " LodaPotChild
-						Control, Disable,, % "Afx:56A50000:8:00010003:01900011:00000000" A_Index, % "ahk_id " LodaPotChild
-						Control, Hide,, % "AfxWnd120su" A_Index + 4, % "ahk_id " LodaPotChild
-						Control, Hide,, % "Afx:56A50000:8:00010003:01900011:00000000" A_Index, % "ahk_id " LodaPotChild
-					}
-					LodaPlayer.SetChildWindow(LodaPotChild, hMainWindow), RedrawWindow(), FreeMemory()
+					VarSetCapacity(ChildPID, 0), DaumPotSet("Fix"), LodaPlayer.SetChildWindow(LodaPotChild, hMainWindow), RedrawWindow()
 				}
 				return
 			}
@@ -787,15 +770,15 @@ class LodaPlayer {
 		}
 	}
 	
-	StartTrans(Para1) 
+	StartTrans(Go) 
 	{
 		global
-		ReservedAddr := Para1
+		ReservedAddr := Go
 	
 		if (LodaPlayer.InternalCount = 1 && LodaPlayer.PluginCount = 0 && LodaPlayer.ExternalCount = 0) {
 			if (LodaPlayer.CustomCount = 0)
 			{
-				Stream.Navigate(LodaPlayer.BaseAddr . Para1, 0x0400)  ;navTrustedForActiveX = 0x0400,
+				Stream.Navigate(LodaPlayer.BaseAddr . Go, 0x0400)  ;navTrustedForActiveX = 0x0400,
 			
 				while !(Stream.readyState=4 || Stream.document.readyState="complete" || !Stream.busy) 
 					continue
@@ -811,8 +794,9 @@ class LodaPlayer {
 			
 			if (LodaPlayer.CustomCount = 1)
 			{
+				Critical
 				ClipHistory := Clipboard
-				Clipboard := LodaPlayer.BaseAddr . Para1
+				Clipboard := LodaPlayer.BaseAddr . Go
 				ControlFocus,, ahk_id %LodaChromeChild%
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
 				Sleep, 30
@@ -823,6 +807,7 @@ class LodaPlayer {
 				ControlSend,, {Enter}, ahk_id %LodaChromeChild%
 				Sleep, 30
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
+				Critical, Off
 				Sleep, 30
 				Clipboard := ClipHistory
 				RedrawWindow()
@@ -833,7 +818,7 @@ class LodaPlayer {
 			iePopUp := ComObjCreate("InternetExplorer.Application")
 			iePopUp.Visible := true, iePopUp.MenuBar := false, iePopUp.StatusBar := false, iePopUp.ToolBar := false
 			iePopUp.Width := A_ScreenWidth * 0.7, iePopUp.Height := A_ScreenHeight * 0.7
-			iePopUp.Navigate(LodaPlayer.BaseAddr . Para1, 0x20)  ; navBrowserBar = 0x20,
+			iePopUp.Navigate(LodaPlayer.BaseAddr . Go, 0x20)  ; navBrowserBar = 0x20,
 			ObjRelease(iePopUp), VarSetCapacity(iePopUp, 0)
 			FreeMemory()
 			return
@@ -841,13 +826,12 @@ class LodaPlayer {
 		
 		if (LodaPlayer.PluginCount = 1 && LodaPlayer.ExternalCount = 0 && LodaPlayer.InternalCount = 1) {
 			Critical
-			InputURL := "http://" . DefaultServer "/" . Para1 . "/video/playlist.m3u8"
+			InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8"
 			ControlFocus,, ahk_id %LodaPotChild%
 			ControlSend,, {Ctrl Down}u{Ctrl Up}, ahk_id %LodaPotChild%
 			WinWait, ahk_class #32770, 주소 열기
-			Sleep, 0
 			Teleport := WinExist("ahk_class #32770", "주소 열기")
-			WinSet, Transparent, 0, ahk_id %Teleport%
+			WinSet, Transparent, 0, % "ahk_id " Teleport 
 			Loop
 			{
 				ControlClick, Button2, ahk_id %Teleport%,,,, NA ; 목록 삭제
@@ -863,12 +847,12 @@ class LodaPlayer {
 			Critical, Off
 			
 			if LodaPlayer.CustomCount = 0
-				Stream.Navigate("https://livehouse.in/en/channel/" . Para1 . "/chatroom")
+				Stream.Navigate("https://livehouse.in/en/channel/" . Go . "/chatroom")
 			if LodaPlayer.CustomCount = 1
 			{
 				Critical
 				ClipHistory := Clipboard
-				Clipboard := "https://livehouse.in/en/channel/" . Para1 . "/chatroom"
+				Clipboard := "https://livehouse.in/en/channel/" . Go . "/chatroom"
 				ControlFocus,, ahk_id %LodaChromeChild%
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
 				Sleep, 30
@@ -885,17 +869,14 @@ class LodaPlayer {
 				RedrawWindow()
 			}
 			
-			Loop {
+			Loop
 				WinGetTitle, LatterT, ahk_id %LodaPotChild%
-				Sleep, 0
-			} until LatterT = "다음 팟플레이어" ; playlist.m3u8 - 다음 팟플레이어
-			
+			until LatterT = "다음 팟플레이어" ; playlist.m3u8 - 다음 팟플레이어
 			Sleep, 100
-			
-			Loop {
+			Loop
 				WinGetTitle, LatterT, ahk_id %LodaPotChild%
-				Sleep, 0
-			} until LatterT = "playlist.m3u8 - 다음 팟플레이어" ; playlist.m3u8 - 다음 팟플레이어
+			until LatterT = "playlist.m3u8 - 다음 팟플레이어" ; playlist.m3u8 - 다음 팟플레이어
+			Sleep, 100
 			
 			VarSetCapacity(LatterT, 0), VarSetCapacity(forVerify, 0), VarSetCapacity(Teleport, 0), VarSetCapacity(InputURL, 0)
 			RedrawWindow(), FreeMemory()
@@ -923,7 +904,7 @@ class LodaPlayer {
 		}
 	}
 	
-	SetChildWindow(Win, Des) 
+	SetChildWindow(Win, Des)
 	{
 		WinSet, Style, -0x80000000, % "ahk_id " Win ;remove popup
 		WinSet, Style, +0x40000000, % "ahk_id " Win ;add child
@@ -1057,9 +1038,8 @@ class ViewControl extends LodaPlayer {
 			WinRestore, ahk_id %hMainWindow%
 			BlockInput(1)
 			ControlFocus,, ahk_id %LodaPotChild%
-			SendInput, {Ctrl Down}{Enter}{Ctrl Up}
-			BlockInput(0)
-			RedrawWindow(), this.hVisible := 1
+			SendInput, {Enter}
+			BlockInput(0), RedrawWindow(), DaumPotSet("Fix"), this.hVisible := 1
 			return
 		}
 		
@@ -1082,15 +1062,14 @@ class ViewControl extends LodaPlayer {
 				if LodaPlayer.CustomCount = 1
 					WinHide, ahk_id %LodaChromeChild%
 			}
+			WinSet, Transparent, 70, ahk_class Shell_TrayWnd
 			WinMaximize, ahk_id %hMainWindow%
 			WinSet, Style, -0xC00000, ahk_id %hMainWindow%
 			WinSet, Redraw,, ahk_id %hMainWindow%
 			BlockInput(1)
 			ControlFocus,, ahk_id %LodaPotChild%
-			SendInput, {Ctrl Down}{Enter}{Ctrl Up}
-			BlockInput(0)
-			WinSet, Transparent, 70, ahk_class Shell_TrayWnd
-			this.hVisible := 0
+			SendInput, {Enter}
+			BlockInput(0), this.hVisible := 0
 			return
 		}
 	}
@@ -1129,6 +1108,36 @@ ClearMemory() {
 
 FreeMemory() {
     return DllCall("psapi.dll\EmptyWorkingSet", "Ptr", -1)
+}
+
+DaumPotSet(Set) {
+	global LodaPotChild
+	
+	if Set = 1
+	{
+		RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, UseStreamTimeShift, 1
+		RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, StreamTimeShiftTime, 5
+		RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini64\Settings, UseStreamTimeShift, 1
+		RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini64\Settings, StreamTimeShiftTime, 5
+		RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, PlaylistAttachToMain2, 0
+		RegWrite, REG_DWORD, HKCU, SOFTWARE\DAUM\PotPlayerMini64\Settings, PlaylistAttachToMain2, 0
+		RegWrite, REG_SZ, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, LastSkinName, WindowFrame.dsf
+		RegWrite, REG_SZ, HKCU, SOFTWARE\DAUM\PotPlayerMini64\Settings, LastSkinName, WindowFrame.dsf
+	}
+	if Set = 0
+	{
+		RegDelete, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, PlaylistAttachToMain2
+		RegDelete, HKCU, SOFTWARE\DAUM\PotPlayerMini64\Settings, PlaylistAttachToMain2
+		RegDelete, HKCU, SOFTWARE\DAUM\PotPlayerMini\Settings, LastSkinName
+		RegDelete, HKCU, SOFTWARE\DAUM\PotPlayerMini64\Settings, LastSkinName
+	}
+	if Set = Fix
+	{
+		WinSet, Style, -0xC00000, % "ahk_id " LodaPotChild ;-Border
+		WinSet, Style, -0x40000, % "ahk_id " LodaPotChild ;-Caption
+		WinSet, Style, -0x800000, % "ahk_id " LodaPotChild ;-Sizebox
+		WinSet, Redraw,, % "ahk_id " LodaPotChild
+	}
 }
 
 RedrawWindow() {
