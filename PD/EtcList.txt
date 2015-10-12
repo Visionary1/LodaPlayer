@@ -5,7 +5,6 @@
 {PD: "로솔", Channel: "로솔TV - 켠김에 왕까지", Addr: "329829"},
 {PD: "erido", Channel: "빅뱅이론", Addr: "322063"},
 {PD: "happysky", Channel: "AVGN 고전게임 리뷰", Addr: "317987"},
-{PD: "떠돌이맥스", Channel: "2차세계대전,태평양전쟁,한국", Addr: "317950"},
 {PD: "PD 별루군", Channel: "애니음악영상방송", Addr: "325098"},
 {PD: "솔코린", Channel: "일본 애니 성우 PV 음방", Addr: "319346"},
 {PD: "Yunaito", Channel: "유나이토 방송", Addr: "315846"},
