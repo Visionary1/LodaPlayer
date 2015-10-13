@@ -91,7 +91,7 @@ class LodaPlayer {
 		Menu, SetMenu, Add, 에러수정＆기타설정, :ErrorFixMenu
 		Menu, MyMenuBar, Add, 플레이어:설정, :SetMenu
 		
-		while !(Film && Ani && Show && Etc)
+		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
 			continue
 		while !(Stream.readyState=4 || Stream.document.readyState="complete" || !Stream.busy) 
 			continue
@@ -905,7 +905,7 @@ class ServerInfo extends LodaPlayer {
 	{
 		global
 		poo := ComObjCreate("InternetExplorer.Application")
-		poo.Visible := false, poo.Navigate("http://poooo.ml/")
+		poo.Visible := true, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
 		this.DeleteMenu("Film"), Film:= "", FilmCount := ""
@@ -919,7 +919,7 @@ class ServerInfo extends LodaPlayer {
 		Etc := this.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 		*/
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
-		while !(Film && Ani && Show && Etc)
+		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
 			continue
 		while !(poo.readyState=4 || poo.document.readyState="complete" || !poo.busy) 
 			continue
