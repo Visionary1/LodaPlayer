@@ -172,7 +172,7 @@ class LodaPlayer {
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 0) {
 			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight+5
-			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", (this.W*0.25) - 2, "int", -2, "int", IMAX - 394, "int", A_GuiHeight+7, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
+			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", (this.W*0.25) - 2, "int", -2, "int", IMAX - 398, "int", A_GuiHeight+7, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 			if (this.CustomCount = 0)
 				GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
 			else if (this.CustomCount = 1)
@@ -180,7 +180,7 @@ class LodaPlayer {
 		}
 		
 		if (chatBAN =1 && this.PluginCount = 1 && this.PotChatBAN = 0) {
-			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", -2, "int", -2, "int", A_GuiWidth - 394, "int", A_GuiHeight+7, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
+			DllCall("SetWindowPos", "ptr", LodaPotChild, "uint", 0, "int", -2, "int", -2, "int", A_GuiWidth - 398, "int", A_GuiHeight+7, "uint", SWP_NACT|SWP_NSC|SWP_NOZO)
 			if (this.CustomCount = 0)
 				GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
 			else if (this.CustomCount = 1)
