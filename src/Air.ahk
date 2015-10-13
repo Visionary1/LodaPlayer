@@ -46,7 +46,7 @@ class LodaPlayer {
 	{
 		global
 		vIni := class_EasyIni("LodaPlayer.ini"), PotIni := vIni.Player.PotLocation, chatBAN := vIni.GaGaLive.ChatPreSet, DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
-		SWP_NACT := 0x10, SWP_NSC := 0x400, SWP_NOZO := 0x0200
+		LodaChromeChild := "", LodaPotChild := "", SWP_NACT := 0x10, SWP_NSC := 0x400, SWP_NOZO := 0x0200
 		
 		Gui, New, +Resize -DPIScale +hWndhMainWindow +LastFound +0x2000000 ;WS_CLIPCHILDREN := 0x2000000
 		this.hMainWindow := hMainWindow
@@ -94,7 +94,7 @@ class LodaPlayer {
 		
 		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
 			continue
-		while !(Stream.readyState=4 || Stream.document.readyState="complete" || !Stream.busy) 
+		while !(Stream.readyState=4 && Stream.document.readyState="complete") 
 			continue
 		newcon := Stream.document.getElementByID("main-content").InnerText, ServerInfo.ParsePD()
 		
@@ -135,8 +135,7 @@ class LodaPlayer {
 		Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\off.png,,0
 		Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\off.png,,0
 		Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
-		try
-			Menu, MyMenuBar, Icon, 즐겨찾기:목록, %A_Temp%\PD.png,, 0
+		try Menu, MyMenuBar, Icon, 즐겨찾기:목록, %A_Temp%\PD.png,, 0
 		Gui, Menu, MyMenuBar
 		
 		WinEvents.Register(this.hMainWindow, this)
@@ -211,9 +210,12 @@ class LodaPlayer {
 			ControlSend,, {Ctrl Down}w{Ctrl Up}, ahk_id %LodaChromeChild%
 		}
 		
-		try {
-			WinKill, ahk_id %LodaChromeChild%
-			WinKill, ahk_id %LodaPotChild%
+		if (LodaChromeChild || LodaPotChild)
+		{
+			try {
+				WinKill, ahk_id %LodaChromeChild%
+				WinKill, ahk_id %LodaPotChild%
+			}
 		}
 		
 		for each, Msg in [0x100]
@@ -467,15 +469,13 @@ class LodaPlayer {
 						ChildPID := ErrorLevel
 					else
 					{
-						try
-							Run, chrome.exe,,, ChildPID
-						catch e
+						try Run, chrome.exe,,, ChildPID
+						catch
 						{
 							RegRead, ChromeLocation, HKCU, SOFTWARE\Google\Update, path
 							if ErrorLevel = 0
 							{
-								try
-									Run, % SubStr(ChromeLocation, 1, -23) . "Chrome\Application\chrome.exe",,, ChildPID
+								try Run, % SubStr(ChromeLocation, 1, -23) . "Chrome\Application\chrome.exe",,, ChildPID
 							}
 							else
 							{
@@ -566,15 +566,13 @@ class LodaPlayer {
 					RegRead, PotLocation, HKCU, SOFTWARE\DAUM\PotPlayer, ProgramFolder
 					if ErrorLevel = 0
 					{
-						try
-							Run, % PotLocation . "\PotPlayerMini.exe",,, ChildPID
+						try Run, % PotLocation . "\PotPlayerMini.exe",,, ChildPID
 					}
 					else if ErrorLevel = 1
 					{
 						if PotIni
 						{
-							try
-								Run, % PotIni,,, ChildPID
+							try Run, % PotIni,,, ChildPID
 						}
 						if !PotIni
 						{
@@ -586,14 +584,12 @@ class LodaPlayer {
 								MsgBox, 262180, 팟플레이어, 다음팟플레이어 64비트용을 사용하고 계세요?`n`n*컴퓨터의 사양을 묻는게 아닙니다
 								IfMsgBox, No
 								{
-									try
-										Run, % PotLocation . "\PotPlayerMini.exe",,, ChildPID
+									try Run, % PotLocation . "\PotPlayerMini.exe",,, ChildPID
 									vIni.Player["PotLocation"] := PotLocation . "\PotPlayerMini.exe"
 								}
 								IfMsgBox, Yes
 								{
-									try
-										Run, % PotLocation . "\PotPlayerMini64.exe",,, ChildPID
+									try Run, % PotLocation . "\PotPlayerMini64.exe",,, ChildPID
 									vIni.Player["PotLocation"] := PotLocation . "\PotPlayerMini64.exe"
 								}
 							}
@@ -854,15 +850,13 @@ class LodaPlayer {
 			
 			Loop
 				WinGetTitle, LatterT, ahk_id %LodaPotChild%
-			until LatterT = "다음 팟플레이어" ; playlist.m3u8 - 다음 팟플레이어
+			until LatterT = "다음 팟플레이어"
 			Sleep, 100
 			Loop
 				WinGetTitle, LatterT, ahk_id %LodaPotChild%
-			until LatterT = "playlist.m3u8 - 다음 팟플레이어" ; playlist.m3u8 - 다음 팟플레이어
+			until LatterT = "playlist.m3u8 - 다음 팟플레이어"
 			Sleep, 100
-			
-			VarSetCapacity(LatterT, 0), VarSetCapacity(forVerify, 0), VarSetCapacity(Teleport, 0), VarSetCapacity(InputURL, 0)
-			RedrawWindow(), FreeMemory()
+			VarSetCapacity(LatterT, 0), VarSetCapacity(forVerify, 0), VarSetCapacity(Teleport, 0), VarSetCapacity(InputURL, 0), RedrawWindow(), FreeMemory()
 		}
 		return
 	}
@@ -901,8 +895,7 @@ class ServerInfo extends LodaPlayer {
 	OnAirCheck()
 	{
 		global
-		poo := ComObjCreate("InternetExplorer.Application")
-		poo.Visible := false, poo.Navigate("http://poooo.ml/")
+		poo := ComObjCreate("InternetExplorer.Application"), poo.Visible := false, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
 		this.DeleteMenu("Film"), Film:= "", FilmCount := ""
@@ -916,10 +909,12 @@ class ServerInfo extends LodaPlayer {
 		Etc := this.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 		*/
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
+		
 		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
 			continue
-		while !(poo.readyState=4 || poo.document.readyState="complete" || !poo.busy) 
+		while !(poo.readyState=4 && poo.document.readyState="complete")
 			continue
+		
 		newcon := poo.document.getElementByID("main-content").InnerText, this.ParsePD()
 		
 		try {
@@ -1125,7 +1120,7 @@ BrowserEmulation(Level) {
 			RegRead ver, HKLM, SOFTWARE\Microsoft\Internet Explorer, svcVersion
 			ieversion :=  SubStr(ver, 1, InStr(ver, ".")-1)
 		}
-		catch e {
+		catch {
 			MsgBox, 262160, Exception, 익스플로러 11을 설치하세요
 			ExitApp
 		}
@@ -1175,8 +1170,8 @@ DaumPotSet(Set) {
 	if Set = Fix
 	{
 		WinSet, Style, -0xC00000, % "ahk_id " LodaPotChild ;-Border
-		WinSet, Style, -0x40000, % "ahk_id " LodaPotChild ;-Caption
-		WinSet, Style, -0x800000, % "ahk_id " LodaPotChild ;-Sizebox
+		WinSet, Style, -0x40000, % "ahk_id " LodaPotChild ;- Sizebox 
+		WinSet, Style, -0x800000, % "ahk_id " LodaPotChild ;-Border
 		WinSet, Redraw,, % "ahk_id " LodaPotChild
 	}
 }
