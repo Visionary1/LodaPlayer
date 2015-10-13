@@ -5,7 +5,7 @@
 * Air 버전은 자동으로 최신버전을 유지해 업데이트를 내려받을 필요가 없습니다!
 
 ## 다운로드
-* [로다플레이어 Air](https://github.com/Visionary1/LodaPlayer/raw/master/%EB%A1%9C%EB%8B%A4%20%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20Air.exe)
+* [로다플레이어 Air](https://github.com/Visionary1/LodaPlayer/raw/master/%EB%A1%9C%EB%8B%A4%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20Air.exe)
 
 ## 도움말
 * 기본설정으로 시청시, 익플(IE)11이 요구됨. 크롬은 상단 '플레이어:설정'-'내부브라우저:크롬을 사용'을 체크
