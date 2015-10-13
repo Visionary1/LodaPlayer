@@ -902,7 +902,7 @@ class ServerInfo extends LodaPlayer {
 	{
 		global
 		poo := ComObjCreate("InternetExplorer.Application")
-		poo.Visible := true, poo.Navigate("http://poooo.ml/")
+		poo.Visible := false, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
 		this.DeleteMenu("Film"), Film:= "", FilmCount := ""
