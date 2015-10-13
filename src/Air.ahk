@@ -14,15 +14,14 @@ SetWinDelay, 0
 SetControlDelay, 0
 Menu, Tray, NoStandard
 ComObjError(False)
-From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
 /*
 Film := ServerInfo.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
 Ani := ServerInfo.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
 Show := ServerInfo.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
 Etc := ServerInfo.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 */
+From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/", ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 BrowserEmulation(1)
-ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
@@ -40,24 +39,22 @@ PlayerClose(Init)
 
 class LodaPlayer {
 
-	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.6", PotChatBAN := 0, TopToggleCk := 0
+	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.7", PotChatBAN := 0, TopToggleCk := 0
 	
 	__New()
 	{
 		global
 		vIni := class_EasyIni("LodaPlayer.ini"), PotIni := vIni.Player.PotLocation, chatBAN := vIni.GaGaLive.ChatPreSet, DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
-		LodaChromeChild := "", LodaPotChild := "", SWP_NACT := 0x10, SWP_NSC := 0x400, SWP_NOZO := 0x0200
+		LodaChromeChild := "", LodaPotChild := "", SWP_NACT := 0x10, SWP_NSC := 0x400, SWP_NOZO := 0x0200 
 		
-		Gui, New, +Resize -DPIScale +hWndhMainWindow +LastFound +0x2000000 ;WS_CLIPCHILDREN := 0x2000000
+		Gui, New, +Resize -DPIScale +hWndhMainWindow +LastFound +0x2000000 +MinSize600x350  ;WS_CLIPCHILDREN := 0x2000000
 		this.hMainWindow := hMainWindow
 		
 		Gui, Add, ActiveX, % " x" 0 " y" 0 " w" this.W*0.25 " h" this.H-10 " hwndhGaGa vChat", Shell.Explorer
-		Chat.Navigate("http://www.gagalive.kr/livechat1.swf?chatroom=~~~new_ForPotsu&fontlarge=true")
-		this.hGaGa := hGaGa, Chat.Silent := true
+		Chat.Navigate("http://www.gagalive.kr/livechat1.swf?chatroom=~~~new_ForPotsu&fontlarge=true"), this.hGaGa := hGaGa, Chat.Silent := true
 		
 		Gui, Add, ActiveX, % " x" this.W *0.25 " y" 0 " w" this.W*0.75 " h" this.H-10 " hwndhStream vStream", Shell.Explorer
-		Stream.Navigate("http://poooo.ml/")
-		this.hStream := hStream, Stream.Silent := true
+		Stream.Navigate("http://poooo.ml/"), this.hStream := hStream, Stream.Silent := true
 		
 		this.Bound := []
 		this.Bound.OnMessage := this.OnMessage.Bind(this)
@@ -92,9 +89,7 @@ class LodaPlayer {
 		Menu, SetMenu, Add, 에러수정＆기타설정, :ErrorFixMenu
 		Menu, MyMenuBar, Add, 플레이어:설정, :SetMenu
 		
-		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
-			continue
-		while !(Stream.readyState=4 && Stream.document.readyState="complete") 
+		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc) && Stream.readyState=4)
 			continue
 		newcon := Stream.document.getElementByID("main-content").InnerText, ServerInfo.ParsePD()
 		
@@ -277,9 +272,7 @@ class LodaPlayer {
 			{
 				if InStr(CheckSum, "https://livehouse.in/en/channel/")
 				{
-					VarSetCapacity( rect, 16, 0 )
-					DllCall("GetClientRect", uint, hMainWindow, uint, &rect )
-					ClientW := NumGet( rect, 8, "int" )
+					VarSetCapacity( rect, 16, 0 ), DllCall("GetClientRect", uint, hMainWindow, uint, &rect ), ClientW := NumGet( rect, 8, "int" )
 					if (ClientW > 1279)
 						Stream.document.getElementsByTagName("DIV")[66].Click() ; 왼쪽 프로필창 자동제거
 				}
@@ -299,9 +292,7 @@ class LodaPlayer {
 			{
 				if InStr(CheckSum, "https://livehouse.in/en/channel/")
 				{
-					VarSetCapacity( rect, 16, 0 )
-					DllCall("GetClientRect", uint, hStream, uint, &rect )
-					ClientW := NumGet( rect, 8, "int" )
+					VarSetCapacity( rect, 16, 0 ), DllCall("GetClientRect", uint, hStream, uint, &rect ), ClientW := NumGet( rect, 8, "int" )
 					if (ClientW > 1279)
 						Stream.document.getElementsByTagName("DIV")[66].Click() ; 왼쪽 프로필창 자동제거
 				}
@@ -457,8 +448,7 @@ class LodaPlayer {
 				IfMsgBox, Yes
 				{
 					MsgBox, 262208, 크롬으로 전환, 내장브라우저를 IE에서 크롬으로 전환합니다`n`n전체화면(F11) 메시지는 건드리지 말고`,`n전체화면을 풀지도 마세요`, 작동중에 에러가 발생할 수 있습니다
-					LodaPlayer.CustomCount := 1
-					Stream.Navigate("about:blank")
+					LodaPlayer.CustomCount := 1, Stream.Navigate("about:blank")
 					GuiControl, Disable, Stream
 					GuiControl, Hide, Stream
 					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
@@ -607,7 +597,6 @@ class LodaPlayer {
 				IfMsgBox, Yes
 				{
 					LodaPlayer.PluginCount := 0
-					
 					if (LodaPlayer.CustomCount = 0)
 					{
 						if (LodaPlayer.PotChatBAN = 1)
@@ -695,7 +684,6 @@ class LodaPlayer {
 		}
 		
 		if (A_ThisMenuItem = "즐겨찾기") {
-			Gui, +OwnDialogs
 			if LodaPlayer.CustomCount = 0
 			{
 				CheckSum := Stream.LocationURL()
@@ -759,13 +747,12 @@ class LodaPlayer {
 			{
 				Stream.Navigate(LodaPlayer.BaseAddr . Go, 0x0400)  ;navTrustedForActiveX = 0x0400,
 			
-				while !(Stream.readyState=4 || Stream.document.readyState="complete" || !Stream.busy) 
+				while !(Stream.readyState=4 && Stream.document.readyState="complete") 
 					continue
 				
 				if (LodaPlayer.BaseAddr = "https://livehouse.in/en/channel/")
 				{
-					VarSetCapacity( rect, 16, 0 )
-					DllCall("GetClientRect", uint, hStream, uint, &rect )
+					VarSetCapacity( rect, 16, 0 ), DllCall("GetClientRect", uint, hStream, uint, &rect )
 					if (NumGet( rect, 8, "int" ) >= 1279)
 						Stream.document.getElementsByTagName("DIV")[66].Click() ; 왼쪽 프로필창 자동제거
 				}
@@ -774,8 +761,7 @@ class LodaPlayer {
 			if (LodaPlayer.CustomCount = 1)
 			{
 				Critical
-				ClipHistory := Clipboard
-				Clipboard := LodaPlayer.BaseAddr . Go
+				ClipHistory := Clipboard, Clipboard := LodaPlayer.BaseAddr . Go
 				ControlFocus,, ahk_id %LodaChromeChild%
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
 				Sleep, 30
@@ -787,19 +773,15 @@ class LodaPlayer {
 				Sleep, 30
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
 				Critical, Off
-				Sleep, 30
-				Clipboard := ClipHistory
-				RedrawWindow()
+				Clipboard := ClipHistory, RedrawWindow()
 			}
 		}
 		
 		if (LodaPlayer.ExternalCount = 1 && LodaPlayer.CustomCount = 0 && LodaPlayer.PluginCount = 0) {
 			iePopUp := ComObjCreate("InternetExplorer.Application")
-			iePopUp.Visible := true, iePopUp.MenuBar := false, iePopUp.StatusBar := false, iePopUp.ToolBar := false
-			iePopUp.Width := A_ScreenWidth * 0.7, iePopUp.Height := A_ScreenHeight * 0.7
+			iePopUp.Visible := true, iePopUp.MenuBar := false, iePopUp.StatusBar := false, iePopUp.ToolBar := false, iePopUp.Width := A_ScreenWidth * 0.7, iePopUp.Height := A_ScreenHeight * 0.7
 			iePopUp.Navigate(LodaPlayer.BaseAddr . Go, 0x20)  ; navBrowserBar = 0x20,
-			ObjRelease(iePopUp), VarSetCapacity(iePopUp, 0)
-			FreeMemory()
+			ObjRelease(iePopUp), VarSetCapacity(iePopUp, 0), FreeMemory()
 			return
 		}
 		
@@ -821,7 +803,6 @@ class LodaPlayer {
 				Sleep, 30
 			} until forVerify = InputURL
 			
-			Sleep, 0
 			ControlClick, Button7, ahk_id %Teleport%,,,, NA   ; 확인(&O)
 			Critical, Off
 			
@@ -830,8 +811,7 @@ class LodaPlayer {
 			if LodaPlayer.CustomCount = 1
 			{
 				Critical
-				ClipHistory := Clipboard
-				Clipboard := "https://livehouse.in/en/channel/" . Go . "/chatroom"
+				ClipHistory := Clipboard, Clipboard := "https://livehouse.in/en/channel/" . Go . "/chatroom"
 				ControlFocus,, ahk_id %LodaChromeChild%
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
 				Sleep, 30
@@ -842,10 +822,8 @@ class LodaPlayer {
 				ControlSend,, {Enter}, ahk_id %LodaChromeChild%
 				Sleep, 30
 				ControlSend,, {F11}, ahk_id %LodaChromeChild%
-				Sleep, 30
 				Critical, Off
-				Clipboard := ClipHistory
-				RedrawWindow()
+				Clipboard := ClipHistory, RedrawWindow()
 			}
 			
 			Loop
@@ -877,7 +855,6 @@ class LodaPlayer {
 				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\on.png,,0
 			else
 				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\off.png,,0
-			Sleep, 0
 		}
 	}
 	
@@ -898,10 +875,8 @@ class ServerInfo extends LodaPlayer {
 		poo := ComObjCreate("InternetExplorer.Application"), poo.Visible := false, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
-		this.DeleteMenu("Film"), Film:= "", FilmCount := ""
-		this.DeleteMenu("Ani"), Ani := "", AniCount := ""
-		this.DeleteMenu("Show"), Show := "", ShowCount := ""
-		this.DeleteMenu("Etc"), Etc := "", EtcCount := ""
+		this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
+		Film:= "", FilmCount := "", Ani := "", AniCount := "", Show := "", ShowCount := "", Etc := "", EtcCount := ""
 		/*
 		Film := this.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
 		Ani := this.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
@@ -910,9 +885,7 @@ class ServerInfo extends LodaPlayer {
 		*/
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
 		
-		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
-			continue
-		while !(poo.readyState=4 && poo.document.readyState="complete")
+		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc) && poo.readyState=4)
 			continue
 		
 		newcon := poo.document.getElementByID("main-content").InnerText, this.ParsePD()
@@ -939,33 +912,29 @@ class ServerInfo extends LodaPlayer {
 	
 	getFilmList(Which) {
 		global
-		reqFilm := ComObjCreate("Msxml2.XMLHTTP"), reqFilm.Open("GET", From . Which, true)
-		reqFilm.onreadystatechange := ObjBindMethod(ServerInfo, "FilmReady"), reqFilm.Send()
+		reqFilm := ComObjCreate("Msxml2.XMLHTTP"), reqFilm.Open("GET", From . Which, true), reqFilm.onreadystatechange := ObjBindMethod(ServerInfo, "FilmReady"), reqFilm.Send()
 	}
 
 	getAniList(Which) {
 		global
-		reqAni := ComObjCreate("Msxml2.XMLHTTP"), reqAni.Open("GET", From . Which, true)
-		reqAni.onreadystatechange := ObjBindMethod(ServerInfo, "AniReady"), reqAni.Send()
+		reqAni := ComObjCreate("Msxml2.XMLHTTP"), reqAni.Open("GET", From . Which, true), reqAni.onreadystatechange := ObjBindMethod(ServerInfo, "AniReady"), reqAni.Send()
 	}
 
 	getShowList(Which) {
 		global
-		reqShow := ComObjCreate("Msxml2.XMLHTTP"), reqShow.Open("GET", From . Which, true)
-		reqShow.onreadystatechange := ObjBindMethod(ServerInfo, "ShowReady"), reqShow.Send()
+		reqShow := ComObjCreate("Msxml2.XMLHTTP"), reqShow.Open("GET", From . Which, true), reqShow.onreadystatechange := ObjBindMethod(ServerInfo, "ShowReady"), reqShow.Send()
 	}
 
 	getEtcList(Which) {
 		global
-		reqEtc := ComObjCreate("Msxml2.XMLHTTP"), reqEtc.Open("GET", From . Which, true)
-		reqEtc.onreadystatechange := ObjBindMethod(ServerInfo, "EtcReady"), reqEtc.Send()
+		reqEtc := ComObjCreate("Msxml2.XMLHTTP"), reqEtc.Open("GET", From . Which, true), reqEtc.onreadystatechange := ObjBindMethod(ServerInfo, "EtcReady"), reqEtc.Send()
 	}
 
 	FilmReady() {
 		global
-		if (reqFilm.readyState != 4)  ; Not done yet.
+		if (reqFilm.readyState != 4)
 			return
-		if (reqFilm.status == 200 || reqFilm.status == 304) ; OK.
+		if (reqFilm.status == 200 || reqFilm.status == 304)
 		{
 			Film := JSON_ToObj(reqFilm.ResponseText), VarSetCapacity(reqFilm, 0), FilmCount := NumGet(&Film, 4*A_PtrSize)
 		}
@@ -973,9 +942,9 @@ class ServerInfo extends LodaPlayer {
 
 	AniReady() {
 		global
-		if (reqAni.readyState != 4)  ; Not done yet.
+		if (reqAni.readyState != 4)
 			return
-		if (reqAni.status == 200 || reqAni.status == 304) ; OK.
+		if (reqAni.status == 200 || reqAni.status == 304)
 		{
 			Ani := JSON_ToObj(reqAni.ResponseText), VarSetCapacity(reqAni, 0), AniCount := NumGet(&Ani, 4*A_PtrSize)
 		}
@@ -983,9 +952,9 @@ class ServerInfo extends LodaPlayer {
 
 	ShowReady() {
 		global
-		if (reqShow.readyState != 4)  ; Not done yet.
+		if (reqShow.readyState != 4)
 			return
-		if (reqShow.status == 200 || reqShow.status == 304) ; OK.
+		if (reqShow.status == 200 || reqShow.status == 304)
 		{
 			Show := JSON_ToObj(reqShow.ResponseText), VarSetCapacity(reqShow, 0), ShowCount := NumGet(&Show, 4*A_PtrSize)
 		}
@@ -993,9 +962,9 @@ class ServerInfo extends LodaPlayer {
 
 	EtcReady() {
 		global
-		if (reqEtc.readyState != 4)  ; Not done yet.
+		if (reqEtc.readyState != 4)
 			return
-		if (reqEtc.status == 200 || reqEtc.status == 304) ; OK.
+		if (reqEtc.status == 200 || reqEtc.status == 304)
 		{
 			Etc := JSON_ToObj(reqEtc.ResponseText), VarSetCapacity(reqEtc, 0), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 		}
@@ -1004,10 +973,21 @@ class ServerInfo extends LodaPlayer {
 	ParsePD()
 	{
 		global
-		newcon := RegExReplace(newcon, "\R+\R", "`r`n"), newcon := RegExReplace(newcon, "\s+", " ")
-		RegExMatch(newcon,"영화(.*?)오프라인",OnlineFilm), RegExMatch(newcon,"애니(.*?)오프라인",OnlineAni)
-		RegExMatch(newcon,"예능(.*?)오프라인",OnlineShow), RegExMatch(newcon,"기타(.*?)오프라인",OnlineEtc)
-		VarSetCapacity(newcon, 0), VarSetCapacity(OnlineFilm, 0), VarSetCapacity(OnlineAni, 0), VarSetCapacity(OnlineShow, 0), VarSetCapacity(OnlineEtc, 0)
+		newcon := RegExReplace(newcon, "\R+\R", "`r`n") ;newcon := RegExReplace(newcon, "\s+", " ")
+		newcon := SubStr(newcon, (InStr(newcon, "영화",, 1, 1) + 1)), newcon := SubStr(newcon, 1, InStr(newcon, "문의/채널/PD님",, 1, 1))
+		OnlineFilm1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
+		StringReplace, newcon, newcon, %OnlineFilm1% ;방송중 영화목록 삭제
+		
+		newcon := SubStr(newcon, (InStr(newcon, "애니",, 1, 1) + 1)), OnlineAni1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
+		StringReplace, newcon, newcon, %OnlineAni1% ;방송중 애니목록 삭제
+		
+		newcon := SubStr(newcon, (InStr(newcon, "예능",, 1, 1) + 1)), OnlineShow1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
+		StringReplace, newcon, newcon, %OnlineShow1% ;방송중 예능목록 삭제
+		
+		newcon := SubStr(newcon, (InStr(newcon, "기타",, 1, 1) + 1)), OnlineEtc1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
+		StringReplace, newcon, newcon, %OnlineEtc1% ;방송중 기타목록 삭제
+		
+		VarSetCapacity(newcon, 0)
 	}
 }
 
