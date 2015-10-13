@@ -14,24 +14,18 @@ SetWinDelay, 0
 SetControlDelay, 0
 Menu, Tray, NoStandard
 ComObjError(False)
-deCount := 0, From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
-
-BrowserEmulation(1)
+From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
 /*
 Film := ServerInfo.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
 Ani := ServerInfo.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
 Show := ServerInfo.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
 Etc := ServerInfo.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 */
-ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
+BrowserEmulation(1), ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
-while !(deCount = 4)
-	continue
-
-deCount := 0
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
-SetTimer, %CheckPoo%, 900000
+SetTimer, %CheckPoo%, 900000  ;900000
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Ctrl & Enter, %LessEx%
 Hotkey, Alt & Enter, %FullEx%
@@ -45,7 +39,7 @@ PlayerClose(Init)
 
 class LodaPlayer {
 
-	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.5", PotChatBAN := 0, TopToggleCk := 0
+	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.6", PotChatBAN := 0, TopToggleCk := 0
 	
 	__New()
 	{
@@ -97,13 +91,13 @@ class LodaPlayer {
 		Menu, SetMenu, Add, 에러수정＆기타설정, :ErrorFixMenu
 		Menu, MyMenuBar, Add, 플레이어:설정, :SetMenu
 		
+		while !(Film && Ani && Show && Etc)
+			continue
 		while !(Stream.readyState=4 || Stream.document.readyState="complete" || !Stream.busy) 
 			continue
-		Sleep, 0
 		newcon := Stream.document.getElementByID("main-content").InnerText, ServerInfo.ParsePD()
 		
-		try 
-		{
+		try {
 			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 			Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
 			Menu, MyMenuBar, Add, 애니:방송, :AniMenu
@@ -918,8 +912,6 @@ class ServerInfo extends LodaPlayer {
 		this.DeleteMenu("Ani"), Ani := "", AniCount := ""
 		this.DeleteMenu("Show"), Show := "", ShowCount := ""
 		this.DeleteMenu("Etc"), Etc := "", EtcCount := ""
-		Gui, Menu, MyMenuBar
-		
 		/*
 		Film := this.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
 		Ani := this.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
@@ -927,14 +919,12 @@ class ServerInfo extends LodaPlayer {
 		Etc := this.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 		*/
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
-		while !(deCount = 4)
+		while !(Film && Ani && Show && Etc)
 			continue
-		deCount := 0
 		while !(poo.readyState=4 || poo.document.readyState="complete" || !poo.busy) 
-				continue
+			continue
 		newcon := poo.document.getElementByID("main-content").InnerText, this.ParsePD()
 		
-		Gui, Menu
 		try {
 			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 		}
@@ -987,7 +977,6 @@ class ServerInfo extends LodaPlayer {
 			return
 		if (reqFilm.status == 200 || reqFilm.status == 304) ; OK.
 		{
-			deCount++
 			Film := JSON_ToObj(reqFilm.ResponseText), VarSetCapacity(reqFilm, 0), FilmCount := NumGet(&Film, 4*A_PtrSize)
 		}
 	}
@@ -998,7 +987,6 @@ class ServerInfo extends LodaPlayer {
 			return
 		if (reqAni.status == 200 || reqAni.status == 304) ; OK.
 		{
-			deCount++
 			Ani := JSON_ToObj(reqAni.ResponseText), VarSetCapacity(reqAni, 0), AniCount := NumGet(&Ani, 4*A_PtrSize)
 		}
 	}
@@ -1009,7 +997,6 @@ class ServerInfo extends LodaPlayer {
 			return
 		if (reqShow.status == 200 || reqShow.status == 304) ; OK.
 		{
-			deCount++
 			Show := JSON_ToObj(reqShow.ResponseText), VarSetCapacity(reqShow, 0), ShowCount := NumGet(&Show, 4*A_PtrSize)
 		}
 	}
@@ -1020,7 +1007,6 @@ class ServerInfo extends LodaPlayer {
 			return
 		if (reqEtc.status == 200 || reqEtc.status == 304) ; OK.
 		{
-			deCount++
 			Etc := JSON_ToObj(reqEtc.ResponseText), VarSetCapacity(reqEtc, 0), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 		}
 	}
