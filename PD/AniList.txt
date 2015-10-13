@@ -1,16 +1,16 @@
 ﻿[
 {PD: "yeori", Channel: "소년탐정 김전일[더빙]", Addr: "318073"},
-{PD: "알타비스타", Channel: "추천 애니", Addr: "320834"},
-{PD: "팟수여죽창을들라", Channel: "심슨가족 방송", Addr: "320851"},
-{PD: "망둥어", Channel: "망둥어네 애니방송", Addr: "324699"},
 {PD: "PD 어둠의볶음밥", Channel: "애니 은혼", Addr: "323431"},
+{PD: "알타비스타", Channel: "추천 애니", Addr: "320834"},
+{PD: "팟수24시", Channel: "짱구는 못말려 순차방송 ", Addr: "323587"},
+{PD: "망둥어", Channel: "망둥어네 애니방송", Addr: "324699"},
 {PD: "아라라기상", Channel: "금일/최신화/완결애니 +3/4분기", Addr: "319279"},
 {PD: "애니메이션", Channel: "애니메이션", Addr: "319157"},
+{PD: "레로", Channel: "아따맘마 ＆ 애니", Addr: "318612"},
+{PD: "팟수여죽창을들라", Channel: "심슨가족 방송", Addr: "320851"},
+{PD: "아이나", Channel: "러브라이브 ＆ 애니", Addr: "320626"},
 {PD: "잭슨TV", Channel: "짱구는 못말려", Addr: "317914"},
 {PD: "릴리루카아데", Channel: "애니 방송", Addr: "325702"},
-{PD: "팟수24시", Channel: "짱구는 못말려 순차방송 ", Addr: "323587"},
-{PD: "레로", Channel: "죠죠의 기묘한 모험 ＆ 애니", Addr: "318612"},
-{PD: "아이나", Channel: "러브라이브 ＆ 애니", Addr: "320626"},
 {PD: "SuDal NIM", Channel: "신작 애니", Addr: "318840"},
 {PD: "Dramatic", Channel: "코난 ＆ 데스노트＆ 짱구", Addr: "317866"}
 ]
