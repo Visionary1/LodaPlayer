@@ -14,14 +14,15 @@ SetWinDelay, 0
 SetControlDelay, 0
 Menu, Tray, NoStandard
 ComObjError(False)
+From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
 /*
 Film := ServerInfo.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
 Ani := ServerInfo.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
 Show := ServerInfo.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
 Etc := ServerInfo.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 */
-From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/", ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 BrowserEmulation(1)
+ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
