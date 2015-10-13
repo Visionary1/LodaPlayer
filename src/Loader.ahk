@@ -8,20 +8,42 @@
 ListLines Off
 Process, Priority, , H
 SetBatchLines, -1
-FileInstall, addpd.png, %A_Temp%\addpd.png, 1
-FileInstall, byaddr.png, %A_Temp%\byaddr.png, 1
-FileInstall, chat.png, %A_Temp%\chat.png, 1
-FileInstall, favorite.png, %A_Temp%\favorite.png, 1
-FileInstall, help.png, %A_Temp%\help.png, 1
-FileInstall, off.png, %A_Temp%\off.png, 1
-FileInstall, on.png, %A_Temp%\on.png, 1
-FileInstall, PD.png, %A_Temp%\PD.png, 1
-FileInstall, pooq.png, %A_Temp%\pooq.png, 1
-FileInstall, refresh.png, %A_Temp%\refresh.png, 1
-FileInstall, setting.png, %A_Temp%\setting.png, 1
-FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe, 1
-FileInstall, LodaPlayer.ini, LodaPlayer.ini
-ExecScript(GitHub("https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Air.ahk"), "", A_Temp . "\LodaPlayer.exe")
+
+GitHub := ""
+req := ComObjCreate("Msxml2.XMLHTTP")
+req.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Air.ahk", true)
+req.onreadystatechange := Func("Ready")
+req.Send()
+
+;FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe, 1
+;FileInstall, LodaPlayer.ini, LodaPlayer.ini
+/*
+FileInstall, addpd.png, %A_Temp%\addpd.png
+FileInstall, byaddr.png, %A_Temp%\byaddr.png
+FileInstall, chat.png, %A_Temp%\chat.png
+FileInstall, favorite.png, %A_Temp%\favorite.png
+FileInstall, help.png, %A_Temp%\help.png
+FileInstall, off.png, %A_Temp%\off.png
+FileInstall, on.png, %A_Temp%\on.png
+FileInstall, PD.png, %A_Temp%\PD.png
+FileInstall, pooq.png, %A_Temp%\pooq.png
+FileInstall, refresh.png, %A_Temp%\refresh.png
+FileInstall, setting.png, %A_Temp%\setting.png
+FileInstall, addpd.png, ~
+FileInstall, byaddr.png, ~
+FileInstall, chat.png, ~
+FileInstall, favorite.png, ~
+FileInstall, help.png, ~
+FileInstall, off.png, ~
+FileInstall, on.png, ~
+FileInstall, PD.png, ~
+FileInstall, pooq.png, ~
+FileInstall, refresh.png, ~
+FileInstall, setting.png, ~
+*/
+while !GitHub
+	continue
+ExecScript(GitHub, "", A_Temp . "\LodaPlayer.exe")
 
 /*
 AhkThread := AhkDllThread(A_ScriptDir . "\AutoHotkey.dll") ; Creates an additional AutoHotkey thread using AutoHotkey.dll.
@@ -31,14 +53,23 @@ While, !AhkThread.ahkReady() ; Wait for the script to be ready.
   Sleep, 10
 While, AhkThread.ahkReady() ; Wait for the dll to finish running its script.
   Sleep, 100
-  */
 
 GitHub(Url)
 {
 	http := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	http.Open("GET", Url, true), http.Send(), http.WaitForResponse()
-	DllCall("Winhttp.dll\WinHttpCloseHandle", "Str", http)
+	;DllCall("Winhttp.dll\WinHttpCloseHandle", "Str", http)
 	return http.ResponseText
+}
+*/
+
+Ready()
+{
+    global 
+    if (req.readyState != 4)
+        return
+    if (req.status == 200 || req.status == 304)
+        GitHub := req.responseText
 }
 
 ExecScript(Script, Params="", Path="")

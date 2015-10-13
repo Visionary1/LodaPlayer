@@ -21,7 +21,8 @@ Ani := ServerInfo.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
 Show := ServerInfo.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
 Etc := ServerInfo.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
 */
-BrowserEmulation(1), ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
+BrowserEmulation(1)
+ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
@@ -144,12 +145,8 @@ class LodaPlayer {
 		
 		if DisplayW
 			Gui, Show, % "w" DisplayW " h" DisplayH, % this.Title
-
-		if !DisplayW
+		else if !DisplayW
 			Gui, Show, % "w" this.W " h" this.H, % this.Title
-		
-		VarSetCapacity(newcon, 0), VarSetCapacity(PotsuHome, 0)
-		VarSetCapacity(OnlineFilm, 0), VarSetCapacity(OnlineAni, 0), VarSetCapacity(OnlineShow, 0), VarSetCapacity(OnlineEtc, 0)
 		VarSetCapacity(OnlineFilm1, 0), VarSetCapacity(OnlineAni1, 0), VarSetCapacity(OnlineShow1, 0), VarSetCapacity(OnlineEtc1, 0)
 	}
 
@@ -930,9 +927,7 @@ class ServerInfo extends LodaPlayer {
 		}
 		Gui, Menu, MyMenuBar
 		WinSet, Redraw,, ahk_id %hMainWindow%
-		poo.Quit(), VarSetCapacity(newcon, 0), VarSetCapacity(poo, 0)
-		VarSetCapacity(OnlineFilm, 0), VarSetCapacity(OnlineAni, 0), VarSetCapacity(OnlineShow, 0), VarSetCapacity(OnlineEtc, 0)
-		VarSetCapacity(OnlineFilm1, 0), VarSetCapacity(OnlineAni1, 0), VarSetCapacity(OnlineShow1, 0), VarSetCapacity(OnlineEtc1, 0), FreeMemory()
+		poo.Quit(), VarSetCapacity(poo, 0), VarSetCapacity(OnlineFilm1, 0), VarSetCapacity(OnlineAni1, 0), VarSetCapacity(OnlineShow1, 0), VarSetCapacity(OnlineEtc1, 0), FreeMemory()
 	}
 	
 	/* until 1.2.3,  async false
@@ -1015,7 +1010,9 @@ class ServerInfo extends LodaPlayer {
 	{
 		global
 		newcon := RegExReplace(newcon, "\R+\R", "`r`n"), newcon := RegExReplace(newcon, "\s+", " ")
-		RegExMatch(newcon,"영화(.*?)오프라인",OnlineFilm), RegExMatch(newcon,"애니(.*?)오프라인",OnlineAni), RegExMatch(newcon,"예능(.*?)오프라인",OnlineShow), RegExMatch(newcon,"기타(.*?)오프라인",OnlineEtc)
+		RegExMatch(newcon,"영화(.*?)오프라인",OnlineFilm), RegExMatch(newcon,"애니(.*?)오프라인",OnlineAni)
+		RegExMatch(newcon,"예능(.*?)오프라인",OnlineShow), RegExMatch(newcon,"기타(.*?)오프라인",OnlineEtc)
+		VarSetCapacity(newcon, 0), VarSetCapacity(OnlineFilm, 0), VarSetCapacity(OnlineAni, 0), VarSetCapacity(OnlineShow, 0), VarSetCapacity(OnlineEtc, 0)
 	}
 }
 
