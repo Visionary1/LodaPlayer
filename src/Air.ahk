@@ -40,7 +40,7 @@ PlayerClose(Init)
 
 class LodaPlayer {
 
-	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.7.2", PotChatBAN := 0, TopToggleCk := 0
+	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.7.3", PotChatBAN := 0, TopToggleCk := 0
 	
 	__New()
 	{
