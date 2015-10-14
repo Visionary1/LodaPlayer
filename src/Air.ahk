@@ -26,7 +26,7 @@ ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), Se
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
-SetTimer, %CheckPoo%, 900000  ;900000
+SetTimer, %CheckPoo%, 900000
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Ctrl & Enter, %LessEx%
 Hotkey, Alt & Enter, %FullEx%
@@ -151,25 +151,30 @@ class LodaPlayer {
 		IMAX := A_GuiWidth - ( this.W*0.25 ), ShouldRedraw := 1
 
 		if (chatBAN = 0 && this.PluginCount = 0 && this.PotChatBAN = 0) {
-			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
+			;GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
+			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
-				GuiControl, Move, % this.hStream, % " x" this.W*0.25 " y" 0 " w" IMAX " h" A_GuiHeight+5
+				DllCall("MoveWindow", "Ptr", this.hStream, "Int", this.W*0.25, "Int", 0, "Int", IMAX, "Int", A_GuiHeight+5, "Int", ShouldRedraw)
+				;GuiControl, Move, % this.hStream, % " x" this.W*0.25 " y" 0 " w" IMAX " h" A_GuiHeight+5
 			else if (this.CustomCount = 1)
 				DllCall("MoveWindow", "Ptr", LodaChromeChild, "Int", this.W*0.25, "Int", 0, "Int", IMAX, "Int", A_GuiHeight+5, "Int", ShouldRedraw)
 		}
 		
 		if (chatBAN = 1 && this.PluginCount = 0 && this.PotChatBAN = 0) {
 			if (this.CustomCount = 0)
-				GuiControl, Move, % this.hStream, % " x" 0 " y" 0 " w" A_GuiWidth " h" A_GuiHeight+5
+				DllCall("MoveWindow", "Ptr", this.hStream, "Int", 0, "Int", 0, "Int", A_GuiWidth, "Int", A_GuiHeight+5, "Int", ShouldRedraw)
+				;GuiControl, Move, % this.hStream, % " x" 0 " y" 0 " w" A_GuiWidth " h" A_GuiHeight+5
 			else if (this.CustomCount = 1)
 				DllCall("MoveWindow", "Ptr", LodaChromeChild, "Int", 0, "Int", 0, "Int", A_GuiWidth, "Int", A_GuiHeight+5, "Int", ShouldRedraw)
 		}
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 0) {
-			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
+			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
+			;GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
 			DllCall("MoveWindow", "Ptr", LodaPotChild, "Int", (this.W*0.25) - 2, "Int", -2, "Int", IMAX - 398, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
-				GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
+				DllCall("MoveWindow", "Ptr", this.hStream, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
+				;GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
 			else if (this.CustomCount = 1)
 				DllCall("MoveWindow", "Ptr", LodaChromeChild, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 		}
@@ -177,13 +182,15 @@ class LodaPlayer {
 		if (chatBAN =1 && this.PluginCount = 1 && this.PotChatBAN = 0) {
 			DllCall("MoveWindow", "Ptr", LodaPotChild, "Int", -2, "Int", -2, "Int", A_GuiWidth - 398, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
-				GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
+				DllCall("MoveWindow", "Ptr", this.hStream, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
+				;GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
 			else if (this.CustomCount = 1)
 				DllCall("MoveWindow", "Ptr", LodaChromeChild, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 		}
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 1) {
-			GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
+			;GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
+			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			DllCall("MoveWindow", "Ptr", LodaPotChild, "Int", (this.W*0.25) - 2, "Int", -2, "Int", IMAX+7, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
 		}
 		
@@ -1168,9 +1175,11 @@ RedrawWindow() {
 	}
 	else
 	{
-		WinMove, ahk_id %hMainWindow%,, % MoveX, % MoveY, % MoveW - 1, % MoveH - 1
+		;WinMove, ahk_id %hMainWindow%,, % MoveX, % MoveY, % MoveW - 1, % MoveH - 1
+		DllCall("MoveWindow", "Ptr", hMainWindow, "Int", MoveX, "Int", MoveY, "Int", MoveW-1, "Int", MoveH-1, "Int", ShouldRedraw)
 		Sleep, 50
-		WinMove, ahk_id %hMainWindow%,, % MoveX, % MoveY, % MoveW, % MoveH
+		;WinMove, ahk_id %hMainWindow%,, % MoveX, % MoveY, % MoveW, % MoveH
+		DllCall("MoveWindow", "Ptr", hMainWindow, "Int", MoveX, "Int", MoveY, "Int", MoveW, "Int", MoveH, "Int", ShouldRedraw)
 	}
 }
 
