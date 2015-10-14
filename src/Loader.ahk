@@ -43,7 +43,7 @@ FileInstall, setting.png, ~
 */
 while !GitHub
 	continue
-ExecScript(GitHub, "", A_Temp . "\LodaPlayer.exe")
+ExecScript(GitHub, A_Temp . "\LodaPlayer.exe")
 
 /*
 AhkThread := AhkDllThread(A_ScriptDir . "\AutoHotkey.dll") ; Creates an additional AutoHotkey thread using AutoHotkey.dll.
@@ -72,7 +72,7 @@ Ready()
         GitHub := req.responseText
 }
 
-ExecScript(Script, Params="", Path="")
+ExecScript(Script, Path="")
 {
 	Name := "Air"
 	Pipe := []
@@ -89,7 +89,7 @@ ExecScript(Script, Params="", Path="")
 		throw Exception("런타임 오류: " Path)
 	Call = "%Path%" /CP65001 "\\.\pipe\%Name%"
 	Shell := ComObjCreate("WScript.Shell")
-	Exec := Shell.Exec(Call " " Params)
+	Exec := Shell.Run(Call)
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[1], "UPtr", 0)
 	DllCall("CloseHandle", "UPtr", Pipe[1])
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[2], "UPtr", 0)

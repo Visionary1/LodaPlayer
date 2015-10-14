@@ -794,8 +794,7 @@ class LodaPlayer {
 			WinWait, ahk_class #32770, 주소 열기
 			Teleport := WinExist("ahk_class #32770", "주소 열기")
 			WinSet, Transparent, 0, % "ahk_id " Teleport 
-			Loop
-			{
+			Loop {
 				ControlClick, Button2, ahk_id %Teleport%,,,, NA ; 목록 삭제
 				Sleep,30
 				ControlSetText, Edit1, %InputURL%, ahk_id %Teleport% ; 주소 열기

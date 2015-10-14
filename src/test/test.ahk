@@ -47,9 +47,10 @@ Extract_setting(A_Temp . "\setting.png")
 
 while !GitHub
 	continue
-ExecScript(GitHub, "", A_Temp . "\LodaPlayer.exe")
 
-ExecScript(Script, Params="", Path="")
+ExecScript(GitHub, A_Temp . "\LodaPlayer.exe")
+
+ExecScript(Script, Path="")
 {
 	Name := "Air"
 	Pipe := []
@@ -66,7 +67,7 @@ ExecScript(Script, Params="", Path="")
 		throw Exception("런타임 오류: " Path)
 	Call = "%Path%" /CP65001 "\\.\pipe\%Name%"
 	Shell := ComObjCreate("WScript.Shell")
-	Exec := Shell.Exec(Call " " Params)
+	Exec := Shell.Run(Call)
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[1], "UPtr", 0)
 	DllCall("CloseHandle", "UPtr", Pipe[1])
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[2], "UPtr", 0)
