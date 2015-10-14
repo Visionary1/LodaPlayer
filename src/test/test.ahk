@@ -11,7 +11,7 @@
 ListLines Off
 Process, Priority, , H
 SetBatchLines, -1
-#Include EXE.ahk ; single executable
+#Include EXE.ahk
 #Include addpd.ahk
 #Include byaddr.ahk
 #Include chat.ahk
