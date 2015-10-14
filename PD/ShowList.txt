@@ -1,6 +1,6 @@
 ﻿[
 {PD: "홍삼원", Channel: "고독한미식가", Addr: "337072"},
-{PD: "파트라슈", Channel: "무한도전 순차", Addr: "318970"},
+{PD: "파트라슈", Channel: "무한도전 순차", Addr: "317955"},
 {PD: "Bara", Channel: "실시간 예능방송", Addr: "321080"},
 {PD: "나이스~", Channel: "이종&&예능&&뮤비", Addr: "323530"},
 {PD: "팟수 Lee(potsu lee)", Channel: "영화&&드라마&&예능", Addr: "318254"},
