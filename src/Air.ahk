@@ -647,12 +647,12 @@ class LodaPlayer {
 		if (A_ThisMenuItem = "설정리셋 : 초기화후 재시작") {
 			try
 			{
-			MsgBox, 262193, 초기화, 대부분의 오류는 '방송 새로고침' 으로 해결이 됩니다`n`n그럼에도 오류가있다면 '확인' 버튼을 누르세요!`n`n프로그램을 초기화하고 재시작됩니다
+			MsgBox, 262193, 초기화, 대부분의 오류는 '방송 새로고침' 으로 해결이 됩니다`n`n그럼에도 오류가있다면 '확인' 버튼을 누르세요!`n`n종료후 다시 플레이어를 실행하세요
 			IfMsgBox, Ok
 				{
 					ClearCookies()
 					FileDelete, LodaPlayer.ini
-					Reload
+					ExitApp
 				}
 			}
 			return
