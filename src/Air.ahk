@@ -40,13 +40,13 @@ PlayerClose(Init)
 
 class LodaPlayer {
 
-	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0, Title := "로다 플레이어 Air 1.2.7.3", PotChatBAN := 0, TopToggleCk := 0
+	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0,PotChatBAN := 0, TopToggleCk := 0
 	
 	__New()
 	{
 		global
 		vIni := class_EasyIni("LodaPlayer.ini"), PotIni := vIni.Player.PotLocation, chatBAN := vIni.GaGaLive.ChatPreSet, DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
-		LodaChromeChild := "", LodaPotChild := ""
+		this.Title := "로다 플레이어 Air 1.2.7.4", LodaChromeChild := "", LodaPotChild := ""
 		
 		Gui, New, +Resize -DPIScale +hWndhMainWindow +LastFound +0x2000000 +MinSize600x350  ;WS_CLIPCHILDREN := 0x2000000
 		this.hMainWindow := hMainWindow
@@ -148,7 +148,7 @@ class LodaPlayer {
 	GuiSize()
 	{
 		global
-		IMAX := A_GuiWidth - ( this.W*0.25 ), ShouldRedraw := 1
+		IMAX := A_GuiWidth - ( this.W*0.25 ), ShouldRedraw := true
 
 		if (chatBAN = 0 && this.PluginCount = 0 && this.PotChatBAN = 0) {
 			;GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
@@ -1004,11 +1004,10 @@ class ViewControl extends LodaPlayer {
 	
 	ToggleOnlyMenu()
 	{
-		global hMainWindow
 		static aMenu := ""
+		global
 		
-		WinGet, ckin, Transparent, ahk_class Shell_TrayWnd
-		if ckin < 120
+		if this.hVisible = 0
 			return
 		
 		KeyWait Ctrl
