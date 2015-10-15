@@ -10,6 +10,6 @@
 {PD: "Yunaito", Channel: "유나이토 방송", Addr: "315846"},
 {PD: "라이거", Channel: "게임방송 - 스타 명경기", Addr: "327277"},
 {PD: "Baek", Channel: "게임방송 - XBO게임", Addr: "331242"},
-{PD: "팟]엘퀴네스", Channel: "고독한미식가", Addr: "317910"},
+{PD: "팟]엘퀴네스", Channel: "실시간 썰전", Addr: "317910"},
 {PD: "팟수난민시대", Channel: "다양한 게임방송", Addr: "321639"}
 ]
