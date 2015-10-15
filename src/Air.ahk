@@ -1163,7 +1163,7 @@ DaumPotSet(Set) {
 }
 
 RedrawWindow() {
-	global hMainWindow
+	global hMainWindow, ShouldRedraw
 	
 	WinGetPos, MoveX, MoveY, MoveW, MoveH, ahk_id %hMainWindow%
 	if (MoveW > A_ScreenWidth - 15)
