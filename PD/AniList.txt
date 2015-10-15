@@ -10,6 +10,7 @@
 {PD: "팟수여죽창을들라", Channel: "심슨가족 방송", Addr: "320851"},
 {PD: "맹약", Channel: "맹약의 애니 방송", Addr: "347423"},
 {PD: "아이나", Channel: "러브라이브 ＆ 애니", Addr: "320626"},
+{PD: "해냐챠", Channel: "애니방송국", Addr: "345197"},
 {PD: "잭슨TV", Channel: "짱구는 못말려", Addr: "317914"},
 {PD: "릴리루카아데", Channel: "애니 방송", Addr: "325702"},
 {PD: "SuDal NIM", Channel: "신작 애니", Addr: "318840"},
