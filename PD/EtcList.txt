@@ -3,7 +3,6 @@
 {PD: "더으락", Channel: "더으락의 추억의 레슬링", Addr: "325628"},
 {PD: "ikoma", Channel: "[이코마] 노기자카46 생방송", Addr: "317679"},
 {PD: "로솔", Channel: "로솔TV - 켠김에 왕까지", Addr: "329829"},
-{PD: "erido", Channel: "빅뱅이론", Addr: "322063"},
 {PD: "happysky", Channel: "AVGN 고전게임 리뷰", Addr: "317987"},
 {PD: "PD 별루군", Channel: "애니음악영상방송", Addr: "325098"},
 {PD: "솔코린", Channel: "일본 애니 성우 PV 음방", Addr: "319346"},

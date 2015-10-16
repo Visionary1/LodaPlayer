@@ -13,15 +13,8 @@ SetDefaultMouseSpeed, 0
 SetWinDelay, 0
 SetControlDelay, 0
 Menu, Tray, NoStandard
-ComObjError(False)
-From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
-/*
-Film := ServerInfo.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
-Ani := ServerInfo.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
-Show := ServerInfo.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
-Etc := ServerInfo.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
-*/
-BrowserEmulation(1)
+ComObjError(False), OnlineList := "", BrowserEmulation(1)
+whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
 ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 Init := new LodaPlayer()
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
@@ -40,9 +33,9 @@ class LodaPlayer {
 		global
 		vIni := class_EasyIni("LodaPlayer.ini"), PotIni := vIni.Player.PotLocation, chatBAN := vIni.GaGaLive.ChatPreSet, DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
 		LPG := ObjBindMethod(this, "GaGaMenu"), LPM := ObjBindMethod(this, "PlayerMenu"), LPP := ObjBindMethod(this, "PDMenu")
-		this.Title := "로다 플레이어 Air 1.3 테스팅"
+		this.Title := "로다 플레이어 Air 1.4"
 		
-		Gui, New, +Resize -DPIScale +hWndhMainWindow +LastFound +0x2000000 +MinSize600x350  ;WS_CLIPCHILDREN := 0x2000000
+		Gui, New, +Resize -DPIScale +hWndhMainWindow +0x2000000 +MinSize700x350  ;WS_CLIPCHILDREN := 0x2000000
 		this.hMainWindow := hMainWindow
 		
 		Gui, Add, ActiveX, % " x" 0 " y" 0 " w" this.W*0.25 " h" this.H-10 " hwndhGaGa vChat", Shell.Explorer
@@ -84,9 +77,12 @@ class LodaPlayer {
 		Menu, SetMenu, Add, 에러수정＆기타설정, :ErrorFixMenu
 		Menu, MyMenuBar, Add, 플레이어:설정, :SetMenu
 		
-		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc) && Stream.readyState=4)
-			continue
-		ServerInfo.ParsePD(Stream.document.getElementByID("main-content").InnerText)
+		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc) && Stream.readyState=4 && !Stream.busy)
+			Sleep, 10
+		
+		while Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
+			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
+		;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
 		
 		try {
 			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
@@ -102,18 +98,18 @@ class LodaPlayer {
 			Menu, MyMenuBar, Add, 즐겨찾기:목록, :FavoriteMenu
 		}
 		Menu, MyMenuBar, Add, 주소로 이동 , %LPM% ;LodaPlayer.PlayerMenu
-		Menu, MyMenuBar, Add, POOOO , %LPM% ;LodaPlayer.PlayerMenu
 		Menu, MyMenuBar, Add, 즐겨찾기, %LPM% ;LodaPlayer.PlayerMenu
-		Menu, MyMenuBar, Add, 방송추가 , %LPM% ;LodaPlayer.PlayerMenu
-		Menu, MyMenuBar, Add, 도움말 , %LPM% ;LodaPlayer.PlayerMenu
+		Menu, MyMenuBar, Add, POOOO , %LPM% ;LodaPlayer.PlayerMenu
+		;Menu, MyMenuBar, Add, 방송추가 , %LPM% ;LodaPlayer.PlayerMenu
+		;Menu, MyMenuBar, Add, 도움말 , %LPM% ;LodaPlayer.PlayerMenu
 		
 		Menu, MyMenuBar, Icon, POOOO, %A_Temp%\pooq.png,, 0
 		Menu, MyMenuBar, Icon, 플레이어:설정, %A_Temp%\setting.png,, 0
 		Menu, MyMenuBar, Icon, 가가라이브:설정, %A_Temp%\chat.png,, 0
 		Menu, MyMenuBar, Icon, 주소로 이동, %A_Temp%\byaddr.png,, 0
 		Menu, MyMenuBar, Icon, 즐겨찾기, %A_Temp%\favorite.png,, 0
-		Menu, MyMenuBar, Icon, 방송추가, %A_Temp%\addpd.png,, 0
-		Menu, MyMenuBar, Icon, 도움말, %A_Temp%\help.png,, 0
+		;Menu, MyMenuBar, Icon, 방송추가, %A_Temp%\addpd.png,, 0
+		;Menu, MyMenuBar, Icon, 도움말, %A_Temp%\help.png,, 0
 		Menu, MyMenuBar, Icon, 영화:방송, %A_Temp%\PD.png,, 0
 		Menu, MyMenuBar, Icon, 애니:방송, %A_Temp%\PD.png,, 0
 		Menu, MyMenuBar, Icon, 예능:방송, %A_Temp%\PD.png,, 0
@@ -132,13 +128,13 @@ class LodaPlayer {
 		for each, Msg in [0x100]
 			OnMessage(Msg, this.Bound.OnMessage)
 		
-		
+		try FileAppend, % whr.ResponseText, %A_Temp%\LodaPlayer\Main.html, UTF-8
+		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html"), VarSetCapacity(whr, 0), VarSetCapacity(OnlineList, 0)
 		
 		if DisplayW
 			Gui, Show, % "w" DisplayW " h" DisplayH, % this.Title
 		else if !DisplayW
 			Gui, Show, % "w" this.W " h" this.H, % this.Title
-		VarSetCapacity(OnlineFilm1, 0), VarSetCapacity(OnlineAni1, 0), VarSetCapacity(OnlineShow1, 0), VarSetCapacity(OnlineEtc1, 0)
 	}
 
 	GuiSize()
@@ -147,11 +143,9 @@ class LodaPlayer {
 		IMAX := A_GuiWidth - ( this.W*0.25 ), ShouldRedraw := true
 
 		if (chatBAN = 0 && this.PluginCount = 0 && this.PotChatBAN = 0) {
-			;GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
 			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
 				DllCall("MoveWindow", "Ptr", this.hStream, "Int", this.W*0.25, "Int", 0, "Int", IMAX, "Int", A_GuiHeight+5, "Int", ShouldRedraw)
-				;GuiControl, Move, % this.hStream, % " x" this.W*0.25 " y" 0 " w" IMAX " h" A_GuiHeight+5
 			else if (this.CustomCount = 1)
 				DllCall("MoveWindow", "Ptr", this.ChromeChild, "Int", this.W*0.25, "Int", 0, "Int", IMAX, "Int", A_GuiHeight+5, "Int", ShouldRedraw)
 		}
@@ -159,18 +153,15 @@ class LodaPlayer {
 		if (chatBAN = 1 && this.PluginCount = 0 && this.PotChatBAN = 0) {
 			if (this.CustomCount = 0)
 				DllCall("MoveWindow", "Ptr", this.hStream, "Int", 0, "Int", 0, "Int", A_GuiWidth, "Int", A_GuiHeight+5, "Int", ShouldRedraw)
-				;GuiControl, Move, % this.hStream, % " x" 0 " y" 0 " w" A_GuiWidth " h" A_GuiHeight+5
 			else if (this.CustomCount = 1)
 				DllCall("MoveWindow", "Ptr", this.ChromeChild, "Int", 0, "Int", 0, "Int", A_GuiWidth, "Int", A_GuiHeight+5, "Int", ShouldRedraw)
 		}
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 0) {
 			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
-			;GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
 			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", (this.W*0.25) - 2, "Int", -2, "Int", IMAX - 398, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
 				DllCall("MoveWindow", "Ptr", this.hStream, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
-				;GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
 			else if (this.CustomCount = 1)
 				DllCall("MoveWindow", "Ptr", this.ChromeChild, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 		}
@@ -179,13 +170,11 @@ class LodaPlayer {
 			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", -2, "Int", -2, "Int", A_GuiWidth - 398, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
 				DllCall("MoveWindow", "Ptr", this.hStream, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
-				;GuiControl, Move, % this.hStream, % " x"  A_GuiWidth - 400 " y" 0 " w" 400 " h" A_GuiHeight
 			else if (this.CustomCount = 1)
 				DllCall("MoveWindow", "Ptr", this.ChromeChild, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 		}
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 1) {
-			;GuiControl, Move, % this.hGaGa, % " x" 0 " y" 0 " w" this.W*0.25 " h" A_GuiHeight
 			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", (this.W*0.25) - 2, "Int", -2, "Int", IMAX+7, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
 		}
@@ -204,6 +193,7 @@ class LodaPlayer {
 		VarSetCapacity(rect, 16, 0), DllCall("GetClientRect", uint, hMainWindow, uint, &rect), vIni.Player["Width"] := NumGet(rect, 8, "int"), vIni.Player["Height"] := ClientH := NumGet(rect, 12, "int")
 		vIni.GaGaLive.ChatPreSet := chatBAN, vIni.Save()
 		FileSetAttrib, +H, LodaPlayer.ini
+		FileDelete, %A_Temp%\LodaPlugin\Main.html
 		
 		if (this.CustomCount = 1) {
 			ControlFocus,, % "ahk_id " this.ChromeChild
@@ -220,9 +210,7 @@ class LodaPlayer {
 		
 		for each, Msg in [0x100]
 			OnMessage(Msg, this.Bound.OnMessage, 0)
-		this.Delete("Bound")
-		WinEvents.Unregister(this.hMainWindow)
-		BrowserEmulation(0), this.DaumPotSet(0)
+		this.Delete("Bound"), WinEvents.Unregister(this.hMainWindow), BrowserEmulation(0), this.DaumPotSet(0)
 		ExitApp ;this.CloseCallback()
 	}
 	
@@ -545,11 +533,13 @@ class LodaPlayer {
 					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
 					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\on.png,,0
 					
+					/*
 					if this.CustomCount = 0
 					{
 						if (Stream.LocationURL() != "about:blank")
-							Stream.Navigate("about:blank")
+							Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
 					}
+					*/
 					
 					this.DaumPotSet(1)
 					RegRead, PotLocation, HKCU, SOFTWARE\DAUM\PotPlayer, ProgramFolder
@@ -791,7 +781,7 @@ class LodaPlayer {
 			ControlSend,, {Ctrl Down}u{Ctrl Up}, % "ahk_id " this.PotChild
 			WinWait, ahk_class #32770, 주소 열기
 			Teleport := WinExist("ahk_class #32770", "주소 열기")
-			WinSet, Transparent, 0, % "ahk_id " Teleport 
+			;WinSet, Transparent, 0, % "ahk_id " Teleport 
 			Loop {
 				ControlClick, Button2, ahk_id %Teleport%,,,, NA ; 목록 삭제
 				Sleep,30
@@ -849,7 +839,7 @@ class LodaPlayer {
 		global
 		Loop, % %Category%Count {
 			Menu, % Category . "Menu", Add, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %LPP% ;LodaPlayer.PDMenu
-			if InStr(Online%Category%1, %Category%[A_Index]["PD"])
+			if InStr(OnlineList, %Category%[A_Index]["PD"])
 				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\on.png,,0
 			else
 				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\off.png,,0
@@ -896,33 +886,36 @@ class LodaPlayer {
 }
 
 class ServerInfo extends LodaPlayer {
+	
+	static From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
 
 	OnAirCheck()
 	{
 		global
-		poo := ComObjCreate("InternetExplorer.Application"), poo.Visible := false, poo.Navigate("http://poooo.ml/")
 		
 		Gui, Menu
+		
 		this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
 		Film:= "", FilmCount := "", Ani := "", AniCount := "", Show := "", ShowCount := "", Etc := "", EtcCount := ""
-		/*
-		Film := this.getList("FilmList.txt"), FilmCount := NumGet(&Film, 4*A_PtrSize)
-		Ani := this.getList("AniList.txt"), AniCount := NumGet(&Ani, 4*A_PtrSize)
-		Show := this.getList("ShowList.txt"), ShowCount := NumGet(&Show, 4*A_PtrSize)
-		Etc := this.getList("EtcList.txt"), EtcCount := NumGet(&Etc, 4*A_PtrSize)
-		*/
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
 		
-		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc) && poo.readyState=4)
-			continue
-		this.ParsePD(poo.document.getElementByID("main-content").InnerText)
+		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1"), poo.Open("GET", "http://poooo.ml/", True), poo.Send(), poo.WaitForResponse()
+		
+		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc) && poo.ResponseText)
+			Sleep, 10
+		
+		dockdock := ComObjCreate("HTMLfile"), dockdock.Write(poo.ResponseText), dockdock.Close()
+		while dockdock.getElementsByClassName("livelist")[A_Index-1].innerText 
+			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
+		
+		;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
 		
 		try {
 			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 		}
 		Gui, Menu, MyMenuBar
 		WinSet, Redraw,, ahk_id %hMainWindow%
-		poo.Quit(), VarSetCapacity(poo, 0), VarSetCapacity(OnlineFilm1, 0), VarSetCapacity(OnlineAni1, 0), VarSetCapacity(OnlineShow1, 0), VarSetCapacity(OnlineEtc1, 0), FreeMemory()
+		VarSetCapacity(poo, 0), VarSetCapacity(dockdock, 0), VarSetCapacity(OnlineList, 0), FreeMemory()
 	}
 	
 	/* until 1.2.3,  async false
@@ -939,22 +932,22 @@ class ServerInfo extends LodaPlayer {
 	
 	getFilmList(Which) {
 		global
-		reqFilm := ComObjCreate("Msxml2.XMLHTTP"), reqFilm.Open("GET", From . Which, true), reqFilm.onreadystatechange := ObjBindMethod(ServerInfo, "FilmReady"), reqFilm.Send()
+		reqFilm := ComObjCreate("Msxml2.XMLHTTP"), reqFilm.Open("GET", this.From . Which, true), reqFilm.onreadystatechange := ObjBindMethod(ServerInfo, "FilmReady"), reqFilm.Send()
 	}
 
 	getAniList(Which) {
 		global
-		reqAni := ComObjCreate("Msxml2.XMLHTTP"), reqAni.Open("GET", From . Which, true), reqAni.onreadystatechange := ObjBindMethod(ServerInfo, "AniReady"), reqAni.Send()
+		reqAni := ComObjCreate("Msxml2.XMLHTTP"), reqAni.Open("GET", this.From . Which, true), reqAni.onreadystatechange := ObjBindMethod(ServerInfo, "AniReady"), reqAni.Send()
 	}
 
 	getShowList(Which) {
 		global
-		reqShow := ComObjCreate("Msxml2.XMLHTTP"), reqShow.Open("GET", From . Which, true), reqShow.onreadystatechange := ObjBindMethod(ServerInfo, "ShowReady"), reqShow.Send()
+		reqShow := ComObjCreate("Msxml2.XMLHTTP"), reqShow.Open("GET", this.From . Which, true), reqShow.onreadystatechange := ObjBindMethod(ServerInfo, "ShowReady"), reqShow.Send()
 	}
 
 	getEtcList(Which) {
 		global
-		reqEtc := ComObjCreate("Msxml2.XMLHTTP"), reqEtc.Open("GET", From . Which, true), reqEtc.onreadystatechange := ObjBindMethod(ServerInfo, "EtcReady"), reqEtc.Send()
+		reqEtc := ComObjCreate("Msxml2.XMLHTTP"), reqEtc.Open("GET", this.From . Which, true), reqEtc.onreadystatechange := ObjBindMethod(ServerInfo, "EtcReady"), reqEtc.Send()
 	}
 
 	FilmReady() {
@@ -997,6 +990,7 @@ class ServerInfo extends LodaPlayer {
 		}
 	}
 	
+	/*
 	ParsePD(newcon)
 	{
 		global
@@ -1013,9 +1007,16 @@ class ServerInfo extends LodaPlayer {
 		
 		newcon := SubStr(newcon, (InStr(newcon, "기타",, 1, 1) + 1)), OnlineEtc1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
 		StringReplace, newcon, newcon, %OnlineEtc1% ;방송중 기타목록 삭제
+		dockdock := ComObjCreate("HTMLfile"), dockdock.Write(newcon), dockdock.Close()
 		
-		VarSetCapacity(newcon, 0)
+		while !dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
+			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
+		
+		OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n"), ObjRelease(dockdock)
+		MsgBox % clipboard
+		Clipboard := OnlineList
 	}
+	*/
 }
 
 class ViewControl extends LodaPlayer {
@@ -1137,6 +1138,7 @@ BrowserEmulation(Level) {
 		RegDelete HKCU, %key%, LodaPlayer.exe
 }
 
+/*
 ClearMemory() {
     for objItem in ComObjGet("winmgmts:").ExecQuery("SELECT * FROM Win32_Process")
     {
@@ -1147,6 +1149,7 @@ ClearMemory() {
     }
     return
 }
+*/
 
 FreeMemory() {
     return DllCall("psapi.dll\EmptyWorkingSet", "Ptr", -1)
@@ -1164,10 +1167,8 @@ RedrawWindow() {
 	}
 	else
 	{
-		;WinMove, ahk_id %hMainWindow%,, % MoveX, % MoveY, % MoveW - 1, % MoveH - 1
 		DllCall("MoveWindow", "Ptr", hMainWindow, "Int", MoveX, "Int", MoveY, "Int", MoveW-1, "Int", MoveH-1, "Int", ShouldRedraw)
 		Sleep, 50
-		;WinMove, ahk_id %hMainWindow%,, % MoveX, % MoveY, % MoveW, % MoveH
 		DllCall("MoveWindow", "Ptr", hMainWindow, "Int", MoveX, "Int", MoveY, "Int", MoveW, "Int", MoveH, "Int", ShouldRedraw)
 	}
 }

@@ -11,48 +11,21 @@
 ListLines Off
 Process, Priority, , H
 SetBatchLines, -1
-;#Include LPResource.ahk
 
 GitHub := ""
 req := ComObjCreate("Msxml2.XMLHTTP")
 req.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Air.ahk", true)
-req.onreadystatechange := Func("Ready"), req.Send()
+req.onreadystatechange := Func("Ready"), req.Send() 
 
-FileInstall, LodaPlayer.ini, LodaPlayer.ini
-;Extract_LPResource(A_Temp . "\LPResource.zip") 
 FileInstall, LPResource.zip, %A_Temp%\LPResource.zip, 1
-shell := ComObjCreate("Shell.Application")
-Folder :=	shell.NameSpace(A_Temp "\LPResource.zip"), NewFolder :=	shell.NameSpace(A_Temp), NewFolder.CopyHere(Folder.items, 4|16)
-/*
-FileInstall, LodaPlayer.exe, %A_Temp%\LodaPlayer.exe, 1
 FileInstall, LodaPlayer.ini, LodaPlayer.ini
-FileInstall, addpd.png, %A_Temp%\addpd.png, 1
-FileInstall, byaddr.png, %A_Temp%\byaddr.png, 1
-FileInstall, chat.png, %A_Temp%\chat.png, 1
-FileInstall, favorite.png, %A_Temp%\favorite.png, 1
-FileInstall, help.png, %A_Temp%\help.png, 1
-FileInstall, off.png, %A_Temp%\off.png, 1
-FileInstall, on.png, %A_Temp%\on.png, 1
-FileInstall, PD.png, %A_Temp%\PD.png, 1
-FileInstall, pooq.png, %A_Temp%\pooq.png
-FileInstall, refresh.png, %A_Temp%\refresh.png
-FileInstall, setting.png, %A_Temp%\setting.png
-FileInstall, addpd.png, ~
-FileInstall, byaddr.png, ~
-FileInstall, chat.png, ~
-FileInstall, favorite.png, ~
-FileInstall, help.png, ~
-FileInstall, off.png, ~
-FileInstall, on.png, ~
-FileInstall, PD.png, ~
-FileInstall, pooq.png, ~
-FileInstall, refresh.png, ~
-FileInstall, setting.png, ~
-*/
+
+Extract := ComObjCreate("Shell.Application"), zip := Extract.NameSpace(A_Temp "\LPResource.zip"), Des := Extract.NameSpace(A_Temp), Des.CopyHere(zip.items, 4|16|1024)
+
 while !GitHub
-	continue
-ExecScript(GitHub, A_Temp . "\LodaPlayer.exe")
-ObjRelease(shell)
+	Sleep, 10
+
+ExecScript(GitHub, A_Temp . "\LodaPlayer.exe"), VarSetCapacity(Extract, 0), VarSetCapacity(req, 0)
 
 /*
 AhkThread := AhkDllThread(A_ScriptDir . "\AutoHotkey.dll") ; Creates an additional AutoHotkey thread using AutoHotkey.dll.
@@ -97,12 +70,12 @@ ExecScript(Script, Path="")
 	if !FileExist(Path)
 		throw Exception("런타임 오류: " Path)
 	Call = "%Path%" /CP65001 "\\.\pipe\%Name%"
-	Shell := ComObjCreate("WScript.Shell")
-	Exec := Shell.Run(Call)
+	Shell := ComObjCreate("WScript.Shell"), Exec := Shell.Run(Call)
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[1], "UPtr", 0)
 	DllCall("CloseHandle", "UPtr", Pipe[1])
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[2], "UPtr", 0)
 	FileOpen(Pipe[2], "h", "UTF-8").Write(Script)
 	DllCall("CloseHandle", "UPtr", Pipe[2])
+	VarSetCapacity(Shell, 0)
 	return Exec
 }
