@@ -1,6 +1,162 @@
-﻿<UL class="column bottom">
-<LI>Air, 자동 업데이트 기능 추가</LI>
-<LI>스트리밍 서버 변경 가능하게</LI>
-<LI>팟플레이어 사용시, 자동 테두리 제거</LI>
-<LI>방송온오프 코드 개선</LI>
-<LI>기타 버그 수정</LI></UL>
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Ion by TEMPLATED</title>
+		<meta http-equiv='X-UA-Compatible' content='IE=Edge'/>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-xlarge.css" />
+		</noscript>
+	</head>
+	<body id="top">
+
+		<!-- Header -->
+			<header id="header" class="skel-layers-fixed">
+				<h1><a href="#">홈</a></h1>
+				<nav id="nav">
+					<ul>
+						<li><a href="index.html">메인</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Banner -->
+			<section id="banner">
+				<div class="inner">
+					<h2>로다 플레이어 Air</h2>
+					<p>라이브하우스인 시청 프로그램</p>
+					<ul class="actions">
+						<li><a href="#three" class="button big alt">업데이트 노트</a></li>
+						<li><a href="#one" class="button big alt">도움말</a></li>
+					</ul>
+				</div>
+			</section>
+
+		<!-- One -->
+			<section id="one" class="wrapper style1">
+				<header class="major">
+					<h2>도움말</h2>
+					<p>팟플레이어로 시청하는것을 권장합니다</p>
+				</header>
+				<div class="container">
+					<div class="row">
+						<div class="4u">
+							<section class="special box">
+								<i class="icon fa-globe major"></i>
+								<h3>브라우저 </h3>
+								<p>기본설정으로 시청시, 익스플로러(IE) 11이 필요합니다<p/>크롬 사용자는 '플레이어:설정'-'내부브라우저:크롬을 사용'를 체크하세요</p>
+								<ul class="actions">
+								<li><a href="http://windows.microsoft.com/ko-kr/internet-explorer/download-ie" class="button special">IE11 설치</a></li>
+								</ul>
+							</section>
+						</div>
+						<div class="4u">
+							<section class="special box">
+								<i class="icon fa-play major"></i>
+								<h3>다음팟플레이어</h3>
+								<p>플레이어:설정 → 팟플레이어 사용 을 체크하세요<p />전체화면은 무조건 알트+엔터로 전환하셔야 합니다</p>
+								<ul class="actions">
+								<li><a href="http://tvpot.daum.net/application/PotPlayer.do" class="button special">팟플레이어 설치</a></li>
+								</ul>
+							</section>
+						</div>
+						<div class="4u">
+							<section class="special box">
+								<i class="icon fa-film major"></i>
+								<h3>방송 온오프</h3>
+								<p>방송 온오프는 POOOO사이트를 기준으로 15분마다 체크합니다<p />만약 방송체크가 잘 안된다면 프로그램을 재실행해주세요</p>
+								<ul class="actions">
+								<li><a href="http://poooo.ml/" class="button special">POOOO</a></li>
+								</ul>
+							</section>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+		<!-- Two -->
+			<section id="two" class="wrapper style1">
+				<header class="major">
+					<h2>로다 플레이어 Air 의 기능</h2>
+					<p>설정법을 알아봐요</p>
+				</header>
+				<div class="container">
+					<div class="row">
+						<div class="6u">
+							<section class="special">
+								<a href="#two" class="image fit"><img src="images/chat.png" alt="" /></a>
+								<h3>가가라이브 채팅</h3>
+								<p>가가라이브 채팅을 끄거나, 킬 수 있습니다</p>
+							</section>
+						</div>
+						<div class="6u">
+							<section class="special">
+								<a href="#two" class="image fit"><img src="images/menubar.png" alt="" /></a>
+								<h3>상단 메뉴</h3>
+								<p>컨트롤+엔터를 눌러 상단 메뉴바를 숨기거나, 보이게 할 수 있습니다</p>
+							</section>
+						</div>
+					</div>
+				</div>
+			</section>
+
+		<!-- Three -->
+			<section id="three" class="wrapper style2">
+				<div class="container">
+					<section>
+						<h2>업데이트 노트</h2>
+						<p><P><EM><SPAN style="FONT-SIZE: 11pt">1.3 업데이트는</SPAN><SPAN style="FONT-SIZE: 11pt">&nbsp;안정성 개선사항 및 오류 수정을 포함합니다</SPAN></EM></P>
+						<UL class="column bottom">
+						<LI>Air, 자동업데이트 기능 추가</LI>
+						<LI>팟플레이어&nbsp;전환시, 스트리밍 서버 선택가능</LI>
+						<LI>창 리사이즈 관련 함수 변경</LI>
+						<LI>각종 버그수정</LI></UL></p>
+					</section>
+				</div>
+			</section>					
+			
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="container">
+					<div class="row double">
+						<div class="6u">
+							<div class="row collapse-at-2">
+								<div class="6u">
+									<h3>Air</h3>
+									<ul class="alt">
+										<li><A class=tx-link href="http://knowledgeisfree.tistory.com/" target=_blank>개발자 블로그</A></li>
+										<li><A class=tx-link href="https://github.com/Visionary1/LodaPlayer" target=_blank>GitHub Repository</A></li>
+									</ul>
+								</div>
+								<div class="6u">
+									<h3>Credits</h3>
+									<ul class="alt">
+										<li>﻿<A class=tx-link href="http://poooo.ml/" target=_blank>공대생 POOOO</A>﻿</li> 
+										<li><A class=tx-link href="https://livehouse.in/en/channel/329050" target=_blank>RONGSPORTS</A>﻿</li>
+										<li>﻿<A class=tx-link href="http://templated.co/" target=_blank>TEMPLATE</A>﻿</li> 
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="6u">
+							<h2>About</h2>
+							<P>로다 플레이어 Air is a free, open-source software written in AutoHotkey</P>
+						</div>
+					</div>
+					<ul class="copyright">
+						<li>&copy; 로다 플레이어 Air. All rights reserved.</li>
+						<li>GitHub: <A class=tx-link href="https://github.com/Visionary1/LodaPlayer" target=_blank>Source Code</A></li>
+					</ul>
+				</div>
+			</footer>
+	</body>
+</html>
