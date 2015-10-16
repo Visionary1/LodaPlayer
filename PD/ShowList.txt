@@ -14,6 +14,5 @@
 {PD: "친절한상근씨", Channel: "", Addr: "334645"},
 {PD: "[전대미문의 팟수] 방송중", Channel: "", Addr: "329611"},
 {PD: "우리집개", Channel: "", Addr: "317849"},
-{PD: "pengs", Channel: "", Addr: "316825"},
-{PD: "hjk", Channel: "", Addr: "322257"}
+{PD: "pengs", Channel: "", Addr: "316825"}
 ]

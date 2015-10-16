@@ -14,7 +14,5 @@
 {PD: "흑설", Channel: "", Addr: "346699"},
 {PD: "아이나", Channel: "", Addr: "320626"},
 {PD: "해냐차", Channel: "", Addr: "345197"},
-{PD: "잭슨TV", Channel: "", Addr: "317914"},
-{PD: "릴리루카아데", Channel: "", Addr: "325702"},
-{PD: "Dramatic1", Channel: "", Addr: "317866"}
+{PD: "잭슨TV", Channel: "", Addr: "317914"}
 ]

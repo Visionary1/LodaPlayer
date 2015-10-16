@@ -5,10 +5,7 @@
 {PD: "로솔", Channel: "", Addr: "329829"},
 {PD: "happysky", Channel: "", Addr: "317987"},
 {PD: "PD 별루군", Channel: "", Addr: "325098"},
-{PD: "솔코린", Channel: "", Addr: "319346"},
 {PD: "Yunaito", Channel: "", Addr: "315846"},
 {PD: "라이거", Channel: "", Addr: "327277"},
-{PD: "Baek", Channel: "", Addr: "331242"},
-{PD: "팟]엘퀴네스", Channel: "", Addr: "317910"},
-{PD: "팟수난민시대", Channel: "", Addr: "321639"}
+{PD: "팟]엘퀴네스", Channel: "", Addr: "317910"}
 ]
