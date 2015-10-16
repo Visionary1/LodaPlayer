@@ -14,6 +14,7 @@
 {PD: "미르", Channel: "", Addr: "318493"},
 {PD: "반지하팟수", Channel: "", Addr: "338369"},
 {PD: "떠돌이맥스", Channel: "", Addr: "317950"},
+{PD: "조PD", Channel: "", Addr: "331325"},
 {PD: "플로우", Channel: "", Addr: "321812"},
 {PD: "visp(배즙)", Channel: "", Addr: "318614"},
 {PD: "거북TV", Channel: "", Addr: "324804"}

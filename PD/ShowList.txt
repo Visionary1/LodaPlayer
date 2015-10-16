@@ -12,7 +12,7 @@
 {PD: "키메", Channel: "", Addr: "318215"},
 {PD: "실제상황기막힌이야기", Channel: "", Addr: "324391"},
 {PD: "친절한상근씨", Channel: "", Addr: "334645"},
-{PD: "[전대미문의 팟수]", Channel: "", Addr: "329611"},
+{PD: "[전대미문의 팟수] 방송중", Channel: "", Addr: "329611"},
 {PD: "우리집개", Channel: "", Addr: "317849"},
 {PD: "pengs", Channel: "", Addr: "316825"},
 {PD: "hjk", Channel: "", Addr: "322257"}
