@@ -128,7 +128,7 @@ class LodaPlayer {
 		for each, Msg in [0x100]
 			OnMessage(Msg, this.Bound.OnMessage)
 		
-		try FileAppend, % whr.ResponseText, %A_Temp%\LodaPlayer\Main.html, UTF-8
+		try FileAppend, % whr.ResponseText, %A_Temp%\LodaPlugin\Main.html, UTF-8
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html"), VarSetCapacity(whr, 0), VarSetCapacity(OnlineList, 0)
 		
 		if DisplayW
