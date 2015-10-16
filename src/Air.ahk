@@ -435,11 +435,6 @@ class LodaPlayer {
 				IfMsgBox, Yes
 				{
 					MsgBox, 262208, 크롬으로 전환, 내장브라우저를 IE에서 크롬으로 전환합니다`n`n전체화면(F11) 메시지는 건드리지 말고`,`n전체화면을 풀지도 마세요`, 작동중에 에러가 발생할 수 있습니다
-					this.CustomCount := 1, Stream.Navigate("about:blank")
-					GuiControl, Disable, Stream
-					GuiControl, Hide, Stream
-					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
-					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\on.png,,0
 					
 					Process, Exist, chrome.exe
 					if ErrorLevel != 0
@@ -461,7 +456,11 @@ class LodaPlayer {
 							}
 						}
 					}
-					
+					this.CustomCount := 1, Stream.Navigate("about:blank")
+					GuiControl, Disable, Stream
+					GuiControl, Hide, Stream
+					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
+					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\on.png,,0
 					WinWait ahk_pid %ChildPID%
 					this.ChromeChild := WinExist("ahk_pid " ChildPID), VarSetCapacity(ChildPID, 0), this.SetChildWindow(this.ChromeChild, this.hMainWindow)
 					ControlFocus,, % "ahk_id " this.ChromeChild
@@ -533,13 +532,11 @@ class LodaPlayer {
 					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
 					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\on.png,,0
 					
-					/*
 					if this.CustomCount = 0
 					{
 						if (Stream.LocationURL() != "about:blank")
-							Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
+							Stream.Navigate("about:blank")
 					}
-					*/
 					
 					this.DaumPotSet(1)
 					RegRead, PotLocation, HKCU, SOFTWARE\DAUM\PotPlayer, ProgramFolder
