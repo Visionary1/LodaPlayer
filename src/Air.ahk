@@ -132,6 +132,8 @@ class LodaPlayer {
 		for each, Msg in [0x100]
 			OnMessage(Msg, this.Bound.OnMessage)
 		
+		
+		
 		if DisplayW
 			Gui, Show, % "w" DisplayW " h" DisplayH, % this.Title
 		else if !DisplayW
