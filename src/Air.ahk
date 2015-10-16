@@ -84,6 +84,32 @@ class LodaPlayer {
 			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
 		;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
 		
+		while Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
+		{
+			WebPD := Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
+			WebTitle := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
+			
+			Loop % Film.Length() {
+				if (Film[A_Index]["PD"] == WebPD)
+					Film[A_Index]["Channel"] := WebTitle
+			}
+			
+			Loop % Ani.Length() {
+				if (Ani[A_Index]["PD"] == WebPD)
+					Ani[A_Index]["Channel"] := WebTitle
+			}
+			
+			Loop % Show.Length() {
+				if (Show[A_Index]["PD"] == WebPD)
+					Show[A_Index]["Channel"] := WebTitle
+			}
+			
+			Loop % Etc.Length() {
+				if (Etc[A_Index]["PD"] == WebPD)
+					Etc[A_Index]["Channel"] := WebTitle
+			}
+		}
+		
 		try {
 			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 			Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
@@ -129,7 +155,7 @@ class LodaPlayer {
 			OnMessage(Msg, this.Bound.OnMessage)
 		
 		try FileAppend, % whr.ResponseText, %A_Temp%\LodaPlugin\Main.html, UTF-8
-		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html"), VarSetCapacity(whr, 0), VarSetCapacity(OnlineList, 0)
+		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html"), whr := "", OnlineList := ""
 		
 		if DisplayW
 			Gui, Show, % "w" DisplayW " h" DisplayH, % this.Title
@@ -462,7 +488,7 @@ class LodaPlayer {
 					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
 					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\on.png,,0
 					WinWait ahk_pid %ChildPID%
-					this.ChromeChild := WinExist("ahk_pid " ChildPID), VarSetCapacity(ChildPID, 0), this.SetChildWindow(this.ChromeChild, this.hMainWindow)
+					this.ChromeChild := WinExist("ahk_pid " ChildPID), ChildPID := "", this.SetChildWindow(this.ChromeChild, this.hMainWindow)
 					ControlFocus,, % "ahk_id " this.ChromeChild
 					ControlSend,, {F11}, % "ahk_id " this.ChromeChild
 					Sleep, 500
@@ -572,7 +598,7 @@ class LodaPlayer {
 						}
 					}
 					WinWait ahk_pid %ChildPID%
-					this.PotChild := WinExist("ahk_pid " ChildPID), VarSetCapacity(ChildPID, 0), this.DaumPotSet("Fix")
+					this.PotChild := WinExist("ahk_pid " ChildPID), ChildPID := "", this.DaumPotSet("Fix")
 					this.SetChildWindow(this.PotChild, this.hMainWindow), RedrawWindow()
 				}
 				return
@@ -767,7 +793,7 @@ class LodaPlayer {
 			iePopUp := ComObjCreate("InternetExplorer.Application")
 			iePopUp.Visible := true, iePopUp.MenuBar := false, iePopUp.StatusBar := false, iePopUp.ToolBar := false, iePopUp.Width := A_ScreenWidth * 0.7, iePopUp.Height := A_ScreenHeight * 0.7
 			iePopUp.Navigate(this.BaseAddr . Go, 0x20)  ; navBrowserBar = 0x20,
-			ObjRelease(iePopUp), VarSetCapacity(iePopUp, 0), FreeMemory()
+			iePopUp := "", FreeMemory()
 			return
 		}
 		
@@ -819,7 +845,7 @@ class LodaPlayer {
 				WinGetTitle, LatterT, % "ahk_id " this.PotChild
 			until LatterT = "playlist.m3u8 - 다음 팟플레이어"
 			Sleep, 100
-			VarSetCapacity(LatterT, 0), VarSetCapacity(forVerify, 0), VarSetCapacity(Teleport, 0), VarSetCapacity(InputURL, 0), RedrawWindow(), FreeMemory()
+			LatterT := "", forVerify := "", Teleport := "", InputURL := "", RedrawWindow(), FreeMemory()
 		}
 		return
 	}
@@ -827,14 +853,14 @@ class LodaPlayer {
 	DeleteMenu(Desire)
 	{
 		global
-		Loop, % %Desire%Count
+		Loop, % NumGet(&%Desire%, 4*A_PtrSize)
 			Menu, % Desire . "Menu", Delete, % %Desire%[A_Index]["PD"] "`t" %Desire%[A_Index]["Channel"]
 	}
 	
 	UpdateMenu(Category)
 	{
 		global
-		Loop, % %Category%Count {
+		Loop, % NumGet(&%Category%, 4*A_PtrSize) {
 			Menu, % Category . "Menu", Add, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %LPP% ;LodaPlayer.PDMenu
 			if InStr(OnlineList, %Category%[A_Index]["PD"])
 				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\on.png,,0
@@ -891,9 +917,8 @@ class ServerInfo extends LodaPlayer {
 		global
 		
 		Gui, Menu
-		
 		this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
-		Film:= "", FilmCount := "", Ani := "", AniCount := "", Show := "", ShowCount := "", Etc := "", EtcCount := ""
+		WebPD := "", WebTitle := "", Film:= "", Ani := "", Show := "", Etc := ""
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
 		
 		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1"), poo.Open("GET", "http://poooo.ml/", True), poo.Send(), poo.WaitForResponse()
@@ -902,17 +927,41 @@ class ServerInfo extends LodaPlayer {
 			Sleep, 10
 		
 		dockdock := ComObjCreate("HTMLfile"), dockdock.Write(poo.ResponseText), dockdock.Close()
-		while dockdock.getElementsByClassName("livelist")[A_Index-1].innerText 
+		while dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 		
-		;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
+		while dockdock.getElementsByClassName("ellipsis")[A_Index-1].innerText
+		{
+			WebPD := dockdock.getElementsByClassName("deepblue")[A_Index-1].innerText
+			WebTitle := dockdock.getElementsByClassName("ellipsis")[A_Index-1].innerText
+			
+			Loop % Film.Length() {
+				if (Film[A_Index]["PD"] == WebPD)
+					Film[A_Index]["Channel"] := WebTitle
+			}
+			
+			Loop % Ani.Length() {
+				if (Ani[A_Index]["PD"] == WebPD)
+					Ani[A_Index]["Channel"] := WebTitle
+			}
+			
+			Loop % Show.Length() {
+				if (Show[A_Index]["PD"] == WebPD)
+					Show[A_Index]["Channel"] := WebTitle
+			}
+			
+			Loop % Etc.Length() {
+				if (Etc[A_Index]["PD"] == WebPD)
+					Etc[A_Index]["Channel"] := WebTitle
+			}
+		}
 		
 		try {
 			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 		}
 		Gui, Menu, MyMenuBar
 		WinSet, Redraw,, ahk_id %hMainWindow%
-		VarSetCapacity(poo, 0), VarSetCapacity(dockdock, 0), VarSetCapacity(OnlineList, 0), FreeMemory()
+		poo := "", dockdock := "", OnlineList := "", FreeMemory()
 	}
 	
 	/* until 1.2.3,  async false
@@ -953,7 +1002,7 @@ class ServerInfo extends LodaPlayer {
 			return
 		if (reqFilm.status == 200 || reqFilm.status == 304)
 		{
-			Film := JSON_ToObj(reqFilm.ResponseText), VarSetCapacity(reqFilm, 0), FilmCount := NumGet(&Film, 4*A_PtrSize)
+			Film := JSON_ToObj(reqFilm.ResponseText), reqFilm := ""
 		}
 	}
 
@@ -963,7 +1012,7 @@ class ServerInfo extends LodaPlayer {
 			return
 		if (reqAni.status == 200 || reqAni.status == 304)
 		{
-			Ani := JSON_ToObj(reqAni.ResponseText), VarSetCapacity(reqAni, 0), AniCount := NumGet(&Ani, 4*A_PtrSize)
+			Ani := JSON_ToObj(reqAni.ResponseText), reqAni := ""
 		}
 	}
 
@@ -973,7 +1022,7 @@ class ServerInfo extends LodaPlayer {
 			return
 		if (reqShow.status == 200 || reqShow.status == 304)
 		{
-			Show := JSON_ToObj(reqShow.ResponseText), VarSetCapacity(reqShow, 0), ShowCount := NumGet(&Show, 4*A_PtrSize)
+			Show := JSON_ToObj(reqShow.ResponseText), reqShow := ""
 		}
 	}
 
@@ -983,7 +1032,7 @@ class ServerInfo extends LodaPlayer {
 			return
 		if (reqEtc.status == 200 || reqEtc.status == 304)
 		{
-			Etc := JSON_ToObj(reqEtc.ResponseText), VarSetCapacity(reqEtc, 0), EtcCount := NumGet(&Etc, 4*A_PtrSize)
+			Etc := JSON_ToObj(reqEtc.ResponseText), reqEtc := ""
 		}
 	}
 	
