@@ -1067,11 +1067,11 @@ class ServerInfo extends LodaPlayer {
 
 class ViewControl extends LodaPlayer {
 
-	static hVisible := 1, MenuNotify := 1
+	static hVisible := 1, MenuNotify := 1, hMenu := ""
 	
 	ToggleOnlyMenu()
 	{
-		static aMenu := ""
+		;static aMenu := ""
 		global
 		
 		if this.hVisible = 0
@@ -1080,12 +1080,12 @@ class ViewControl extends LodaPlayer {
 		KeyWait Ctrl
 		KeyWait Enter
 		
-		if aMenu =
-			aMenu := DllCall("GetMenu", "uint", hMainWindow)
+		if hMenu =
+			hMenu := DllCall("GetMenu", "uint", hMainWindow)
 		
 		if this.MenuNotify = 0
 		{
-			DllCall("SetMenu", "uint", hMainWindow, "uint", aMenu) ;Menu Show
+			DllCall("SetMenu", "uint", hMainWindow, "uint", hMenu) ;Menu Show
 			return this.MenuNotify := 1
 		}
 		if this.MenuNotify = 1 ;처음
@@ -1097,7 +1097,7 @@ class ViewControl extends LodaPlayer {
 	
 	ToggleAll()
 	{
-		static hMenu := ""
+		;static hMenu := ""
 		global
 		
 		if Init.PluginCount = 0
