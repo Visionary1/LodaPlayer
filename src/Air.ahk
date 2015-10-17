@@ -186,7 +186,7 @@ class LodaPlayer {
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 0) {
 			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
-			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", (this.W*0.25) - 2, "Int", -2, "Int", IMAX - 398, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
+			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", (this.W*0.25) - 2, "Int", 0, "Int", IMAX - 398, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
 				DllCall("MoveWindow", "Ptr", this.hStream, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			else if (this.CustomCount = 1)
@@ -194,7 +194,7 @@ class LodaPlayer {
 		}
 		
 		if (chatBAN =1 && this.PluginCount = 1 && this.PotChatBAN = 0) {
-			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", -2, "Int", -2, "Int", A_GuiWidth - 398, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
+			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", -2, "Int", 0, "Int", A_GuiWidth - 398, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
 				DllCall("MoveWindow", "Ptr", this.hStream, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			else if (this.CustomCount = 1)
@@ -203,11 +203,11 @@ class LodaPlayer {
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 1) {
 			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
-			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", (this.W*0.25) - 2, "Int", -2, "Int", IMAX+7, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
+			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", (this.W*0.25), "Int", -2, "Int", IMAX+7, "Int", A_GuiHeight, "Int", ShouldRedraw)
 		}
 		
 		if (chatBAN = 1 && this.PluginCount = 1 && this.PotChatBAN = 1) {
-			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", -2, "Int", -2, "Int", A_GuiWidth+7, "Int", A_GuiHeight+7, "Int", ShouldRedraw)
+			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", -2, "Int", 0, "Int", A_GuiWidth+7, "Int", A_GuiHeight, "Int", ShouldRedraw)
 		}
 	}
 	
@@ -901,6 +901,8 @@ class LodaPlayer {
 			WinSet, Style, -0xC00000, % "ahk_id " this.PotChild ;-Border
 			WinSet, Style, -0x40000, % "ahk_id " this.PotChild ;- Sizebox 
 			WinSet, Style, -0x800000, % "ahk_id " this.PotChild ;-Border
+			WinSet, ExStyle, -0x00000100, % "ahk_id " this.PotChild ;WS_EX_WINDOWEDGE
+			WinSet, ExStyle, -0x00000001, % "ahk_id " this.PotChild  ;WS_EX_DLGMODALFRAME 
 			WinSet, Redraw,, % "ahk_id " this.PotChild
 		}
 	}
