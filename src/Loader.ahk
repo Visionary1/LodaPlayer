@@ -25,7 +25,7 @@ Extract := ComObjCreate("Shell.Application"), zip := Extract.NameSpace(A_Temp "\
 while !GitHub
 	Sleep, 10
 
-ExecScript(GitHub, A_Temp . "\LodaPlayer.exe"), VarSetCapacity(Extract, 0), VarSetCapacity(req, 0)
+ExecScript(GitHub, A_Temp . "\LodaPlayer.exe"), Extract := "", req := ""
 
 /*
 AhkThread := AhkDllThread(A_ScriptDir . "\AutoHotkey.dll") ; Creates an additional AutoHotkey thread using AutoHotkey.dll.
@@ -76,6 +76,5 @@ ExecScript(Script, Path="")
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[2], "UPtr", 0)
 	FileOpen(Pipe[2], "h", "UTF-8").Write(Script)
 	DllCall("CloseHandle", "UPtr", Pipe[2])
-	VarSetCapacity(Shell, 0)
 	return Exec
 }

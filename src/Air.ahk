@@ -26,16 +26,17 @@ return
 
 class LodaPlayer {
 
-	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0,PotChatBAN := 0, TopToggleCk := 0, ChromeChild := "", PotChild := ""
+	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7,
+	BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0,
+	PotChatBAN := 0, TopToggleCk := 0, ChromeChild := "", PotChild := "", Title := "로다 플레이어 Air"
 	
 	__New()
 	{
 		global
 		vIni := class_EasyIni("LodaPlayer.ini"), PotIni := vIni.Player.PotLocation, chatBAN := vIni.GaGaLive.ChatPreSet, DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
 		LPG := ObjBindMethod(this, "GaGaMenu"), LPM := ObjBindMethod(this, "PlayerMenu"), LPP := ObjBindMethod(this, "PDMenu")
-		this.Title := "로다 플레이어 Air 1.4"
 		
-		Gui, New, +Resize -DPIScale +hWndhMainWindow +0x2000000 +MinSize700x350  ;WS_CLIPCHILDREN := 0x2000000
+		Gui, New, +Resize -DPIScale +hWndhMainWindow +0x2000000 ;+MinSize700x350  ;WS_CLIPCHILDREN := 0x2000000
 		this.hMainWindow := hMainWindow
 		
 		Gui, Add, ActiveX, % " x" 0 " y" 0 " w" this.W*0.25 " h" this.H-10 " hwndhGaGa vChat", Shell.Explorer
@@ -81,8 +82,7 @@ class LodaPlayer {
 			Sleep, 10
 		
 		while Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
-			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
-		;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
+			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText ;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
 		
 		while Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
 		{
@@ -154,12 +154,13 @@ class LodaPlayer {
 		for each, Msg in [0x100]
 			OnMessage(Msg, this.Bound.OnMessage)
 		
-		try FileAppend, % whr.ResponseText, %A_Temp%\LodaPlugin\Main.html, UTF-8
-		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html"), whr := "", OnlineList := ""
+		mHTML := FileOpen(A_Temp . "\LodaPlugin\Main.html", "w", "UTF-8"), mHTML.Write(whr.ResponseText), mHTML.Close()
+		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
+		whr := "", OnlineList := "", mHTML := ""
 		
 		if DisplayW
 			Gui, Show, % "w" DisplayW " h" DisplayH, % this.Title
-		else if !DisplayW
+		else
 			Gui, Show, % "w" this.W " h" this.H, % this.Title
 	}
 
@@ -214,12 +215,10 @@ class LodaPlayer {
 	{
 		global
 		
-		Gui, Hide
 		SetTimer, %CheckPoo%, Off
-		VarSetCapacity(rect, 16, 0), DllCall("GetClientRect", uint, hMainWindow, uint, &rect), vIni.Player["Width"] := NumGet(rect, 8, "int"), vIni.Player["Height"] := ClientH := NumGet(rect, 12, "int")
+		VarSetCapacity(rect, 16, 0), DllCall("GetClientRect", uint, hMainWindow, uint, &rect), vIni.Player["Width"] := NumGet(rect, 8, "int"), vIni.Player["Height"] := NumGet(rect, 12, "int")
 		vIni.GaGaLive.ChatPreSet := chatBAN, vIni.Save()
 		FileSetAttrib, +H, LodaPlayer.ini
-		FileDelete, %A_Temp%\LodaPlugin\Main.html
 		
 		if (this.CustomCount = 1) {
 			ControlFocus,, % "ahk_id " this.ChromeChild
@@ -229,7 +228,7 @@ class LodaPlayer {
 		if (this.ChromeChild = || this.PotChild =)
 		{
 			try {
-				WinKill, % "ahk_id " this.ChromeChild
+				;WinKill, % "ahk_id " this.ChromeChild
 				WinKill, % "ahk_id " this.PotChild
 			}
 		}
@@ -286,8 +285,8 @@ class LodaPlayer {
 			{
 				if InStr(CheckSum, "https://livehouse.in/en/channel/")
 				{
-					VarSetCapacity( rect, 16, 0 ), DllCall("GetClientRect", uint, hMainWindow, uint, &rect ), ClientW := NumGet( rect, 8, "int" )
-					if (ClientW > 1279)
+					VarSetCapacity( rect, 16, 0 ), DllCall("GetClientRect", uint, hMainWindow, uint, &rect )
+					if (NumGet( rect, 8, "int" ) >= 1279)
 						Stream.document.getElementsByTagName("DIV")[66].Click() ; 왼쪽 프로필창 자동제거
 				}
 			}
@@ -306,8 +305,8 @@ class LodaPlayer {
 			{
 				if InStr(CheckSum, "https://livehouse.in/en/channel/")
 				{
-					VarSetCapacity( rect, 16, 0 ), DllCall("GetClientRect", uint, hStream, uint, &rect ), ClientW := NumGet( rect, 8, "int" )
-					if (ClientW > 1279)
+					VarSetCapacity( rect, 16, 0 ), DllCall("GetClientRect", uint, hStream, uint, &rect )
+					if (NumGet( rect, 8, "int" ) >= 1279)
 						Stream.document.getElementsByTagName("DIV")[66].Click() ; 왼쪽 프로필창 자동제거
 				}
 			}
@@ -363,17 +362,15 @@ class LodaPlayer {
 			else if this.CustomCount = 1
 			{
 				ClipHistory := Clipboard, Clipboard := "http://poooo.ml/"
-				ControlSend,, {F11}, ahk_id %LodaChromeChild%
+				ControlSend,, {F11}, % "ahk_id " this.ChromeChild
 				Sleep, 30
-				ControlFocus,, ahk_id %LodaChromeChild%
+				ControlSend,, {F6}, % "ahk_id " this.ChromeChild
 				Sleep, 30
-				ControlSend,, {F6}, ahk_id %LodaChromeChild%
+				ControlSend,, {Ctrl Down}{v}{Ctrl Up},% "ahk_id " this.ChromeChild
 				Sleep, 30
-				ControlSend,, {Ctrl Down}{v}{Ctrl Up}, ahk_id %LodaChromeChild%
+				ControlSend,, {Enter}, % "ahk_id " this.ChromeChild
 				Sleep, 30
-				ControlSend,, {Enter}, ahk_id %LodaChromeChild%
-				Sleep, 30
-				ControlSend,, {F11}, ahk_id %LodaChromeChild%
+				ControlSend,, {F11}, % "ahk_id " this.ChromeChild
 				Sleep, 30
 				Clipboard := ClipHistory, RedrawWindow()
 			}
@@ -535,35 +532,6 @@ class LodaPlayer {
 					else if (pressed = "홍콩서버")
 						DefaultServer := "119.81.135.21"
 					
-					if (this.InternalCount = 0 && this.ExternalCount = 1)
-					{
-						Menu, SetMenu, NoIcon, 익스플로러 전용 : 팝업으로 보기
-						Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\off.png,,0
-						Menu, SetMenu, Disable, 익스플로러 전용 : 팝업으로 보기
-					}
-					else
-						Menu, SetMenu, Disable, 익스플로러 전용 : 팝업으로 보기
-					
-					if (this.BaseAddr = "https://livehouse.in/en/embed/channel/")
-					{
-						Menu, SetMenu, NoIcon, UI 인터페이스 : 태그 형식으로 전환
-						Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\off.png,,0
-						Menu, SetMenu, Disable, UI 인터페이스 : 태그 형식으로 전환
-					}
-					else
-						Menu, SetMenu, Disable, UI 인터페이스 : 태그 형식으로 전환
-					
-					Menu, SetMenu, Enable, 다음팟플레이어전용 : 채팅창숨기기
-					this.PluginCount := 1, this.InternalCount := 1, this.ExternalCount := 0, this.BaseAddr := "https://livehouse.in/en/channel/"
-					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
-					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\on.png,,0
-					
-					if this.CustomCount = 0
-					{
-						if (Stream.LocationURL() != "about:blank")
-							Stream.Navigate("about:blank")
-					}
-					
 					this.DaumPotSet(1)
 					RegRead, PotLocation, HKCU, SOFTWARE\DAUM\PotPlayer, ProgramFolder
 					if ErrorLevel = 0
@@ -597,6 +565,36 @@ class LodaPlayer {
 							}
 						}
 					}
+					
+					if (this.InternalCount = 0 && this.ExternalCount = 1)
+					{
+						Menu, SetMenu, NoIcon, 익스플로러 전용 : 팝업으로 보기
+						Menu, SetMenu, Icon, 익스플로러 전용 : 팝업으로 보기, %A_Temp%\off.png,,0
+						Menu, SetMenu, Disable, 익스플로러 전용 : 팝업으로 보기
+					}
+					else
+						Menu, SetMenu, Disable, 익스플로러 전용 : 팝업으로 보기
+					
+					if (this.BaseAddr = "https://livehouse.in/en/embed/channel/")
+					{
+						Menu, SetMenu, NoIcon, UI 인터페이스 : 태그 형식으로 전환
+						Menu, SetMenu, Icon, UI 인터페이스 : 태그 형식으로 전환, %A_Temp%\off.png,,0
+						Menu, SetMenu, Disable, UI 인터페이스 : 태그 형식으로 전환
+					}
+					else
+						Menu, SetMenu, Disable, UI 인터페이스 : 태그 형식으로 전환
+					
+					Menu, SetMenu, Enable, 다음팟플레이어전용 : 채팅창숨기기
+					this.PluginCount := 1, this.InternalCount := 1, this.ExternalCount := 0, this.BaseAddr := "https://livehouse.in/en/channel/"
+					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
+					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\on.png,,0
+					
+					if this.CustomCount = 0
+					{
+						if (Stream.LocationURL() != "about:blank")
+							Stream.Navigate("about:blank")
+					}
+					
 					WinWait ahk_pid %ChildPID%
 					this.PotChild := WinExist("ahk_pid " ChildPID), ChildPID := "", this.DaumPotSet("Fix")
 					this.SetChildWindow(this.PotChild, this.hMainWindow), RedrawWindow()
@@ -799,21 +797,21 @@ class LodaPlayer {
 		
 		if (this.PluginCount = 1 && this.ExternalCount = 0 && this.InternalCount = 1) {
 			Critical
-			InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8"
+			InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8", forVerify := "", LatterT := ""
 			ControlFocus,, % "ahk_id " this.PotChild
 			ControlSend,, {Ctrl Down}u{Ctrl Up}, % "ahk_id " this.PotChild
 			WinWait, ahk_class #32770, 주소 열기
+			WinSet, Transparent, 0, ahk_class #32770, 주소 열기
 			Teleport := WinExist("ahk_class #32770", "주소 열기")
-			;WinSet, Transparent, 0, % "ahk_id " Teleport 
-			Loop {
+			
+			while forVerify != InputURL {
 				ControlClick, Button2, ahk_id %Teleport%,,,, NA ; 목록 삭제
 				Sleep,30
-				ControlSetText, Edit1, %InputURL%, ahk_id %Teleport% ; 주소 열기
+				ControlSetText, Edit1, %InputURL%, ahk_id %Teleport% ; 주소
 				Sleep, 30
-				ControlGetText, forVerify, Edit1, ahk_id %Teleport%  ;주소 열기
+				ControlGetText, forVerify, Edit1, ahk_id %Teleport%  ;check
 				Sleep, 30
-			} until forVerify = InputURL
-			
+			}
 			ControlClick, Button7, ahk_id %Teleport%,,,, NA   ; 확인(&O)
 			Critical, Off
 			
@@ -837,14 +835,14 @@ class LodaPlayer {
 				Clipboard := ClipHistory, RedrawWindow()
 			}
 			
-			Loop
+			while LatterT != "다음 팟플레이어"
 				WinGetTitle, LatterT, % "ahk_id " this.PotChild
-			until LatterT = "다음 팟플레이어"
-			Sleep, 100
-			Loop
+			Sleep, 200
+			
+			while LatterT != "playlist.m3u8 - 다음 팟플레이어"
 				WinGetTitle, LatterT, % "ahk_id " this.PotChild
-			until LatterT = "playlist.m3u8 - 다음 팟플레이어"
-			Sleep, 100
+			Sleep, 200
+			
 			LatterT := "", forVerify := "", Teleport := "", InputURL := "", RedrawWindow(), FreeMemory()
 		}
 		return
@@ -976,24 +974,24 @@ class ServerInfo extends LodaPlayer {
 	}
 	*/ 
 	
-	getFilmList(Which) {
+	getFilmList(to) {
 		global
-		reqFilm := ComObjCreate("Msxml2.XMLHTTP"), reqFilm.Open("GET", this.From . Which, true), reqFilm.onreadystatechange := ObjBindMethod(ServerInfo, "FilmReady"), reqFilm.Send()
+		reqFilm := ComObjCreate("Msxml2.XMLHTTP"), reqFilm.Open("GET", this.From . to, true), reqFilm.onreadystatechange := ObjBindMethod(this, "FilmReady"), reqFilm.Send()
 	}
 
-	getAniList(Which) {
+	getAniList(to) {
 		global
-		reqAni := ComObjCreate("Msxml2.XMLHTTP"), reqAni.Open("GET", this.From . Which, true), reqAni.onreadystatechange := ObjBindMethod(ServerInfo, "AniReady"), reqAni.Send()
+		reqAni := ComObjCreate("Msxml2.XMLHTTP"), reqAni.Open("GET", this.From . to, true), reqAni.onreadystatechange := ObjBindMethod(this, "AniReady"), reqAni.Send()
 	}
 
-	getShowList(Which) {
+	getShowList(to) {
 		global
-		reqShow := ComObjCreate("Msxml2.XMLHTTP"), reqShow.Open("GET", this.From . Which, true), reqShow.onreadystatechange := ObjBindMethod(ServerInfo, "ShowReady"), reqShow.Send()
+		reqShow := ComObjCreate("Msxml2.XMLHTTP"), reqShow.Open("GET", this.From . to, true), reqShow.onreadystatechange := ObjBindMethod(this, "ShowReady"), reqShow.Send()
 	}
 
-	getEtcList(Which) {
+	getEtcList(to) {
 		global
-		reqEtc := ComObjCreate("Msxml2.XMLHTTP"), reqEtc.Open("GET", this.From . Which, true), reqEtc.onreadystatechange := ObjBindMethod(ServerInfo, "EtcReady"), reqEtc.Send()
+		reqEtc := ComObjCreate("Msxml2.XMLHTTP"), reqEtc.Open("GET", this.From . to, true), reqEtc.onreadystatechange := ObjBindMethod(this, "EtcReady"), reqEtc.Send()
 	}
 
 	FilmReady() {
