@@ -110,19 +110,20 @@ class LodaPlayer {
 			}
 		}
 		
+		ServerInfo.UpdateMenu("Film"), ServerInfo.UpdateMenu("Ani"), ServerInfo.UpdateMenu("Show"), ServerInfo.UpdateMenu("Etc")
+		Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
+		Menu, MyMenuBar, Add, 애니:방송, :AniMenu
+		Menu, MyMenuBar, Add, 예능:방송, :ShowMenu
+		Menu, MyMenuBar, Add, 기타:방송, :EtcMenu
+		
 		try {
-			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
-			Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
-			Menu, MyMenuBar, Add, 애니:방송, :AniMenu
-			Menu, MyMenuBar, Add, 예능:방송, :ShowMenu
-			Menu, MyMenuBar, Add, 기타:방송, :EtcMenu
-			
 			for SectionName, a in vIni
 				for KeyName, Value in a
 					if SectionName = Favorite
 						Menu, FavoriteMenu, Add, %KeyName%, %LPP% ;LodaPlayer.PDMenu
 			Menu, MyMenuBar, Add, 즐겨찾기:목록, :FavoriteMenu
 		}
+		
 		Menu, MyMenuBar, Add, 주소로 이동 , %LPM% ;LodaPlayer.PlayerMenu
 		Menu, MyMenuBar, Add, 즐겨찾기, %LPM% ;LodaPlayer.PlayerMenu
 		Menu, MyMenuBar, Add, POOOO , %LPM% ;LodaPlayer.PlayerMenu
@@ -235,7 +236,9 @@ class LodaPlayer {
 		
 		for each, Msg in [0x100]
 			OnMessage(Msg, this.Bound.OnMessage, 0)
-		this.Delete("Bound"), WinEvents.Unregister(this.hMainWindow), BrowserEmulation(0), this.DaumPotSet(0)
+		this.Delete("Bound")
+		WinEvents.Unregister(this.hMainWindow)
+		BrowserEmulation(0), this.DaumPotSet(0)
 		ExitApp ;this.CloseCallback()
 	}
 	
@@ -268,12 +271,12 @@ class LodaPlayer {
 		}
 	}
 	
-	GaGaMenu()
+	GaGaMenu(ItemName)
 	{
 		global
 		CheckSum := Stream.LocationURL()
 		
-		if (A_ThisMenuItem = "채팅하기" && ChatBAN = 0) {
+		if (ItemName = "채팅하기" && ChatBAN = 0) {
 			ChatBAN := 1
 			GuiControl, Disable, chat
 			GuiControl, Hide, chat
@@ -293,7 +296,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "채팅하기" && ChatBAN = 1) {
+		if (ItemName = "채팅하기" && ChatBAN = 1) {
 			ChatBAN := 0
 			GuiControl, Enable, chat
 			GuiControl, Show, chat
@@ -317,11 +320,11 @@ class LodaPlayer {
 			Chat.Refresh()
 	}
 	
-	PlayerMenu()
+	PlayerMenu(ItemName)
 	{
 		global
 		
-		if (A_ThisMenuItem = "다음팟플레이어전용 : 채팅창숨기기" && this.PotChatBAN = 0 && this.PluginCount = 1) {
+		if (ItemName = "다음팟플레이어전용 : 채팅창숨기기" && this.PotChatBAN = 0 && this.PluginCount = 1) {
 			if this.CustomCount = 0
 			{
 				GuiControl, Disable, Stream
@@ -336,7 +339,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "다음팟플레이어전용 : 채팅창숨기기" && this.PotChatBAN = 1 && this.PluginCount = 1) {
+		if (ItemName = "다음팟플레이어전용 : 채팅창숨기기" && this.PotChatBAN = 1 && this.PluginCount = 1) {
 			if this.CustomCount = 0
 			{
 				GuiControl, Enable, Stream
@@ -351,7 +354,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "POOOO") {
+		if (ItemName = "POOOO") {
 			if this.CustomCount = 0
 			{
 				if ( Stream.LocationURL() = "http://poooo.ml/" )
@@ -377,7 +380,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if  (A_ThisMenuItem = "UI 인터페이스 : 태그 형식으로 전환" && this.PluginCount = 0) {
+		if  (ItemName = "UI 인터페이스 : 태그 형식으로 전환" && this.PluginCount = 0) {
 			if (this.BaseAddr = "https://livehouse.in/en/channel/")
 			{
 				MsgBox, 262180, 보기, 방송UI를 태그 형식으로 전환할까요?
@@ -403,7 +406,7 @@ class LodaPlayer {
 			}
 		}
 		
-		if (A_ThisMenuItem = "익스플로러 전용 : 팝업으로 보기") {
+		if (ItemName = "익스플로러 전용 : 팝업으로 보기") {
 			if (this.CustomCount = 1 || this.PluginCount = 1)
 			{
 				MsgBox, 262192, 안내, 기본 플레이어모드로 전환하세요`n`n*다음팟모드`,크롬해제
@@ -435,7 +438,7 @@ class LodaPlayer {
 			}
 		}
 		
-		if (A_ThisMenuItem = "로다 플레이어를 항상위로") {
+		if (ItemName = "로다 플레이어를 항상위로") {
 			WinSet, AlwaysOnTop, Toggle
 			if this.TopToggleCk = 0
 			{
@@ -451,7 +454,7 @@ class LodaPlayer {
 			}
 		}
 		
-		if (A_ThisMenuItem = "내장브라우저 : 크롬을 사용") {
+		if (ItemName = "내장브라우저 : 크롬을 사용") {
 			if (this.CustomCount = 0)
 			{
 				MsgBox, 262180, 사용자 브라우저, 로다 플레이어는 익스플로러를 기본으로 사용합니다`n`n크롬 브라우저로 변경하시겠어요?
@@ -516,7 +519,7 @@ class LodaPlayer {
 			}
 		}
 
-		if (A_ThisMenuItem = "내장플레이어 : 다음팟플레이어를 사용") {
+		if (ItemName = "내장플레이어 : 다음팟플레이어를 사용") {
 			if this.PluginCount = 0
 			{
 				MsgBox, 262180, 다음팟모드, 다음팟플레이어로 방송을 시청하시겠어요?`n`n'예'를 누르시면`, 다음팟모드로 전환합니다!
@@ -546,21 +549,21 @@ class LodaPlayer {
 						}
 						if !PotIni
 						{
-							FileSelectFolder, PotLocation, *C:\, 0, 다음팟플레이어 경로를 설정해주세요`n\DAUM\PotPlayer 까지만 설정하면 됩니다!
-							if PotLocation =
+							FileSelectFolder, Pot64Location, *C:\, 0, 다음팟플레이어 경로를 설정해주세요`n\DAUM\PotPlayer 까지만 설정하면 됩니다!
+							if Pot64Location =
 								return
 							else
 							{
 								MsgBox, 262180, 팟플레이어, 다음팟플레이어 64비트용을 사용하고 계세요?`n`n*컴퓨터의 사양을 묻는게 아닙니다
 								IfMsgBox, No
 								{
-									try Run, % PotLocation . "\PotPlayerMini.exe",,, ChildPID
-									vIni.Player["PotLocation"] := PotLocation . "\PotPlayerMini.exe"
+									try Run, % Pot64Location . "\PotPlayerMini.exe",,, ChildPID
+									vIni.Player["PotLocation"] := Pot64Location . "\PotPlayerMini.exe"
 								}
 								IfMsgBox, Yes
 								{
-									try Run, % PotLocation . "\PotPlayerMini64.exe",,, ChildPID
-									vIni.Player["PotLocation"] := PotLocation . "\PotPlayerMini64.exe"
+									try Run, % Pot64Location . "\PotPlayerMini64.exe",,, ChildPID
+									vIni.Player["PotLocation"] := Pot64Location . "\PotPlayerMini64.exe"
 								}
 							}
 						}
@@ -638,7 +641,7 @@ class LodaPlayer {
 			}
 		}
 		
-		if (A_ThisMenuItem = "문의 ＆ 피드백") {
+		if (ItemName = "문의 ＆ 피드백") {
 			if this.CustomCount = 0
 				Stream.Navigate("http://knowledgeisfree.tistory.com/guestbook")
 			else if this.CustomCount = 1
@@ -646,7 +649,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "렉＆끊김현상시 : 방송 새로고침") {
+		if (ItemName = "렉＆끊김현상시 : 방송 새로고침") {
 			if this.CustomCount = 0
 				Stream.Refresh()
 			else if this.CustomCount = 1
@@ -657,7 +660,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "설정리셋 : 초기화후 재시작") {
+		if (ItemName = "설정리셋 : 초기화후 재시작") {
 			try
 			{
 			MsgBox, 262193, 초기화, 대부분의 오류는 '방송 새로고침' 으로 해결이 됩니다`n`n그럼에도 오류가있다면 '확인' 버튼을 누르세요!`n`n종료후 다시 플레이어를 실행하세요
@@ -671,7 +674,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "즐겨찾기 목록수정 : 설정파일 열기") {
+		if (ItemName = "즐겨찾기 목록수정 : 설정파일 열기") {
 			try
 				Run, LodaPlayer.ini
 			if this.PluginCount = 0
@@ -679,7 +682,7 @@ class LodaPlayer {
 			return
 		}
 
-		if (A_ThisMenuItem = "방송＆채팅방이 안나오면 : IE11 설치") {
+		if (ItemName = "방송＆채팅방이 안나오면 : IE11 설치") {
 			if this.CustomCount = 0
 				Stream.Navigate("http://windows.microsoft.com/ko-kr/internet-explorer/download-ie")
 			else if this.CustomCount = 1
@@ -687,13 +690,13 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "주소로 이동") {
+		if (ItemName = "주소로 이동") {
 			InputBox, Address, 찾아가기, 채널번호를 입력해 방송으로 이동합니다`n`n채널번호를 입력하세요!`n`n채널번호 : 방송주소 끝의 6자리 숫자
 			if !ErrorLevel
 				return this.StartTrans(Address)
 		}
 		
-		if (A_ThisMenuItem = "즐겨찾기") {
+		if (ItemName = "즐겨찾기") {
 			if this.CustomCount = 0
 			{
 				CheckSum := Stream.LocationURL()
@@ -716,7 +719,7 @@ class LodaPlayer {
 			}
 		}
 		
-		if (A_ThisMenuItem = "방송추가") {
+		if (ItemName = "방송추가") {
 			if this.CustomCount = 0
 				Stream.Navigate("http://knowledgeisfree.tistory.com/84")
 			else if this.CustomCount = 1
@@ -724,7 +727,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "도움말") {
+		if (ItemName = "도움말") {
 			if this.CustomCount = 0
 				Stream.Navigate("http://knowledgeisfree.tistory.com/category/로다%20플레이어/메뉴얼")
 			else if this.CustomCount = 1
@@ -733,18 +736,18 @@ class LodaPlayer {
 		}
 	}
 
-	PDMenu()
+	PDMenu(ItemName, ItemPos, MenuName)
 	{
 		global
-		ReservedBanner := A_ThisMenuItem, Part := SubStr(A_ThisMenu, 1, -4)
+		ReservedBanner := ItemName, Part := SubStr(MenuName, 1, -4)
 		
 		if Part = Favorite
 		{
-			NewKey := A_ThisMenuItem
+			NewKey := ItemName
 			return this.StartTrans(vIni.Favorite[NewKey])
 		}
 		else
-			return this.StartTrans(%Part%[A_ThisMenuItemPos]["Addr"])
+			return this.StartTrans(%Part%[ItemPos]["Addr"])
 	}
 	
 	StartTrans(Go) 
@@ -848,25 +851,6 @@ class LodaPlayer {
 		return
 	}
 	
-	DeleteMenu(Desire)
-	{
-		global
-		Loop, % NumGet(&%Desire%, 4*A_PtrSize)
-			Menu, % Desire . "Menu", Delete, % %Desire%[A_Index]["PD"] "`t" %Desire%[A_Index]["Channel"]
-	}
-	
-	UpdateMenu(Category)
-	{
-		global
-		Loop, % NumGet(&%Category%, 4*A_PtrSize) {
-			Menu, % Category . "Menu", Add, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %LPP% ;LodaPlayer.PDMenu
-			if InStr(OnlineList, %Category%[A_Index]["PD"])
-				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\on.png,,0
-			else
-				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\off.png,,0
-		}
-	}
-	
 	SetChildWindow(Win, Des)
 	{
 		WinSet, Style, -0x80000000, % "ahk_id " Win ;remove popup
@@ -875,7 +859,7 @@ class LodaPlayer {
 		DllCall( "SetParent", "Ptr", Win, "Ptr", Des)
 	}
 	
-	DaumPotSet(Set) 
+	DaumPotSet(Set)
 	{
 		global
 		if Set = 1
@@ -911,14 +895,13 @@ class LodaPlayer {
 class ServerInfo extends LodaPlayer {
 	
 	static From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
-
+	
 	OnAirCheck()
 	{
 		global
-		
-		Gui, Menu
+		;Gui, Menu
 		this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
-		WebPD := "", WebTitle := "", Film:= "", Ani := "", Show := "", Etc := ""
+		WebPD := "", WebTitle := "", Film := "", Ani := "", Show := "", Etc := ""
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
 		
 		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1"), poo.Open("GET", "http://poooo.ml/", True), poo.Send(), poo.WaitForResponse()
@@ -956,10 +939,8 @@ class ServerInfo extends LodaPlayer {
 			}
 		}
 		
-		try {
-			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
-		}
-		Gui, Menu, MyMenuBar
+		this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
+		;Gui, Menu, MyMenuBar
 		WinSet, Redraw,, ahk_id %hMainWindow%
 		poo := "", dockdock := "", OnlineList := "", FreeMemory()
 	}
@@ -975,6 +956,27 @@ class ServerInfo extends LodaPlayer {
 		return JSON_ToObj(whr.ResponseText)
 	}
 	*/ 
+	
+	DeleteMenu(Desire)
+	{
+		global
+		Gui Menu
+		Loop, % NumGet(&%Desire%, 4*A_PtrSize)
+			Menu, % Desire . "Menu", Delete, % %Desire%[A_Index]["PD"] "`t" %Desire%[A_Index]["Channel"]
+		Gui, Menu, MyMenuBar
+	}
+	
+	UpdateMenu(Category)
+	{
+		global
+		Loop, % NumGet(&%Category%, 4*A_PtrSize) {
+			Menu, % Category . "Menu", Add, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %LPP% ;LodaPlayer.PDMenu
+			if InStr(OnlineList, %Category%[A_Index]["PD"])
+				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\on.png,,0
+			else
+				Menu, % Category . "Menu", Icon, % %Category%[A_Index]["PD"] "`t" %Category%[A_Index]["Channel"], %A_Temp%\off.png,,0
+		}
+	}
 	
 	getFilmList(to) {
 		global
@@ -1174,8 +1176,7 @@ BrowserEmulation(Level) {
 			ieversion :=  SubStr(ver, 1, InStr(ver, ".")-1)
 		}
 		catch {
-			MsgBox, 262160, Exception, 익스플로러 11을 설치하세요
-			ExitApp
+			MsgBox, 262160, Exception, 익스플로러 11가 설치되지 않았네요`n플레이어:설정-크롬을 사용 을 클릭하세요
 		}
 	}
 	if Level = 1
