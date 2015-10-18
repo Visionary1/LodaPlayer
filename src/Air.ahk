@@ -16,13 +16,18 @@ Menu, Tray, NoStandard
 OnlineList := "", Film := "", Ani := "", Show := "", Etc := "", ComObjError(False), BrowserEmulation(1)
 whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
 ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
-Init := new LodaPlayer()
+Init := new LodaPlayer(), Init.RegisterCloseCallback(Func("PlayerClose"))
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
 SetTimer, %CheckPoo%, 900000 ;900000
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Ctrl & Enter, %LessEx%
 Hotkey, Alt & Enter, %FullEx%
 return
+
+PlayerClose(Init)
+{
+	ExitApp
+}
 
 class LodaPlayer {
 
@@ -226,10 +231,10 @@ class LodaPlayer {
 			ControlSend,, {Ctrl Down}w{Ctrl Up}, % "ahk_id " this.ChromeChild
 		}
 		
-		if (this.ChromeChild = || this.PotChild =)
+		if (this.ChromeChild || this.PotChild)
 		{
 			try {
-				;WinKill, % "ahk_id " this.ChromeChild
+				WinKill, % "ahk_id " this.ChromeChild
 				WinKill, % "ahk_id " this.PotChild
 			}
 		}
@@ -238,8 +243,15 @@ class LodaPlayer {
 			OnMessage(Msg, this.Bound.OnMessage, 0)
 		this.Delete("Bound")
 		WinEvents.Unregister(this.hMainWindow)
-		BrowserEmulation(0), this.DaumPotSet(0)
-		ExitApp ;this.CloseCallback()
+		BrowserEmulation(0)
+		this.DaumPotSet(0)
+		Gui, Destroy
+		this.CloseCallback()
+	}
+	
+	RegisterCloseCallback(CloseCallback)
+	{
+		this.CloseCallback := CloseCallback
 	}
 	
 	OnMessage(wParam, lParam, Msg, hWnd)
