@@ -13,7 +13,7 @@ SetDefaultMouseSpeed, 0
 SetWinDelay, 0
 SetControlDelay, 0
 Menu, Tray, NoStandard
-ComObjError(False), OnlineList := "", BrowserEmulation(1)
+OnlineList := "", Film := "", Ani := "", Show := "", Etc := "", ComObjError(False), BrowserEmulation(1)
 whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
 ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 Init := new LodaPlayer()
@@ -157,7 +157,7 @@ class LodaPlayer {
 		
 		mHTML := FileOpen(A_Temp . "\LodaPlugin\Main.html", "w", "UTF-8"), mHTML.Write(whr.ResponseText), mHTML.Close()
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
-		whr := "", OnlineList := "", mHTML := ""
+		whr := "", OnlineList := "", mHTML := "", WebPD := "", WebTitle := ""
 		
 		if DisplayW
 			Gui, Show, % "w" DisplayW " h" DisplayH, % this.Title
@@ -316,7 +316,7 @@ class LodaPlayer {
 			return
 		}
 		
-		if (A_ThisMenuItem = "새로고침")
+		if (ItemName = "새로고침")
 			Chat.Refresh()
 	}
 	
@@ -773,7 +773,6 @@ class LodaPlayer {
 			
 			if (this.CustomCount = 1)
 			{
-				Critical
 				ClipHistory := Clipboard, Clipboard := this.BaseAddr . Go
 				ControlFocus,, % "ahk_id " this.ChromeChild
 				ControlSend,, {F11}, % "ahk_id " this.ChromeChild
@@ -785,7 +784,6 @@ class LodaPlayer {
 				ControlSend,, {Enter}, % "ahk_id " this.ChromeChild
 				Sleep, 30
 				ControlSend,, {F11}, % "ahk_id " this.ChromeChild
-				Critical, Off
 				Clipboard := ClipHistory, RedrawWindow()
 			}
 		}
@@ -799,7 +797,6 @@ class LodaPlayer {
 		}
 		
 		if (this.PluginCount = 1 && this.ExternalCount = 0 && this.InternalCount = 1) {
-			Critical
 			InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8", forVerify := "", LatterT := ""
 			ControlFocus,, % "ahk_id " this.PotChild
 			ControlSend,, {Ctrl Down}u{Ctrl Up}, % "ahk_id " this.PotChild
@@ -816,13 +813,11 @@ class LodaPlayer {
 				Sleep, 30
 			}
 			ControlClick, Button7, ahk_id %Teleport%,,,, NA   ; 확인(&O)
-			Critical, Off
 			
 			if this.CustomCount = 0
 				Stream.Navigate("https://livehouse.in/en/channel/" . Go . "/chatroom")
 			if this.CustomCount = 1
 			{
-				Critical
 				ClipHistory := Clipboard, Clipboard := "https://livehouse.in/en/channel/" . Go . "/chatroom"
 				ControlFocus,, % "ahk_id " this.ChromeChild
 				ControlSend,, {F11}, % "ahk_id " this.ChromeChild
@@ -834,7 +829,6 @@ class LodaPlayer {
 				ControlSend,, {Enter}, % "ahk_id " this.ChromeChild
 				Sleep, 30
 				ControlSend,, {F11}, % "ahk_id " this.ChromeChild
-				Critical, Off
 				Clipboard := ClipHistory, RedrawWindow()
 			}
 			
@@ -900,20 +894,21 @@ class ServerInfo extends LodaPlayer {
 	{
 		global
 		;Gui, Menu
+		WinSet, Redraw,, ahk_id %hMainWindow%
 		this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
-		WebPD := "", WebTitle := "", Film := "", Ani := "", Show := "", Etc := ""
+		Film := "", Ani := "", Show := "", Etc := ""
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
 		
 		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1"), poo.Open("GET", "http://poooo.ml/", True), poo.Send(), poo.WaitForResponse()
 		
-		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc) && poo.ResponseText)
+		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
 			Sleep, 10
 		
-		dockdock := ComObjCreate("HTMLfile"), dockdock.Write(poo.ResponseText), dockdock.Close()
+		dockdock := ComObjCreate("HTMLfile"), dockdock.Open(), dockdock.Write(poo.ResponseText), dockdock.Close()
 		while dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 		
-		while dockdock.getElementsByClassName("ellipsis")[A_Index-1].innerText
+		while dockdock.getElementsByClassName("deepblue")[A_Index-1].innerText
 		{
 			WebPD := dockdock.getElementsByClassName("deepblue")[A_Index-1].innerText
 			WebTitle := dockdock.getElementsByClassName("ellipsis")[A_Index-1].innerText
@@ -942,7 +937,7 @@ class ServerInfo extends LodaPlayer {
 		this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 		;Gui, Menu, MyMenuBar
 		WinSet, Redraw,, ahk_id %hMainWindow%
-		poo := "", dockdock := "", OnlineList := "", FreeMemory()
+		WebPD := "", WebTitle := "", poo := "", dockdock := "", OnlineList := "", FreeMemory()
 	}
 	
 	/* until 1.2.3,  async false
