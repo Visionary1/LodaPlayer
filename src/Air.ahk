@@ -1128,6 +1128,8 @@ class ViewControl extends LodaPlayer {
 			if (Init.PluginCount = 1)
 			{
 				Init.PotChatBAN := 0
+				Menu, SetMenu, NoIcon, 다음팟플레이어전용 : 채팅창숨기기
+				Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
 				if Init.CustomCount = 0
 					WinShow, ahk_id %hStream%
 				if Init.CustomCount = 1
@@ -1213,7 +1215,7 @@ FreeMemory() {
 }
 
 RedrawWindow() {
-	global hMainWindow, ShouldRedraw
+	global hMainWindow
 	
 	WinGetPos, MoveX, MoveY, MoveW, MoveH, ahk_id %hMainWindow%
 	if (MoveW > A_ScreenWidth - 15)
@@ -1224,9 +1226,9 @@ RedrawWindow() {
 	}
 	else
 	{
-		DllCall("MoveWindow", "Ptr", hMainWindow, "Int", MoveX, "Int", MoveY, "Int", MoveW-1, "Int", MoveH-1, "Int", ShouldRedraw)
+		DllCall("MoveWindow", "Ptr", hMainWindow, "Int", MoveX, "Int", MoveY, "Int", MoveW-1, "Int", MoveH-1, "Int", 1)
 		Sleep, 50
-		DllCall("MoveWindow", "Ptr", hMainWindow, "Int", MoveX, "Int", MoveY, "Int", MoveW, "Int", MoveH, "Int", ShouldRedraw)
+		DllCall("MoveWindow", "Ptr", hMainWindow, "Int", MoveX, "Int", MoveY, "Int", MoveW, "Int", MoveH, "Int", 1)
 	}
 }
 
