@@ -45,10 +45,12 @@ class LodaPlayer {
 		this.hMainWindow := hMainWindow
 		
 		Gui, Add, ActiveX, % " x" 0 " y" 0 " w" this.W*0.25 " h" this.H-10 " hwndhGaGa vChat", Shell.Explorer
-		Chat.Navigate("http://www.gagalive.kr/livechat1.swf?chatroom=~~~new_ForPotsu&fontlarge=true"), this.hGaGa := hGaGa, Chat.Silent := true
+		Chat.Navigate("http://www.gagalive.kr/livechat1.swf?chatroom=~~~new_ForPotsu&fontlarge=true"), Chat.Silent := true
+		this.hGaGa := hGaGa
 		
 		Gui, Add, ActiveX, % " x" this.W *0.25 " y" 0 " w" this.W*0.75 " h" this.H-10 " hwndhStream vStream", Shell.Explorer
-		Stream.Navigate("http://poooo.ml/"), this.hStream := hStream, Stream.Silent := true
+		Stream.Navigate("http://poooo.ml/"), Stream.Silent := true
+		this.hStream := hStream
 		
 		this.Bound := []
 		this.Bound.OnMessage := this.OnMessage.Bind(this)
@@ -192,7 +194,7 @@ class LodaPlayer {
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 0) {
 			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
-			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", (this.W*0.25) - 2, "Int", 0, "Int", IMAX - 398, "Int", A_GuiHeight, "Int", ShouldRedraw)
+			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", this.W*0.25, "Int", 0, "Int", IMAX - 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
 				DllCall("MoveWindow", "Ptr", this.hStream, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			else if (this.CustomCount = 1)
@@ -200,7 +202,7 @@ class LodaPlayer {
 		}
 		
 		if (chatBAN =1 && this.PluginCount = 1 && this.PotChatBAN = 0) {
-			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", -2, "Int", 0, "Int", A_GuiWidth - 398, "Int", A_GuiHeight, "Int", ShouldRedraw)
+			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", 0, "Int", 0, "Int", A_GuiWidth - 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			if (this.CustomCount = 0)
 				DllCall("MoveWindow", "Ptr", this.hStream, "Int", A_GuiWidth - 400, "Int", 0, "Int", 400, "Int", A_GuiHeight, "Int", ShouldRedraw)
 			else if (this.CustomCount = 1)
@@ -209,11 +211,11 @@ class LodaPlayer {
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 1) {
 			DllCall("MoveWindow", "Ptr", this.hGaGa, "Int", 0, "Int", 0, "Int", this.W*0.25, "Int", A_GuiHeight, "Int", ShouldRedraw)
-			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", (this.W*0.25), "Int", -2, "Int", IMAX+7, "Int", A_GuiHeight, "Int", ShouldRedraw)
+			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", this.W*0.25, "Int", 0, "Int", IMAX, "Int", A_GuiHeight, "Int", ShouldRedraw)
 		}
 		
 		if (chatBAN = 1 && this.PluginCount = 1 && this.PotChatBAN = 1) {
-			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", -2, "Int", 0, "Int", A_GuiWidth+7, "Int", A_GuiHeight, "Int", ShouldRedraw)
+			DllCall("MoveWindow", "Ptr", this.PotChild, "Int", 0, "Int", 0, "Int", A_GuiWidth, "Int", A_GuiHeight, "Int", ShouldRedraw)
 		}
 	}
 	
@@ -500,7 +502,8 @@ class LodaPlayer {
 					Menu, SetMenu, NoIcon, 내장브라우저 : 크롬을 사용
 					Menu, SetMenu, Icon, 내장브라우저 : 크롬을 사용, %A_Temp%\on.png,,0
 					WinWait ahk_pid %ChildPID%
-					this.ChromeChild := WinExist("ahk_pid " ChildPID), ChildPID := "", this.SetChildWindow(this.ChromeChild, this.hMainWindow)
+					this.ChromeChild := WinExist("ahk_pid " ChildPID), ChildPID := ""
+					this.SetChildWindow(this.ChromeChild)
 					ControlFocus,, % "ahk_id " this.ChromeChild
 					ControlSend,, {F11}, % "ahk_id " this.ChromeChild
 					Sleep, 500
@@ -612,7 +615,7 @@ class LodaPlayer {
 					
 					WinWait ahk_pid %ChildPID%
 					this.PotChild := WinExist("ahk_pid " ChildPID), ChildPID := "", this.DaumPotSet("Fix")
-					this.SetChildWindow(this.PotChild, this.hMainWindow), RedrawWindow()
+					this.SetChildWindow(this.PotChild), RedrawWindow()
 				}
 				return
 			}
@@ -857,12 +860,12 @@ class LodaPlayer {
 		return
 	}
 	
-	SetChildWindow(Win, Des)
+	SetChildWindow(Win)
 	{
 		WinSet, Style, -0x80000000, % "ahk_id " Win ;remove popup
 		WinSet, Style, +0x40000000, % "ahk_id " Win ;add child
 		WinSet, Redraw,, % "ahk_id " Win
-		DllCall( "SetParent", "Ptr", Win, "Ptr", Des)
+		DllCall( "SetParent", "Ptr", Win, "Ptr", this.hMainWindow)
 	}
 	
 	DaumPotSet(Set)
