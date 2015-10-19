@@ -683,7 +683,7 @@ class LodaPlayer {
 				{
 					ClearCookies()
 					FileDelete, LodaPlayer.ini
-					ExitApp
+					this.CloseCallback()
 				}
 			}
 			return
