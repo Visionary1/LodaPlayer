@@ -93,11 +93,12 @@ class LodaPlayer {
 		while Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText ;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
 		
+		/*
 		pooobj := {}
 		
 		while Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
 			pooobj[Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText] := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
-		/*
+
 		{
 
 			WebPD := Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
@@ -105,7 +106,6 @@ class LodaPlayer {
 			
 			pooobj[Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText] := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
 		}
-		*/
 
 		For key, value in pooobj
 			Loop, % Film.Length() {
@@ -133,16 +133,13 @@ class LodaPlayer {
 				break
 			}
 		}
-		/*
+		*/
+		
 		outer:
 		while Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
 		{
 			WebPD := Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
 			WebTitle := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
-			
-			pooobj := {}
-			pooobj[WebPD] := WebTitle
-		
 			
 			Loop % Film.Length() {
 				if (Film[A_Index]["PD"] == WebPD)
@@ -176,7 +173,6 @@ class LodaPlayer {
 				}
 			}
 		}
-		*/
 		
 		ServerInfo.UpdateMenu("Film"), ServerInfo.UpdateMenu("Ani"), ServerInfo.UpdateMenu("Show"), ServerInfo.UpdateMenu("Etc")
 		Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
@@ -225,7 +221,7 @@ class LodaPlayer {
 		
 		mHTML := FileOpen(A_Temp . "\LodaPlugin\Main.html", "w", "UTF-8"), mHTML.Write(whr.ResponseText), mHTML.Close()
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
-		whr := "", OnlineList := "", mHTML := "", WebPD := "", WebTitle := "", pooobj := ""
+		whr := "", OnlineList := "", mHTML := "", WebPD := "", WebTitle := ""
 		
 		Gui, Show, % ((DisplayW) ? ("w " DisplayW " h" DisplayH) : (" w" this.W " h" this.H)), % this.Title
 	}
