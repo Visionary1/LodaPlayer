@@ -93,11 +93,56 @@ class LodaPlayer {
 		while Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText ;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
 		
+		pooobj := {}
+		
+		while Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
+			pooobj[Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText] := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
+		/*
+		{
+
+			WebPD := Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
+			WebTitle := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
+			
+			pooobj[Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText] := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
+		}
+		*/
+
+		For key, value in pooobj
+			Loop, % Film.Length() {
+			if (Film[A_Index]["PD"] == key)
+			{
+				Film[A_Index]["Channel"] := value
+				break
+			}
+			
+			else if (Ani[A_Index]["PD"] == key)
+			{
+				Ani[A_Index]["Channel"] := value
+				break
+			}
+			
+			else if (Show[A_Index]["PD"] == key)
+			{
+				Show[A_Index]["Channel"] := value
+				break
+			}
+			
+			else if (Etc[A_Index]["PD"] == key)
+			{
+				Etc[A_Index]["Channel"] := value
+				break
+			}
+		}
+		/*
 		outer:
 		while Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
 		{
 			WebPD := Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
 			WebTitle := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
+			
+			pooobj := {}
+			pooobj[WebPD] := WebTitle
+		
 			
 			Loop % Film.Length() {
 				if (Film[A_Index]["PD"] == WebPD)
@@ -131,6 +176,7 @@ class LodaPlayer {
 				}
 			}
 		}
+		*/
 		
 		ServerInfo.UpdateMenu("Film"), ServerInfo.UpdateMenu("Ani"), ServerInfo.UpdateMenu("Show"), ServerInfo.UpdateMenu("Etc")
 		Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
@@ -179,12 +225,9 @@ class LodaPlayer {
 		
 		mHTML := FileOpen(A_Temp . "\LodaPlugin\Main.html", "w", "UTF-8"), mHTML.Write(whr.ResponseText), mHTML.Close()
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
-		whr := "", OnlineList := "", mHTML := "", WebPD := "", WebTitle := ""
+		whr := "", OnlineList := "", mHTML := "", WebPD := "", WebTitle := "", pooobj := ""
 		
-		if DisplayW
-			Gui, Show, % "w" DisplayW " h" DisplayH, % this.Title
-		else
-			Gui, Show, % "w" this.W " h" this.H, % this.Title
+		Gui, Show, % ((DisplayW) ? ("w " DisplayW " h" DisplayH) : (" w" this.W " h" this.H)), % this.Title
 	}
 
 	GuiSize()
@@ -193,34 +236,21 @@ class LodaPlayer {
 		
 		if (chatBAN = 0 && this.PluginCount = 0 && this.PotChatBAN = 0) {
 			this.Resizer.(this.hGaGa, 0, 0, this.W*0.25, A_GuiHeight)
-			if (this.CustomCount = 0)
-				this.Resizer.(this.hStream, this.W*0.25, 0, A_GuiWidth - (this.W*0.25), A_GuiHeight+5)
-			else if (this.CustomCount = 1)
-				this.Resizer.(this.ChromeChild, this.W*0.25, 0, A_GuiWidth - (this.W*0.25), A_GuiHeight+5)
+			this.Resizer.(((this.CustomCount = 0) ? (this.hStream) : (this.ChromeChild)), this.W*0.25, 0, A_GuiWidth - (this.W*0.25), A_GuiHeight+5)
 		}
 		
-		if (chatBAN = 1 && this.PluginCount = 0 && this.PotChatBAN = 0) {
-			if (this.CustomCount = 0)
-				this.Resizer.(this.hStream, 0, 0, A_GuiWidth, A_GuiHeight+5)
-			else if (this.CustomCount = 1)
-				this.Resizer.(this.ChromeChild, 0, 0, A_GuiWidth, A_GuiHeight+5)
-		}
+		if (chatBAN = 1 && this.PluginCount = 0 && this.PotChatBAN = 0)
+			this.Resizer.(((this.CustomCount = 0) ? (this.hStream) : (this.ChromeChild)), 0, 0, A_GuiWidth, A_GuiHeight+5)
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 0) {
 			this.Resizer.(this.hGaGa, 0, 0, this.W*0.25, A_GuiHeight)
 			this.Resizer.(this.PotChild, this.W*0.25, 0, A_GuiWidth - ( this.W*0.25 )-400, A_GuiHeight)
-			if (this.CustomCount = 0)
-				this.Resizer.(this.hStream, A_GuiWidth - 400, 0, 400, A_GuiHeight)
-			else if (this.CustomCount = 1)
-				this.Resizer.(this.ChromeChild, A_GuiWidth - 400, 0, 400, A_GuiHeight)
+			this.Resizer.(((this.CustomCount = 0) ? (this.hStream) : (this.ChromeChild)), A_GuiWidth - 400, 0, 400, A_GuiHeight)
 		}
 		
 		if (chatBAN =1 && this.PluginCount = 1 && this.PotChatBAN = 0) {
 			this.Resizer.(this.PotChild, 0, 0, A_GuiWidth - 400, A_GuiHeight)
-			if (this.CustomCount = 0)
-				this.Resizer.(this.hStream, A_GuiWidth - 400, 0, 400, A_GuiHeight)
-			else if (this.CustomCount = 1)
-				this.Resizer.(this.ChromeChild, A_GuiWidth - 400, 0, 400, A_GuiHeight)
+			this.Resizer.(((this.CustomCount = 0) ? (this.hStream) : (this.ChromeChild)), A_GuiWidth - 400, 0, 400, A_GuiHeight)
 		}
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 1) {
@@ -228,9 +258,8 @@ class LodaPlayer {
 			this.Resizer.(this.PotChild, this.W*0.25, 0, A_GuiWidth - (this.W*0.25), A_GuiHeight)
 		}
 		
-		if (chatBAN = 1 && this.PluginCount = 1 && this.PotChatBAN = 1) {
+		if (chatBAN = 1 && this.PluginCount = 1 && this.PotChatBAN = 1)
 			this.Resizer.(this.PotChild, 0, 0, A_GuiWidth, A_GuiHeight)
-		}
 	}
 	
 	GuiClose()
@@ -621,11 +650,8 @@ class LodaPlayer {
 					Menu, SetMenu, NoIcon, 내장플레이어 : 다음팟플레이어를 사용
 					Menu, SetMenu, Icon, 내장플레이어 : 다음팟플레이어를 사용, %A_Temp%\on.png,,0
 					
-					if this.CustomCount = 0
-					{
-						if (Stream.LocationURL() != "about:blank")
+					if (this.CustomCount = 0 && Stream.LocationURL() != "about:blank")
 							Stream.Navigate("about:blank")
-					}
 					
 					WinWait ahk_pid %ChildPID%
 					this.PotChild := WinExist("ahk_pid " ChildPID), ChildPID := ""
@@ -791,7 +817,7 @@ class LodaPlayer {
 				Stream.Navigate(this.BaseAddr . Go, 0x0400)  ;navTrustedForActiveX = 0x0400,
 			
 				while !(Stream.readyState=4 && Stream.document.readyState="complete") 
-					continue
+					Sleep, 10
 				
 				if (this.BaseAddr = "https://livehouse.in/en/channel/")
 				{
