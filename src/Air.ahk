@@ -57,7 +57,7 @@ class LodaPlayer {
 		this.Bound := []
 		this.Bound.OnMessage := this.OnMessage.Bind(this)
 		
-		Menu, GaGaMenu, Add, 채팅하기, %LPG% ;LodaPlayer.GaGaMenu
+		Menu, GaGaMenu, Add, 채팅하기, % LPG
 		if (vIni.GaGaLive.ChatPreSet = 0)
 			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\on.png,,0
 		if (vIni.GaGaLive.ChatPreSet = 1) {
@@ -65,25 +65,25 @@ class LodaPlayer {
 			GuiControl, Hide, chat
 			Menu, GaGaMenu, Icon, 채팅하기, %A_Temp%\off.png,,0
 		}
-		Menu, GaGaMenu, Add, 새로고침, %LPG% ;LodaPlayer.GaGaMenu
+		Menu, GaGaMenu, Add, 새로고침, % LPG
 		Menu, MyMenuBar, Add, 가가라이브:설정, :GaGaMenu
 		
-		Menu, SetMenu, Add, UI 인터페이스 : 태그 형식으로 전환, %LPM% ;LodaPlayer.PlayerMenu
-		Menu, SetMenu, Add, 익스플로러 전용 : 팝업으로 보기, %LPM% ;LodaPlayer.PlayerMenu
+		Menu, SetMenu, Add, UI 인터페이스 : 태그 형식으로 전환, % LPM
+		Menu, SetMenu, Add, 익스플로러 전용 : 팝업으로 보기, % LPM
 		Menu, SetMenu, Add,
-		Menu, SetMenu, Add, 로다 플레이어를 항상위로, %LPM% ;LodaPlayer.PlayerMenu
+		Menu, SetMenu, Add, 로다 플레이어를 항상위로, % LPM
 		Menu, SetMenu, Add,
-		Menu, SetMenu, Add, 내장브라우저 : 크롬을 사용, %LPM% ;LodaPlayer.PlayerMenu
-		Menu, SetMenu, Add, 내장플레이어 : 다음팟플레이어를 사용, %LPM% ;LodaPlayer.PlayerMenu
-		Menu, SetMenu, Add, 다음팟플레이어전용 : 채팅창숨기기, %LPM% ;LodaPlayer.PlayerMenu
+		Menu, SetMenu, Add, 내장브라우저 : 크롬을 사용, % LPM
+		Menu, SetMenu, Add, 내장플레이어 : 다음팟플레이어를 사용, % LPM
+		Menu, SetMenu, Add, 다음팟플레이어전용 : 채팅창숨기기, % LPM
 		Menu, SetMenu, Disable, 다음팟플레이어전용 : 채팅창숨기기
 		Menu, SetMenu, Add,
-		Menu, SetMenu, Add, 문의 ＆ 피드백, %LPM% ;LodaPlayer.PlayerMenu
+		Menu, SetMenu, Add, 문의 ＆ 피드백, % LPM
 		
-		Menu, ErrorFixMenu, Add, 렉＆끊김현상시 : 방송 새로고침, %LPM% ;LodaPlayer.PlayerMenu
-		Menu, ErrorFixMenu, Add, 설정리셋 : 초기화후 재시작, %LPM% ;LodaPlayer.PlayerMenu
-		Menu, ErrorFixMenu, Add, 즐겨찾기 목록수정 : 설정파일 열기, %LPM% ;LodaPlayer.PlayerMenu
-		Menu, ErrorFixMenu, Add, 방송＆채팅방이 안나오면 : IE11 설치, %LPM% ;LodaPlayer.PlayerMenu
+		Menu, ErrorFixMenu, Add, 렉＆끊김현상시 : 방송 새로고침, % LPM
+		Menu, ErrorFixMenu, Add, 설정리셋 : 초기화후 재시작, % LPM
+		Menu, ErrorFixMenu, Add, 즐겨찾기 목록수정 : 설정파일 열기, % LPM
+		Menu, ErrorFixMenu, Add, 방송＆채팅방이 안나오면 : IE11 설치, % LPM
 		Menu, SetMenu, Add, 에러수정＆기타설정, :ErrorFixMenu
 		Menu, MyMenuBar, Add, 플레이어:설정, :SetMenu
 		
@@ -184,13 +184,13 @@ class LodaPlayer {
 			for SectionName, a in vIni
 				for KeyName, Value in a
 					if SectionName = Favorite
-						Menu, FavoriteMenu, Add, %KeyName%, %LPP% ;LodaPlayer.PDMenu
+						Menu, FavoriteMenu, Add, %KeyName%, % LPP
 			Menu, MyMenuBar, Add, 즐겨찾기:목록, :FavoriteMenu
 		}
 		
-		Menu, MyMenuBar, Add, 주소로 이동 , %LPM% ;LodaPlayer.PlayerMenu
-		Menu, MyMenuBar, Add, 즐겨찾기, %LPM% ;LodaPlayer.PlayerMenu
-		Menu, MyMenuBar, Add, POOOO , %LPM% ;LodaPlayer.PlayerMenu
+		Menu, MyMenuBar, Add, 주소로 이동 , % LPM
+		Menu, MyMenuBar, Add, 즐겨찾기, % LPM
+		Menu, MyMenuBar, Add, POOOO , % LPM
 		;Menu, MyMenuBar, Add, 방송추가 , %LPM% ;LodaPlayer.PlayerMenu
 		;Menu, MyMenuBar, Add, 도움말 , %LPM% ;LodaPlayer.PlayerMenu
 		
