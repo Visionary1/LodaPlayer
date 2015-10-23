@@ -235,8 +235,9 @@ class LodaPlayer {
 			this.Resizer.(((this.CustomCount = 0) ? (this.hStream) : (this.ChromeChild)), this.W*0.25, 0, A_GuiWidth - (this.W*0.25), A_GuiHeight+5)
 		}
 		
-		if (chatBAN = 1 && this.PluginCount = 0 && this.PotChatBAN = 0)
+		if (chatBAN = 1 && this.PluginCount = 0 && this.PotChatBAN = 0) {
 			this.Resizer.(((this.CustomCount = 0) ? (this.hStream) : (this.ChromeChild)), 0, 0, A_GuiWidth, A_GuiHeight+5)
+		}
 		
 		if (chatBAN = 0 && this.PluginCount = 1 && this.PotChatBAN = 0) {
 			this.Resizer.(this.hGaGa, 0, 0, this.W*0.25, A_GuiHeight)
@@ -254,8 +255,9 @@ class LodaPlayer {
 			this.Resizer.(this.PotChild, this.W*0.25, 0, A_GuiWidth - (this.W*0.25), A_GuiHeight)
 		}
 		
-		if (chatBAN = 1 && this.PluginCount = 1 && this.PotChatBAN = 1)
+		if (chatBAN = 1 && this.PluginCount = 1 && this.PotChatBAN = 1) {
 			this.Resizer.(this.PotChild, 0, 0, A_GuiWidth, A_GuiHeight)
+		}
 	}
 	
 	GuiClose()
@@ -945,18 +947,23 @@ class ServerInfo extends LodaPlayer {
 	OnAirCheck()
 	{
 		global
-		;Gui, Menu
-		WinSet, Redraw,, ahk_id %hMainWindow%
+		Gui, Menu
+		;WinSet, Redraw,, ahk_id %hMainWindow%
 		this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
+		Gui, Menu, MyMenuBar
 		Film := "", Ani := "", Show := "", Etc := ""
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
 		
-		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1"), poo.Open("GET", "http://poooo.ml/", True), poo.Send(), poo.WaitForResponse()
+		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+		poo.Open("GET", "http://poooo.ml/", false)
+		poo.Send()
+		poo.WaitForResponse()
 		
 		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
 			Sleep, 10
 		
-		dockdock := ComObjCreate("HTMLfile"), dockdock.Open(), dockdock.Write(poo.ResponseText), dockdock.Close()
+		dockdock := ComObjCreate("HTMLfile")
+		dockdock.Write(poo.ResponseText)
 		while dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 		
@@ -988,7 +995,7 @@ class ServerInfo extends LodaPlayer {
 		
 		this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 		;Gui, Menu, MyMenuBar
-		WinSet, Redraw,, ahk_id %hMainWindow%
+		;WinSet, Redraw,, ahk_id %hMainWindow%
 		WebPD := "", WebTitle := "", poo := "", dockdock := "", OnlineList := "", FreeMemory()
 	}
 	
@@ -1007,10 +1014,8 @@ class ServerInfo extends LodaPlayer {
 	DeleteMenu(Desire)
 	{
 		global
-		Gui Menu
 		Loop, % NumGet(&%Desire%, 4*A_PtrSize)
 			Menu, % Desire . "Menu", Delete, % %Desire%[A_Index]["PD"] "`t" %Desire%[A_Index]["Channel"]
-		Gui, Menu, MyMenuBar
 	}
 	
 	UpdateMenu(Category)
