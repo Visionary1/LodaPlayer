@@ -2,6 +2,7 @@
 {PD: "yeori", Channel: "", Addr: "318073"},
 {PD: "PD 어둠의볶음밥", Channel: "", Addr: "323431"},
 {PD: "알타비스타", Channel: "", Addr: "320834"},
+{PD: "현돌이", Channel: "", Addr: "354181"},
 {PD: "팟수24시", Channel: "", Addr: "323587"},
 {PD: "망둥어", Channel: "", Addr: "324699"},
 {PD: "아라라기상", Channel: "", Addr: "319279"},
