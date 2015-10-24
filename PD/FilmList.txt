@@ -4,7 +4,7 @@
 {PD: "WARP", Channel: "", Addr: "318512"},
 {PD: "사공TV", Channel: "", Addr: "338631"},
 {PD: "엘", Channel: "", Addr: "343740"},
-{PD: "레아", Channel: "", Addr: "328321"},
+{PD: "레아TV", Channel: "", Addr: "328321"},
 {PD: "플로우", Channel: "", Addr: "321812"},
 {PD: "고퀄리티", Channel: "", Addr: "323005"},
 {PD: "레베", Channel: "", Addr: "346894"},
