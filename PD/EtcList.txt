@@ -6,6 +6,6 @@
 {PD: "happysky", Channel: "", Addr: "317987"},
 {PD: "PD 별루군", Channel: "", Addr: "325098"},
 {PD: "Yunaito", Channel: "", Addr: "315846"},
-{PD: "라이거", Channel: "", Addr: "327277"},
+{PD: "라이거", Channel: "", Addr: "358420"},
 {PD: "팟]엘퀴네스", Channel: "", Addr: "317910"}
 ]

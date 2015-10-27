@@ -25,11 +25,6 @@ Hotkey, Ctrl & Enter, %LessEx%
 Hotkey, Alt & Enter, %FullEx%
 return
 
-PlayerClose(Init)
-{
-	ExitApp
-}
-
 class LodaPlayer {
 
 	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7
@@ -174,13 +169,14 @@ class LodaPlayer {
 			}
 		}
 		
+		try {
+			
 		ServerInfo.UpdateMenu("Film"), ServerInfo.UpdateMenu("Ani"), ServerInfo.UpdateMenu("Show"), ServerInfo.UpdateMenu("Etc")
 		Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
 		Menu, MyMenuBar, Add, 애니:방송, :AniMenu
 		Menu, MyMenuBar, Add, 예능:방송, :ShowMenu
 		Menu, MyMenuBar, Add, 기타:방송, :EtcMenu
 		
-		try {
 			for SectionName, a in vIni
 				for KeyName, Value in a
 					if SectionName = Favorite
@@ -947,23 +943,22 @@ class ServerInfo extends LodaPlayer {
 	OnAirCheck()
 	{
 		global
+		
 		Gui, Menu
-		;WinSet, Redraw,, ahk_id %hMainWindow%
-		this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
+		try {
+			this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
+		}
 		Gui, Menu, MyMenuBar
+		
 		Film := "", Ani := "", Show := "", Etc := ""
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
 		
-		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-		poo.Open("GET", "http://poooo.ml/", false)
-		poo.Send()
-		poo.WaitForResponse()
+		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1"), poo.Open("GET", "http://poooo.ml/", true), poo.Send(), poo.WaitForResponse()
 		
 		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
 			Sleep, 10
 		
-		dockdock := ComObjCreate("HTMLfile")
-		dockdock.Write(poo.ResponseText)
+		dockdock := ComObjCreate("HTMLfile"), dockdock.Write(poo.ResponseText)
 		while dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 		
@@ -993,23 +988,17 @@ class ServerInfo extends LodaPlayer {
 			}
 		}
 		
-		this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
-		;Gui, Menu, MyMenuBar
-		;WinSet, Redraw,, ahk_id %hMainWindow%
-		WebPD := "", WebTitle := "", poo := "", dockdock := "", OnlineList := "", FreeMemory()
+		try {
+			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
+		}
+		
+		WebPD := "", WebTitle := "", poo := "", dockdock := "", OnlineList := ""
+		
+		if (!Film[1]["Channel"] || !Ani[1]["Channel"] || !Show[1]["Channel"] || !Etc[1]["Channel"])
+			ServerInfo.OnAirCheck()
+		
+		FreeMemory()
 	}
-	
-	/* until 1.2.3,  async false
-	getList(Which)
-	{
-		;global
-		From := "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/PD/"
-		whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-		whr.Open("GET", From . Which, True), whr.Send(), whr.WaitForResponse()
-		;json := "[" RegExReplace(whr.ResponseText, "\R+", ",") "]"
-		return JSON_ToObj(whr.ResponseText)
-	}
-	*/ 
 	
 	DeleteMenu(Desire)
 	{
@@ -1089,34 +1078,6 @@ class ServerInfo extends LodaPlayer {
 			Etc := JSON_ToObj(reqEtc.ResponseText), reqEtc := ""
 		}
 	}
-	
-	/*
-	ParsePD(newcon)
-	{
-		global
-		newcon := RegExReplace(newcon, "\R+\R", "`r`n") ;newcon := RegExReplace(newcon, "\s+", " ")
-		newcon := SubStr(newcon, (InStr(newcon, "영화",, 1, 1) + 1)), newcon := SubStr(newcon, 1, InStr(newcon, "문의/채널/PD님",, 1, 1))
-		OnlineFilm1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
-		StringReplace, newcon, newcon, %OnlineFilm1% ;방송중 영화목록 삭제
-		
-		newcon := SubStr(newcon, (InStr(newcon, "애니",, 1, 1) + 1)), OnlineAni1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
-		StringReplace, newcon, newcon, %OnlineAni1% ;방송중 애니목록 삭제
-		
-		newcon := SubStr(newcon, (InStr(newcon, "예능",, 1, 1) + 1)), OnlineShow1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
-		StringReplace, newcon, newcon, %OnlineShow1% ;방송중 예능목록 삭제
-		
-		newcon := SubStr(newcon, (InStr(newcon, "기타",, 1, 1) + 1)), OnlineEtc1 := SubStr(newcon, 1, InStr(newcon, "오프라인",, 1, 1))
-		StringReplace, newcon, newcon, %OnlineEtc1% ;방송중 기타목록 삭제
-		dockdock := ComObjCreate("HTMLfile"), dockdock.Write(newcon), dockdock.Close()
-		
-		while !dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
-			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
-		
-		OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n"), ObjRelease(dockdock)
-		MsgBox % clipboard
-		Clipboard := OnlineList
-	}
-	*/
 }
 
 class ViewControl extends LodaPlayer {
@@ -1125,7 +1086,6 @@ class ViewControl extends LodaPlayer {
 	
 	ToggleOnlyMenu()
 	{
-		;static aMenu := ""
 		global
 		
 		if this.hVisible = 0
@@ -1151,7 +1111,6 @@ class ViewControl extends LodaPlayer {
 	
 	ToggleAll()
 	{
-		;static hMenu := ""
 		global
 		
 		if Init.PluginCount = 0
@@ -1218,6 +1177,11 @@ class ViewControl extends LodaPlayer {
 			return
 		}
 	}
+}
+
+PlayerClose(Init)
+{
+	ExitApp
 }
 
 BrowserEmulation(Level) {

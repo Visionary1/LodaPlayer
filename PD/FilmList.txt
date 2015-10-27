@@ -3,6 +3,7 @@
 {PD: "FOX&Tails TV", Channel: "", Addr: "318870"},
 {PD: "WARP", Channel: "", Addr: "318512"},
 {PD: "사공TV", Channel: "", Addr: "338631"},
+{PD: "일주일에영화세편", Channel: "", Addr: "354799"},
 {PD: "엘", Channel: "", Addr: "343740"},
 {PD: "레아TV", Channel: "", Addr: "328321"},
 {PD: "플로우", Channel: "", Addr: "321812"},
