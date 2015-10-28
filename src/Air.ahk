@@ -996,6 +996,7 @@ class ServerInfo extends LodaPlayer {
 			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 		}
 		Gui, Menu, MyMenuBar
+		WinSet, Redraw,, % "ahk_id " hMainWindow
 		WebPD := "", WebTitle := "", poo := "", dockdock := "", OnlineList := ""
 		
 		/*
