@@ -223,9 +223,9 @@ class LodaPlayer {
 		/*
 		mHTML := FileOpen(A_Temp . "\LodaPlugin\Main.html", "w", "UTF-8"), mHTML.Write(whr.ResponseText), mHTML.Close()
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
-		whr := ""
+		whr := "", mHTML := ""
 		*/
-		OnlineList := "", mHTML := "", WebPD := "", WebTitle := ""
+		OnlineList := "", WebPD := "", WebTitle := ""
 		
 		Gui, Show, % ((DisplayW) ? ("w " DisplayW " h" DisplayH) : (" w" this.W " h" this.H)), % this.Title
 	}
