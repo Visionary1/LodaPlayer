@@ -5,6 +5,7 @@
 #HotkeyInterval 99000000
 #KeyHistory 0
 #ErrorStdOut
+;#Warn
 ListLines Off
 Process, Priority, , H
 SetBatchLines, -1
@@ -32,7 +33,7 @@ class LodaPlayer {
 	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7
 	, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0
 	, PotChatBAN := 0, TopToggleCk := 0, ChromeChild := "", PotChild := "", Title := "로다 플레이어 Air"
-	, Resizer := DynaCall("MoveWindow", ["tiiiii", 1, 2, 3, 4, 5], Dynahwnd, DynaX, DynaY, DynaW, DynaH, RedrawOpt := true)
+	, Resizer := DynaCall("MoveWindow", ["tiiiii", 1, 2, 3, 4, 5], Dynahwnd := "", DynaX := "", DynaY := "", DynaW := "", DynaH := "", RedrawOpt := true)
 	
 	__New()
 	{
