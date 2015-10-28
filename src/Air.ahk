@@ -4,6 +4,7 @@
 #MaxHotkeysPerInterval 99000000
 #HotkeyInterval 99000000
 #KeyHistory 0
+#ErrorStdOut
 ListLines Off
 Process, Priority, , H
 SetBatchLines, -1
@@ -13,13 +14,14 @@ SetDefaultMouseSpeed, 0
 SetWinDelay, 0
 SetControlDelay, 0
 Menu, Tray, NoStandard
-OnlineList := "", Film := "", Ani := "", Show := "", Etc := "", ComObjError(False), BrowserEmulation(1)
+OnlineList := "", Film := "", Ani := "", Show := "", Etc := ""
+ComObjError(False), BrowserEmulation(1)
 whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
 ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
 FullEx := ObjBindMethod(ViewControl, "ToggleAll"), LessEx := ObjBindMethod(ViewControl, "ToggleOnlyMenu"), CheckPoo := ObjBindMethod(ServerInfo, "OnAirCheck")
-SetTimer, %CheckPoo%, 900000 ;900000
+SetTimer, %CheckPoo%, 600000 ;900000
 Hotkey, IfWinActive, % "ahk_id " hMainWindow
 Hotkey, Ctrl & Enter, %LessEx%
 Hotkey, Alt & Enter, %FullEx%
@@ -945,10 +947,10 @@ class ServerInfo extends LodaPlayer {
 		global
 		
 		Gui, Menu
-		try {
+		try 
+		{
 			this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
 		}
-		Gui, Menu, MyMenuBar
 		
 		Film := "", Ani := "", Show := "", Etc := ""
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
@@ -988,16 +990,17 @@ class ServerInfo extends LodaPlayer {
 			}
 		}
 		
-		try {
+		try
+		{
 			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
 		}
-		
+		Gui, Menu, MyMenuBar
 		WebPD := "", WebTitle := "", poo := "", dockdock := "", OnlineList := ""
 		
+		/*
 		if (!Film[1]["Channel"] || !Ani[1]["Channel"] || !Show[1]["Channel"] || !Etc[1]["Channel"])
 			ServerInfo.OnAirCheck()
-		
-		FreeMemory()
+			*/
 	}
 	
 	DeleteMenu(Desire)
