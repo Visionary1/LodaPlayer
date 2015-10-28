@@ -17,7 +17,9 @@ SetControlDelay, 0
 Menu, Tray, NoStandard
 OnlineList := "", Film := "", Ani := "", Show := "", Etc := ""
 ComObjError(False), BrowserEmulation(1)
+/*
 whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
+*/
 ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 Init := new LodaPlayer()
 Init.RegisterCloseCallback(Func("PlayerClose"))
@@ -218,9 +220,12 @@ class LodaPlayer {
 		for each, Msg in [0x100]
 			OnMessage(Msg, this.Bound.OnMessage)
 		
+		/*
 		mHTML := FileOpen(A_Temp . "\LodaPlugin\Main.html", "w", "UTF-8"), mHTML.Write(whr.ResponseText), mHTML.Close()
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
-		whr := "", OnlineList := "", mHTML := "", WebPD := "", WebTitle := ""
+		whr := ""
+		*/
+		OnlineList := "", mHTML := "", WebPD := "", WebTitle := ""
 		
 		Gui, Show, % ((DisplayW) ? ("w " DisplayW " h" DisplayH) : (" w" this.W " h" this.H)), % this.Title
 	}
