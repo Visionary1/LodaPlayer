@@ -281,7 +281,7 @@ class LodaPlayer {
 		{
 			try {
 				WinKill, % "ahk_id " this.ChromeChild
-				WinKill, % "ahk_id " this.PotChild
+				WinKill, % "ahk_id " this.PotChild ; Run, % PotLocation . "\KillPot.exe"
 			}
 		}
 		
@@ -854,9 +854,10 @@ class LodaPlayer {
 		}
 		
 		if (this.PluginCount = 1 && this.ExternalCount = 0 && this.InternalCount = 1) {
-			InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8", forVerify := "", LatterT := ""
+			InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8"
+			LatterT := "", forVerify := "", Teleport := ""
 			ControlFocus,, % "ahk_id " this.PotChild
-			ControlSend,, {Ctrl Down}u{Ctrl Up}, % "ahk_id " this.PotChild
+			SendInput, {Ctrl Down}u{Ctrl Up}  ;ControlSend,, {Ctrl Down}u{Ctrl Up}, % "ahk_id " this.PotChild
 			WinWait, ahk_class #32770, 주소 열기
 			;WinSet, Transparent, 0, ahk_class #32770, 주소 열기
 			Teleport := WinExist("ahk_class #32770", "주소 열기")
@@ -898,7 +899,7 @@ class LodaPlayer {
 				WinGetTitle, LatterT, % "ahk_id " this.PotChild
 			Sleep, 200
 			
-			LatterT := "", forVerify := "", Teleport := "", InputURL := "", RedrawWindow()
+			InputURL := "", RedrawWindow()
 		}
 		return
 	}
