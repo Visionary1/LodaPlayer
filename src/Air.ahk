@@ -966,6 +966,25 @@ class ServerInfo extends LodaPlayer {
 		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
 			Sleep, 10
 		
+		this.GetPDTitle()
+		
+		while !Film[1]["Channel"]
+			this.GetPDTitle()
+		
+		try
+		{
+			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
+		}
+		Gui, Menu, MyMenuBar
+		;WinSet, Redraw,, % "ahk_id " hMainWindow
+		poo := ""
+	}
+	
+	GetPDTitle()
+	{
+		global
+		WebPD := "", WebTitle := "", dockdock := "", OnlineList := ""
+		
 		dockdock := ComObjCreate("HTMLfile"), dockdock.Write(poo.ResponseText)
 		while dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
@@ -995,19 +1014,7 @@ class ServerInfo extends LodaPlayer {
 					Etc[A_Index]["Channel"] := WebTitle
 			}
 		}
-		
-		try
-		{
-			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
-		}
-		Gui, Menu, MyMenuBar
-		WinSet, Redraw,, % "ahk_id " hMainWindow
-		WebPD := "", WebTitle := "", poo := "", dockdock := "", OnlineList := ""
-		
-		/*
-		if (!Film[1]["Channel"] || !Ani[1]["Channel"] || !Show[1]["Channel"] || !Etc[1]["Channel"])
-			ServerInfo.OnAirCheck()
-			*/
+		WebPD := "", WebTitle := "", dockdock := ""
 	}
 	
 	DeleteMenu(Desire)
