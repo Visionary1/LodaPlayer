@@ -692,7 +692,7 @@ class LodaPlayer {
 					Menu, SetMenu, Icon, 다음팟플레이어전용 : 채팅창숨기기, %A_Temp%\off.png,,0
 					WinKill, % "ahk_id " this.PotChild
 					WinWaitClose, % "ahk_id " this.PotChild
-					RedrawWindow(), FreeMemory()
+					RedrawWindow()
 				}
 				return
 			}
