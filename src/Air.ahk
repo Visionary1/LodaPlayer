@@ -656,8 +656,8 @@ class LodaPlayer {
 					
 					WinWait ahk_pid %ChildPID%
 					this.PotChild := WinExist("ahk_pid " ChildPID), ChildPID := ""
-					this.DaumPotSet("Fix")
-					this.SetChildWindow(this.PotChild), RedrawWindow()
+					;this.DaumPotSet("Fix")
+					this.SetChildWindow(this.PotChild), this.DaumPotSet("Fix"), RedrawWindow()
 				}
 				return
 			}
