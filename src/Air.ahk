@@ -1110,11 +1110,13 @@ class ViewControl extends LodaPlayer {
 		if this.MenuNotify = 0
 		{
 			DllCall("SetMenu", "uint", hMainWindow, "uint", hMenu) ;Menu Show
+			SetTimer, %CheckPoo%, On
 			return this.MenuNotify := 1
 		}
 		if this.MenuNotify = 1 ;처음
 		{
 			DllCall("SetMenu", "uint", hMainWindow, "uint", 0) ;Menu Hide
+			SetTimer, %CheckPoo%, Off
 			return this.MenuNotify := 0
 		}
 	}
@@ -1154,6 +1156,7 @@ class ViewControl extends LodaPlayer {
 			ControlFocus,, % "ahk_id " Init.PotChild
 			SendInput, {Enter}
 			BlockInput(0), RedrawWindow(), Init.DaumPotSet("Fix"), this.hVisible := 1
+			SetTimer, %CheckPoo%, On
 			return
 		}
 		
@@ -1184,6 +1187,7 @@ class ViewControl extends LodaPlayer {
 			ControlFocus,, % "ahk_id " Init.PotChild
 			SendInput, {Enter}
 			BlockInput(0), this.hVisible := 0
+			SetTimer, %CheckPoo%, Off
 			return
 		}
 	}
