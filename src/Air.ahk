@@ -175,18 +175,17 @@ class LodaPlayer {
 		}
 		
 		try {
-			
 		ServerInfo.UpdateMenu("Film"), ServerInfo.UpdateMenu("Ani"), ServerInfo.UpdateMenu("Show"), ServerInfo.UpdateMenu("Etc")
 		Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
 		Menu, MyMenuBar, Add, 애니:방송, :AniMenu
 		Menu, MyMenuBar, Add, 예능:방송, :ShowMenu
 		Menu, MyMenuBar, Add, 기타:방송, :EtcMenu
 		
-			for SectionName, a in vIni
-				for KeyName, Value in a
-					if SectionName = Favorite
-						Menu, FavoriteMenu, Add, %KeyName%, % LPP
-			Menu, MyMenuBar, Add, 즐겨찾기:목록, :FavoriteMenu
+		for SectionName, a in vIni
+			for KeyName, Value in a
+				if SectionName = Favorite
+					Menu, FavoriteMenu, Add, %KeyName%, % LPP
+		Menu, MyMenuBar, Add, 즐겨찾기:목록, :FavoriteMenu
 		}
 		
 		Menu, MyMenuBar, Add, 주소로 이동 , % LPM
@@ -898,7 +897,7 @@ class LodaPlayer {
 				WinGetTitle, LatterT, % "ahk_id " this.PotChild
 			Sleep, 200
 			
-			LatterT := "", forVerify := "", Teleport := "", InputURL := "", RedrawWindow(), FreeMemory()
+			LatterT := "", forVerify := "", Teleport := "", InputURL := "", RedrawWindow()
 		}
 		return
 	}
