@@ -6,6 +6,7 @@
 {PD: "하루", Channel: "", Addr: "341613"},
 {PD: "바삭바삭", Channel: "", Addr: "341808"},
 {PD: "해냐차", Channel: "", Addr: "345197"},
+{PD: "James Corbett", Channel: "", Addr: "318061"},
 {PD: "팟수24시", Channel: "", Addr: "323587"},
 {PD: "망둥어", Channel: "", Addr: "324699"},
 {PD: "아라라기상", Channel: "", Addr: "319279"},
@@ -16,7 +17,5 @@
 {PD: "팟수여죽창을들라", Channel: "", Addr: "320851"},
 {PD: "erido", Channel: "", Addr: "322063"},
 {PD: "SuDaL NIM", Channel: "", Addr: "318840"},
-{PD: "흑설", Channel: "", Addr: "346699"},
-{PD: "아이나", Channel: "", Addr: "320626"},
-{PD: "잭슨TV", Channel: "", Addr: "317914"}
+{PD: "흑설", Channel: "", Addr: "346699"}
 ]

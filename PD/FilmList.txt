@@ -4,6 +4,7 @@
 {PD: "WARP", Channel: "", Addr: "318512"},
 {PD: "사공TV", Channel: "", Addr: "338631"},
 {PD: "일주일에영화세편", Channel: "", Addr: "354799"},
+{PD: "족발", Channel: "", Addr: "325458"},
 {PD: "엘", Channel: "", Addr: "343740"},
 {PD: "레아TV", Channel: "", Addr: "328321"},
 {PD: "플로우", Channel: "", Addr: "321812"},
@@ -14,10 +15,7 @@
 {PD: "브레인워시", Channel: "", Addr: "321989"},
 {PD: "힐링", Channel: "", Addr: "323745"},
 {PD: "민지", Channel: "", Addr: "318023"},
-{PD: "미르", Channel: "", Addr: "318493"},
 {PD: "반지하팟수", Channel: "", Addr: "338369"},
 {PD: "떠돌이맥스", Channel: "", Addr: "317950"},
-{PD: "조PD", Channel: "", Addr: "331325"},
-{PD: "visp(배즙)", Channel: "", Addr: "318614"},
-{PD: "거북TV", Channel: "", Addr: "324804"}
+{PD: "조PD", Channel: "", Addr: "331325"}
 ]
