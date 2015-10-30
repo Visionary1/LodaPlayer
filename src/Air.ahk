@@ -35,7 +35,7 @@ class LodaPlayer {
 	static W := A_ScreenWidth * 0.7, H := A_ScreenHeight * 0.7
 	, BaseAddr := "https://livehouse.in/en/channel/", ExternalCount := 0, InternalCount := 1, CustomCount := 0, PluginCount := 0
 	, PotChatBAN := 0, TopToggleCk := 0, ChromeChild := "", PotChild := "", Title := "로다 플레이어 Air"
-	, Resizer := DynaCall("MoveWindow", ["tiiiii", 1, 2, 3, 4, 5], Dynahwnd := "", DynaX := "", DynaY := "", DynaW := "", DynaH := "", RedrawOpt := true)
+	, Resizer := DynaCall("MoveWindow", ["tiiiii", 1, 2, 3, 4, 5], Dynahwnd := "", DynaX := "", DynaY := "", DynaW := "", DynaH := "", true)
 	
 	__New()
 	{
@@ -43,7 +43,7 @@ class LodaPlayer {
 		vIni := class_EasyIni("LodaPlayer.ini"), PotIni := vIni.Player.PotLocation, chatBAN := vIni.GaGaLive.ChatPreSet, DisplayW := vIni.Player.Width, DisplayH := vIni.Player.Height
 		LPG := ObjBindMethod(this, "GaGaMenu"), LPM := ObjBindMethod(this, "PlayerMenu"), LPP := ObjBindMethod(this, "PDMenu")
 		
-		Gui, New, +Resize -DPIScale +hWndhMainWindow +0x2000000 ;+MinSize700x350  ;WS_CLIPCHILDREN := 0x2000000
+		Gui, New, +Resize -DPIScale +hWndhMainWindow +0x2000000
 		this.hMainWindow := hMainWindow
 		
 		Gui, Add, ActiveX, % " x" 0 " y" 0 " w" this.W*0.25 " h" this.H-10 " hwndhGaGa vChat", Shell.Explorer
@@ -92,48 +92,6 @@ class LodaPlayer {
 		
 		while Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText ;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
-		
-		/*
-		pooobj := {}
-		
-		while Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
-			pooobj[Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText] := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
-
-		{
-
-			WebPD := Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
-			WebTitle := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
-			
-			pooobj[Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText] := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
-		}
-
-		For key, value in pooobj
-			Loop, % Film.Length() {
-			if (Film[A_Index]["PD"] == key)
-			{
-				Film[A_Index]["Channel"] := value
-				break
-			}
-			
-			else if (Ani[A_Index]["PD"] == key)
-			{
-				Ani[A_Index]["Channel"] := value
-				break
-			}
-			
-			else if (Show[A_Index]["PD"] == key)
-			{
-				Show[A_Index]["Channel"] := value
-				break
-			}
-			
-			else if (Etc[A_Index]["PD"] == key)
-			{
-				Etc[A_Index]["Channel"] := value
-				break
-			}
-		}
-		*/
 		
 		outer:
 		while Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
@@ -656,8 +614,8 @@ class LodaPlayer {
 					
 					WinWait ahk_pid %ChildPID%
 					this.PotChild := WinExist("ahk_pid " ChildPID), ChildPID := ""
-					;this.DaumPotSet("Fix")
-					this.SetChildWindow(this.PotChild), this.DaumPotSet("Fix"), RedrawWindow()
+					this.DaumPotSet("Fix")
+					this.SetChildWindow(this.PotChild), RedrawWindow()
 				}
 				return
 			}
@@ -935,9 +893,9 @@ class LodaPlayer {
 		}
 		if Set = Fix
 		{
-			WinSet, Style, -0xC00000, % "ahk_id " this.PotChild ;-Border
-			WinSet, Style, -0x40000, % "ahk_id " this.PotChild ;- Sizebox 
-			WinSet, Style, -0x800000, % "ahk_id " this.PotChild ;-Border
+			WinSet, Style, -0xC00000, % "ahk_id " this.PotChild ;WS_CAPTION
+			WinSet, Style, -0x40000, % "ahk_id " this.PotChild ;WS_SIZEBOX
+			WinSet, Style, -0x800000, % "ahk_id " this.PotChild ;WS_BORDER
 			WinSet, ExStyle, -0x00000100, % "ahk_id " this.PotChild ;WS_EX_WINDOWEDGE
 			WinSet, ExStyle, -0x00000001, % "ahk_id " this.PotChild  ;WS_EX_DLGMODALFRAME 
 			WinSet, Redraw,, % "ahk_id " this.PotChild
@@ -952,48 +910,25 @@ class ServerInfo extends LodaPlayer {
 	OnAirCheck()
 	{
 		global
-		
 		Gui, Menu
-		try 
+		try
 		{
 			this.DeleteMenu("Film"), this.DeleteMenu("Ani"), this.DeleteMenu("Show"), this.DeleteMenu("Etc")
 		}
-		
-		Film := "", Ani := "", Show := "", Etc := ""
+		Film := "", Ani := "", Show := "", Etc := "", dockdock := "", poo := ""
+		poo := ComObjCreate("InternetExplorer.Application"), poo.Visible := false, poo.Navigate("http://poooo.ml/")
 		this.getFilmList("FilmList.txt"), this.getAniList("AniList.txt"), this.getShowList("ShowList.txt"), this.getEtcList("EtcList.txt")
-		
-		poo := ComObjCreate("WinHttp.WinHttpRequest.5.1"), poo.Open("GET", "http://poooo.ml/", true), poo.Send(), poo.WaitForResponse()
-		
-		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc))
+		;poo := ComObjCreate("WinHttp.WinHttpRequest.5.1"), poo.Open("GET", "http://poooo.ml/", True), poo.Send(), poo.WaitForResponse()
+		while !(IsObject(Film) && IsObject(Ani) && IsObject(Show) && IsObject(Etc) && poo.readyState=4 && !poo.busy)
 			Sleep, 10
 		
-		this.GetPDTitle()
+		while poo.document.getElementsByClassName("livelist")[A_Index-1].innerText
+			OnlineList .= poo.document.getElementsByClassName("livelist")[A_Index-1].innerText
 		
-		while !Film[1]["Channel"]
-			this.GetPDTitle()
-		
-		try
+		while poo.document.getElementsByClassName("deepblue")[A_Index-1].innerText
 		{
-			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
-		}
-		Gui, Menu, MyMenuBar
-		;WinSet, Redraw,, % "ahk_id " hMainWindow
-		poo := ""
-	}
-	
-	GetPDTitle()
-	{
-		global
-		WebPD := "", WebTitle := "", dockdock := "", OnlineList := ""
-		
-		dockdock := ComObjCreate("HTMLfile"), dockdock.Write(poo.ResponseText)
-		while dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
-			OnlineList .= dockdock.getElementsByClassName("livelist")[A_Index-1].innerText
-		
-		while dockdock.getElementsByClassName("deepblue")[A_Index-1].innerText
-		{
-			WebPD := dockdock.getElementsByClassName("deepblue")[A_Index-1].innerText
-			WebTitle := dockdock.getElementsByClassName("ellipsis")[A_Index-1].innerText
+			WebPD := poo.document.getElementsByClassName("deepblue")[A_Index-1].innerText
+			WebTitle := poo.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
 			
 			Loop % Film.Length() {
 				if (Film[A_Index]["PD"] == WebPD)
@@ -1015,7 +950,13 @@ class ServerInfo extends LodaPlayer {
 					Etc[A_Index]["Channel"] := WebTitle
 			}
 		}
-		WebPD := "", WebTitle := "", dockdock := ""
+		
+		try
+		{
+			this.UpdateMenu("Film"), this.UpdateMenu("Ani"), this.UpdateMenu("Show"), this.UpdateMenu("Etc")
+		}
+		Gui, Menu, MyMenuBar
+		poo.Quit(), WebPD := "", WebTitle := "", poo := "", dockdock := "", OnlineList := ""
 	}
 	
 	DeleteMenu(Desire)
