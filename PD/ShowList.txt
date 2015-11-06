@@ -1,5 +1,6 @@
 ﻿[
 {PD: "홍삼원", Channel: "", Addr: "337072"},
+{PD: "Navy", Channel: "", Addr: "322254"},
 {PD: "파트라슈", Channel: "", Addr: "317955"},
 {PD: "풍파고등학교", Channel: "", Addr: "324901"},
 {PD: "PD Bara", Channel: "", Addr: "321080"},

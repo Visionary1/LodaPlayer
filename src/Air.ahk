@@ -1,13 +1,10 @@
 ﻿#NoEnv
 #NoTrayIcon
 #SingleInstance Off
-#MaxHotkeysPerInterval 99000000
-#HotkeyInterval 99000000
 #KeyHistory 0
-#ErrorStdOut
-;#Warn
+#ErrorStdOut ;#Warn
 ListLines Off
-Process, Priority, , H
+;Process, Priority, , H
 SetBatchLines, -1
 SetKeyDelay, 10, 10
 SetMouseDelay, 0
@@ -92,43 +89,30 @@ class LodaPlayer {
 		
 		while Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText ;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
-		
-		outer:
-		while Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
+	
+		while Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText || !Etc[9]["Channel"]
 		{
 			WebPD := Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
 			WebTitle := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
 			
 			Loop % Film.Length() {
 				if (Film[A_Index]["PD"] == WebPD)
-				{
 					Film[A_Index]["Channel"] := WebTitle
-					continue outer
-				}
 			}
 			
 			Loop % Ani.Length() {
 				if (Ani[A_Index]["PD"] == WebPD)
-				{
 					Ani[A_Index]["Channel"] := WebTitle
-					continue outer
-				}
 			}
 			
 			Loop % Show.Length() {
 				if (Show[A_Index]["PD"] == WebPD)
-				{
 					Show[A_Index]["Channel"] := WebTitle
-					continue outer
-				}
 			}
 			
 			Loop % Etc.Length() {
 				if (Etc[A_Index]["PD"] == WebPD)
-				{
 					Etc[A_Index]["Channel"] := WebTitle
-					continue outer
-				}
 			}
 		}
 		
@@ -925,7 +909,7 @@ class ServerInfo extends LodaPlayer {
 		while poo.document.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= poo.document.getElementsByClassName("livelist")[A_Index-1].innerText
 		
-		while poo.document.getElementsByClassName("deepblue")[A_Index-1].innerText
+		while poo.document.getElementsByClassName("deepblue")[A_Index-1].innerText && !Etc[9]["Channel"]
 		{
 			WebPD := poo.document.getElementsByClassName("deepblue")[A_Index-1].innerText
 			WebTitle := poo.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
