@@ -89,29 +89,21 @@ class LodaPlayer {
 		
 		while Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= Stream.document.getElementsByClassName("livelist")[A_Index-1].innerText ;OnlineList := RegExReplace(OnlineList, "\R+\R", "`r`n")
-	
-		while Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText || !Etc[9]["Channel"]
+		highest := MinMax(true, FIlm.Length(), Ani.Length(), Show.Length(), Etc.Length())
+		
+		while Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText || !Etc[Etc.MaxIndex()]["Channel"]
 		{
 			WebPD := Stream.document.getElementsByClassName("deepblue")[A_Index-1].innerText
 			WebTitle := Stream.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
 			
-			Loop % Film.Length() {
+			Loop % highest{
 				if (Film[A_Index]["PD"] == WebPD)
 					Film[A_Index]["Channel"] := WebTitle
-			}
-			
-			Loop % Ani.Length() {
-				if (Ani[A_Index]["PD"] == WebPD)
+				else if (Ani[A_Index]["PD"] == WebPD)
 					Ani[A_Index]["Channel"] := WebTitle
-			}
-			
-			Loop % Show.Length() {
-				if (Show[A_Index]["PD"] == WebPD)
+				else if (Show[A_Index]["PD"] == WebPD)
 					Show[A_Index]["Channel"] := WebTitle
-			}
-			
-			Loop % Etc.Length() {
-				if (Etc[A_Index]["PD"] == WebPD)
+				else if (Etc[A_Index]["PD"] == WebPD)
 					Etc[A_Index]["Channel"] := WebTitle
 			}
 		}
@@ -166,7 +158,7 @@ class LodaPlayer {
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
 		whr := "", mHTML := ""
 		*/
-		OnlineList := "", WebPD := "", WebTitle := ""
+		OnlineList := "", WebPD := "", WebTitle := "", highest := ""
 		
 		Gui, Show, % ((DisplayW) ? ("w " DisplayW " h" DisplayH) : (" w" this.W " h" this.H)), % this.Title
 	}
@@ -1165,6 +1157,15 @@ ClearMemory() {
 
 FreeMemory() {
     return DllCall("psapi.dll\EmptyWorkingSet", "Ptr", -1)
+}
+
+MinMax(max:=false, values*) {
+	for k, v in values
+		if v is number
+			x .= (k == values.MaxIndex() ? v : v ";")
+	Sort, x, % "d`; N" (max ? " R" : "")
+        RegExMatch(x, "[^\;]*", z) ; Alternative RegEx 	; RegExMatch(x, "[\d.-]*", z) ; Previous RegEx
+	return z
 }
 
 RedrawWindow() {

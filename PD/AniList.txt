@@ -15,7 +15,6 @@
 {PD: "맹약", Channel: "", Addr: "347423"},
 {PD: "불꽃방망이", Channel: "", Addr: "342962"},
 {PD: "팟수여죽창을들라", Channel: "", Addr: "320851"},
-{PD: "erido", Channel: "", Addr: "322063"},
 {PD: "SuDaL NIM", Channel: "", Addr: "318840"},
 {PD: "흑설", Channel: "", Addr: "346699"}
 ]
