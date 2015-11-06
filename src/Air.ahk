@@ -909,7 +909,7 @@ class ServerInfo extends LodaPlayer {
 		while poo.document.getElementsByClassName("livelist")[A_Index-1].innerText
 			OnlineList .= poo.document.getElementsByClassName("livelist")[A_Index-1].innerText
 		
-		while poo.document.getElementsByClassName("deepblue")[A_Index-1].innerText && !Etc[9]["Channel"]
+		while poo.document.getElementsByClassName("deepblue")[A_Index-1].innerText || !Etc[9]["Channel"]
 		{
 			WebPD := poo.document.getElementsByClassName("deepblue")[A_Index-1].innerText
 			WebTitle := poo.document.getElementsByClassName("ellipsis")[A_Index-1].innerText
