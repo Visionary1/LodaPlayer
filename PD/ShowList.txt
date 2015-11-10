@@ -5,6 +5,7 @@
 {PD: "풍파고등학교", Channel: "", Addr: "324901"},
 {PD: "PD Bara", Channel: "", Addr: "321080"},
 {PD: "나이스~", Channel: "", Addr: "323530"},
+{PD: "팟하", Channel: "", Addr: "321058"},
 {PD: "팟수 Lee(potsu lee)", Channel: "", Addr: "318254"},
 {PD: "팟수 Lee 2관", Channel: "", Addr: "318396"},
 {PD: "호,뭐?!심슨!!", Channel: "", Addr: "319046"},
@@ -18,3 +19,4 @@
 {PD: "우리집개", Channel: "", Addr: "317849"},
 {PD: "pengs", Channel: "", Addr: "316825"}
 ]
+

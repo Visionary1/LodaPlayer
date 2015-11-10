@@ -19,31 +19,31 @@ req.onreadystatechange := Func("Ready"), req.Send()
 FileInstall, LPResource.zip, %A_Temp%\LPResource.zip, 1
 FileInstall, LodaPlayer.ini, LodaPlayer.ini
 
-Extract := ComObjCreate("Shell.Application")
-zip := Extract.NameSpace(A_Temp "\LPResource.zip"), Des := Extract.NameSpace(A_Temp), Des.CopyHere(zip.items, 4|16|1024)
+IfExist, % A_Temp "\LPResource.zip"
+	Unz(A_Temp "\LPResource.zip", A_Temp)
 
 while !GitHub
 	Sleep, 10
 
-ExecScript(GitHub, A_Is64bitOS ? (A_Temp . "\LodaPlayer64.exe") : (A_Temp . "\LodaPlayer.exe"))
+ExecScript(GitHub,, A_Is64bitOS ? (A_Temp . "\LodaPlayer64.exe") : (A_Temp . "\LodaPlayer32.exe"))
 
-/*
-AhkThread := AhkDllThread(A_ScriptDir . "\AutoHotkey.dll") ; Creates an additional AutoHotkey thread using AutoHotkey.dll.
-AhkThread.ahktextdll() ; Will automatically add *#Persistent`n#NoTrayIcon* and run "empty" script.
-AhkThread.ahkExec(src) ; Execute some code.
-While, !AhkThread.ahkReady() ; Wait for the script to be ready.
-  Sleep, 10
-While, AhkThread.ahkReady() ; Wait for the dll to finish running its script.
-  Sleep, 100
-
-GitHub(Url)
+Unz(sZip, sUnz)
 {
-	http := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-	http.Open("GET", Url, true), http.Send(), http.WaitForResponse()
-	;DllCall("Winhttp.dll\WinHttpCloseHandle", "Str", http)
-	return http.ResponseText
+    fso := ComObjCreate("Scripting.FileSystemObject")
+    If Not fso.FolderExists(sUnz)
+       fso.CreateFolder(sUnz)
+    psh  := ComObjCreate("Shell.Application")
+    zippedItems := psh.Namespace( sZip ).items().count
+    psh.Namespace( sUnz ).CopyHere( psh.Namespace( sZip ).items, 4|16 )
+    Loop {
+        Sleep, 50
+        unzippedItems := psh.Namespace( sUnz ).items().count
+        ToolTip 리소스 파일 설정 중..
+        If (unzippedItems >= zippedItems)
+            break
+    }
+    ToolTip
 }
-*/
 
 Ready()
 {
@@ -54,24 +54,24 @@ Ready()
         GitHub := req.responseText
 }
 
-ExecScript(Script, Path="")
+ExecScript(Script, Params="", Path="")
 {
-	Name := "Air"
+	Name := "로다 플레이어 Air"
 	Pipe := []
 	Loop, 2
 	{
 		Pipe[A_Index] := DllCall("CreateNamedPipe"
-		, "Str", "\\.\pipe\" name
+		, "Str", "\\.\pipe\" Name
 		, "UInt", 2, "UInt", 0
 		, "UInt", 255, "UInt", 0
 		, "UInt", 0, "UPtr", 0
 		, "UPtr", 0, "UPtr")
 	}
 	if !FileExist(Path)
-		throw Exception("런타임 오류: " Path)
+		throw Exception("해당 리소스 파일이 설치되지 않았습니다: " Path)
 	Call = "%Path%" /CP65001 "\\.\pipe\%Name%"
 	Shell := ComObjCreate("WScript.Shell")
-	Exec := Shell.Exec(Call)
+	Exec := Shell.Exec(Call " " Params)
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[1], "UPtr", 0)
 	DllCall("CloseHandle", "UPtr", Pipe[1])
 	DllCall("ConnectNamedPipe", "UPtr", Pipe[2], "UPtr", 0)

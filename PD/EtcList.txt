@@ -1,6 +1,6 @@
 ﻿[
 {PD: "RONGSPORTS", Channel: "", Addr: "329050"},
-{PD: "erido", Channel: "", Addr: "322063"},
+{PD: "이리도", Channel: "", Addr: "365821"},
 {PD: "더으락", Channel: "", Addr: "325628"},
 {PD: "ikoma", Channel: "", Addr: "317679"},
 {PD: "로솔", Channel: "", Addr: "329829"},
@@ -8,5 +8,6 @@
 {PD: "PD 별루군", Channel: "", Addr: "325098"},
 {PD: "Yunaito", Channel: "", Addr: "315846"},
 {PD: "라이거", Channel: "", Addr: "358420"},
-{PD: "팟]엘퀴네스", Channel: "", Addr: "317910"}
+{PD: "팟]엘퀴네스", Channel: "", Addr: "317910"},
+{PD: "erido", Channel: "", Addr: "322063"}
 ]
