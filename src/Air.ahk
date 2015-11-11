@@ -173,13 +173,13 @@ class LodaPlayer {
 			}
 		}
 		
-		try {
 		ServerInfo.UpdateMenu("Film"), ServerInfo.UpdateMenu("Ani"), ServerInfo.UpdateMenu("Show"), ServerInfo.UpdateMenu("Etc")
 		Menu, MyMenuBar, Add, 영화:방송, :FilmMenu
 		Menu, MyMenuBar, Add, 애니:방송, :AniMenu
 		Menu, MyMenuBar, Add, 예능:방송, :ShowMenu
 		Menu, MyMenuBar, Add, 기타:방송, :EtcMenu
 		
+		try{
 		for SectionName, a in vIni
 			for KeyName, Value in a
 				if SectionName = Favorite
@@ -221,8 +221,7 @@ class LodaPlayer {
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
 		whr := "", mHTML := ""
 		*/
-		OnlineList := "", WebPD := "", WebTitle := "", highest := ""
-		GaGaMenuList := "", SetMenuList := "", ErrorMenuList := "", OtherMenuList := ""
+		OnlineList := "", WebPD := "", WebTitle := "", highest := "", GaGaMenuList := "", SetMenuList := "", ErrorMenuList := "", OtherMenuList := ""
 		Gui, Show, % ((DisplayW) ? ("w " DisplayW " h" DisplayH) : (" w" this.W " h" this.H)), % this.Title
 	}
 
