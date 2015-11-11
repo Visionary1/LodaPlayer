@@ -9,13 +9,13 @@
 {PD: "팟수 Lee(potsu lee)", Channel: "", Addr: "318254"},
 {PD: "팟수 Lee 2관", Channel: "", Addr: "318396"},
 {PD: "호,뭐?!심슨!!", Channel: "", Addr: "319046"},
-{PD: "마리테넷", Channel: "", Addr: "317975"},
-{PD: "E.A.OP TV", Channel: "", Addr: "342792"},
-{PD: "정은지", Channel: "", Addr: "336352"},
 {PD: "키메", Channel: "", Addr: "318215"},
+{PD: "정은지", Channel: "", Addr: "336352"},
 {PD: "실제상황기막힌이야기", Channel: "", Addr: "324391"},
 {PD: "친절한상근씨", Channel: "", Addr: "334645"},
 {PD: "[전대미문의 팟수] 방송중", Channel: "", Addr: "329611"},
+{PD: "마리테넷", Channel: "", Addr: "317975"},
+{PD: "E.A.OP TV", Channel: "", Addr: "342792"},
 {PD: "우리집개", Channel: "", Addr: "317849"},
 {PD: "pengs", Channel: "", Addr: "316825"}
 ]

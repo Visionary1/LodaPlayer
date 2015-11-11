@@ -4,6 +4,7 @@
 {PD: "더으락", Channel: "", Addr: "325628"},
 {PD: "ikoma", Channel: "", Addr: "317679"},
 {PD: "로솔", Channel: "", Addr: "329829"},
+{PD: "갓쥬멍뭉", Channel: "", Addr: "317753"},
 {PD: "happysky", Channel: "", Addr: "317987"},
 {PD: "PD 별루군", Channel: "", Addr: "325098"},
 {PD: "Yunaito", Channel: "", Addr: "315846"},
