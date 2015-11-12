@@ -343,7 +343,7 @@ class LodaPlayer {
 			ChatBAN := 1
 			GuiControl, Disable, chat
 			GuiControl, Hide, chat
-			this.Menu.Icon("GaGaMenu", "채팅하기", "off")
+			LodaPlayer.Menu.Icon("GaGaMenu", "채팅하기", "off")
 			return RedrawWindow()
 		}
 		
@@ -351,7 +351,7 @@ class LodaPlayer {
 			ChatBAN := 0
 			GuiControl, Enable, chat
 			GuiControl, Show, chat
-			this.Menu.Icon("GaGaMenu", "채팅하기", "on")
+			LodaPlayer.Menu.Icon("GaGaMenu", "채팅하기", "on")
 			return RedrawWindow()
 		}
 		
