@@ -223,7 +223,7 @@ class LodaPlayer {
 					for mK, mVal in mList
 						try Menu, % mName, Icon, % mVal, % RsrcPath . mIcon . ".png",, 0
 				} else if (Mode == "Object") {
-					for mk, mVal in mList
+					for mK, mVal in mList
 						try Menu, % mName, Icon, % mK, % RsrcPath . mVal . ".png",, 0
 				}
 			}
