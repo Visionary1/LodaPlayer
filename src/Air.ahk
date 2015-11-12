@@ -142,6 +142,7 @@ class LodaPlayer {
 		, "다음팟플레이어전용 : 채팅창숨기기", "", "문의 ＆ 피드백"]
 		for i, val in SetMenuList
 			Menu, SetMenu, Add, % val, % LPM
+		Menu, SetMenu, Disable, 다음팟플레이어전용 : 채팅창숨기기
 		
 		ErrorMenuList := ["렉＆끊김현상시 : 방송 새로고침", "설정리셋 : 초기화후 재시작", "즐겨찾기 목록수정 : 설정파일 열기", "방송＆채팅방이 안나오면 : IE11 설치"]
 		for i, val in ErrorMenuList
