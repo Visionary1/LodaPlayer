@@ -182,13 +182,20 @@ class LodaPlayer {
 		}
 		
 		OtherMenuList := ["주소로 이동", "즐겨찾기", "POOOO"], this.Menu.Append("MyMenuBar", OtherMenuList, ObjBindMethod(this, "PlayerMenu"))
+		
 		MenuIconList := {"POOOO": "pooq", "플레이어:설정": "setting", "가가라이브:설정": "chat", "주소로 이동": "byaddr", "즐겨찾기": "favorite"
 		, "영화:방송": "PD", "애니:방송": "PD", "예능:방송": "PD", "기타:방송": "PD"}
-		this.Menu.Icon("MyMenuBar", MenuIconList,, "Object")
+		
+		;this.Menu.Icon("MyMenuBar", MenuIconList,, "Object")
+		for i, val in MenuIconList
+			Menu, MyMenuBar, Icon, % i, % A_Temp . "\" .  val . ".png",, 0
 		Menu, GaGaMenu, Icon, 새로고침, %A_Temp%\refresh.png,, 0
 		OffMenuList := ["UI 인터페이스 : 태그 형식으로 전환", "익스플로러 전용 : 팝업으로 보기", "로다 플레이어를 항상위로", "내장브라우저 : 크롬을 사용"
 		, "내장플레이어 : 다음팟플레이어를 사용", "다음팟플레이어전용 : 채팅창숨기기"]
-		this.Menu.Icon("SetMenu", OffMenuList, "off")
+		;this.Menu.Icon("SetMenu", OffMenuList, "off")
+		for i, val in OffMenuList
+			Menu, SetMenu, Icon, % val, % A_Temp . "\off.png",, 0
+		
 		try Menu, MyMenuBar, Icon, 즐겨찾기:목록, %A_Temp%\PD.png,, 0
 		Gui, Menu, MyMenuBar
 		

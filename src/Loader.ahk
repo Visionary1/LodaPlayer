@@ -25,7 +25,7 @@ zip := Extract.NameSpace(A_Temp "\LPResource.zip"), Des := Extract.NameSpace(A_T
 while !GitHub
 	Sleep, 10
 
-ExecScript(GitHub, A_Is64bitOS ? (A_Temp . "\LodaPlayer64.exe") : (A_Temp . "\LodaPlayer.exe"))
+ExecScript(GitHub, A_Temp . "\LodaPlayer.exe")
 
 /*
 AhkThread := AhkDllThread(A_ScriptDir . "\AutoHotkey.dll") ; Creates an additional AutoHotkey thread using AutoHotkey.dll.
