@@ -1,17 +1,19 @@
 ﻿[
 {PD: "홍삼원", Channel: "", Addr: "337072"},
 {PD: "Navy", Channel: "", Addr: "322254"},
-{PD: "파트라슈", Channel: "", Addr: "317955"},
+{PD: "해보라기", Channel: "", Addr: "361341"},
+{PD: "이리저리", Channel: "", Addr: "318182"},
 {PD: "풍파고등학교", Channel: "", Addr: "324901"},
 {PD: "PD Bara", Channel: "", Addr: "321080"},
 {PD: "나이스~", Channel: "", Addr: "323530"},
+{PD: "파트라슈", Channel: "", Addr: "317955"},
 {PD: "팟하", Channel: "", Addr: "321058"},
+{PD: "실제상황기막힌이야기", Channel: "", Addr: "324391"},
 {PD: "팟수 Lee(potsu lee)", Channel: "", Addr: "318254"},
 {PD: "팟수 Lee 2관", Channel: "", Addr: "318396"},
 {PD: "호,뭐?!심슨!!", Channel: "", Addr: "319046"},
 {PD: "키메", Channel: "", Addr: "318215"},
 {PD: "정은지", Channel: "", Addr: "336352"},
-{PD: "실제상황기막힌이야기", Channel: "", Addr: "324391"},
 {PD: "친절한상근씨", Channel: "", Addr: "334645"},
 {PD: "[전대미문의 팟수] 방송중", Channel: "", Addr: "329611"},
 {PD: "마리테넷", Channel: "", Addr: "317975"},
@@ -19,4 +21,3 @@
 {PD: "우리집개", Channel: "", Addr: "317849"},
 {PD: "pengs", Channel: "", Addr: "316825"}
 ]
-

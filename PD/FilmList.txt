@@ -5,6 +5,7 @@
 {PD: "마스터", Channel: "", Addr: "328250"},
 {PD: "사공TV", Channel: "", Addr: "338631"},
 {PD: "반지하팟수", Channel: "", Addr: "338369"},
+{PD: "민지", Channel: "", Addr: "318023"},
 {PD: "푸른용", Channel: "", Addr: "318532"},
 {PD: "고퀄리티", Channel: "", Addr: "323005"},
 {PD: "족발", Channel: "", Addr: "325458"},
@@ -19,7 +20,6 @@
 {PD: "레베", Channel: "", Addr: "346894"},
 {PD: "브레인워시", Channel: "", Addr: "321989"},
 {PD: "힐링", Channel: "", Addr: "323745"},
-{PD: "민지", Channel: "", Addr: "318023"},
 {PD: "떠돌이맥스", Channel: "", Addr: "317950"},
 {PD: "조PD", Channel: "", Addr: "331325"}
 ]
