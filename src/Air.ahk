@@ -315,7 +315,7 @@ class LodaPlugin
 		;MsgBox, 삭제
 		this.ParsePOOO(), this.UpdateMenu("Film", "영화"), this.UpdateMenu("Ani", "애니"), this.UpdateMenu("Show", "예능"), this.UpdateMenu("Etc", "기타"), this.FreeObjects()
 		Gui, Menu, MyMenuBar
-		WinSet, Redraw,, % "ahk_id " this.hPlugin
+		;WinSet, Redraw,, % "ahk_id " this.hPlugin
 		;MsgBox, 완료
 	}
 	
