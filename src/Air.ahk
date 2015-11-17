@@ -354,7 +354,8 @@ class LodaPlugin
 		WinGetPos, pX, pY, pW, pH, % "ahk_id " this.hPotPlayer
 		
 		ControlFocus,, % "ahk_id " this.hPotPlayer
-		ControlSend,, {Ctrl Down}u{Ctrl Up}, % "ahk_id " this.hPotPlayer
+		SendInput, {Ctrl Down}u{Ctrl Up}
+		;ControlSend,, {Ctrl Down}u{Ctrl Up}, % "ahk_id " this.hPotPlayer
 		WinWait, ahk_class #32770, 주소 열기
 		Teleport := WinExist("ahk_class #32770", "주소 열기")
 		
