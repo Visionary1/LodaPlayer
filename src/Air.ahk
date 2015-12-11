@@ -1,4 +1,4 @@
-﻿#NoEnv
+#NoEnv
 #NoTrayIcon
 #SingleInstance Off
 #KeyHistory 0
@@ -518,15 +518,15 @@ class LodaPlayer {
 				MsgBox, 262180, 다음팟모드, 다음팟플레이어로 방송을 시청하시겠어요?`n`n'예'를 누르시면`, 다음팟모드로 전환합니다!
 				IfMsgBox, Yes
 				{
-					pressed := CMsgbox( "스트리밍 서버 선택", "스트리밍 서버를 선택하세요", "&기본|*대만서버2|&일본서버|&홍콩서버", "Q", 0)
+					pressed := CMsgbox( "스트리밍 서버 선택", "스트리밍 서버를 선택하세요", "&기본|*주소2|&일본서버|&주소4", "Q", 0)
 					if (pressed = "기본")
 						DefaultServer := "hi.cdn.livehouse.in"
-					else if (pressed = "대만서버2")
-						DefaultServer := "220.130.187.73"
+					else if (pressed = "주소2")
+						DefaultServer := "rtctw-rtcp-hi-1.livehouse.in"
 					else if (pressed = "일본서버")
 						DefaultServer := "119.81.135.21" ;"106.187.40.237"
-					else if (pressed = "홍콩서버")
-						DefaultServer := "119.81.135.21"
+					else if (pressed = "주소4")
+						DefaultServer := "rtcp-sln.livebc.net"
 					
 					this.DaumPotSet(1)
 					RegRead, PotLocation, HKCU, SOFTWARE\DAUM\PotPlayer, ProgramFolder
