@@ -1,6 +1,7 @@
-﻿[
+[
 {PD: "망둥어", Channel: "", Addr: "324699"},
-{PD: "아라라기상", Channel: "", Addr: "319279"},
+{PD: "구리뱅이", Channel: "", Addr: "387411"},
+{PD: "아라라기상", Channel: "", Addr: "387415"},
 {PD: "yeori", Channel: "", Addr: "318073"},
 {PD: "PD 어둠의볶음밥", Channel: "", Addr: "323431"},
 {PD: "알타비스타", Channel: "", Addr: "320834"},
@@ -14,6 +15,7 @@
 {PD: "애니메이션", Channel: "", Addr: "319157"},
 {PD: "레로", Channel: "", Addr: "318612"},
 {PD: "맹약", Channel: "", Addr: "347423"},
+{PD: "심청이", Channel: "", Addr: "387423"},
 {PD: "불꽃방망이", Channel: "", Addr: "342962"},
 {PD: "팟수여죽창을들라", Channel: "", Addr: "320851"},
 {PD: "흑설", Channel: "", Addr: "346699"}
