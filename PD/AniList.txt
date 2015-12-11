@@ -1,5 +1,5 @@
 [
-{PD: "망둥어", Channel: "", Addr: "324699"},
+{PD: "망둥어", Channel: "", Addr: "387679"},
 {PD: "구리뱅이", Channel: "", Addr: "387411"},
 {PD: "아라라기상", Channel: "", Addr: "387415"},
 {PD: "yeori", Channel: "", Addr: "318073"},
