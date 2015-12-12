@@ -16,7 +16,7 @@ OnlineList := "", Film := "", Ani := "", Show := "", Etc := "", ComObjError(fals
 /*
 whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
 */
-Noti := new CleanNotify("로다 플레이어 Air", "12월 12일전에는 오류수정이나 업데이트는 없습니다`n채팅오류는 크롬으로 해결해주세요(__)" , (A_ScreenWidth / 3), (A_ScreenHeight / 6), "vc hc", "P")
+Noti := new CleanNotify("로다 플레이어 Air", "~" , (A_ScreenWidth / 3), (A_ScreenHeight / 6), "vc hc", "P")
 ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 ;Noti.Mod("", "방송 확인 완료, 프로그램 로딩 중...")
 Init := new LodaPlayer()
