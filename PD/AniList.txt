@@ -7,7 +7,7 @@
 {PD: "알타비스타", Channel: "", Addr: "ALTAVISTA"},
 {PD: "현돌이", Channel: "", Addr: "354181"},
 {PD: "SuDaL NIM", Channel: "", Addr: "318840"},
-{PD: "하루", Channel: "", Addr: "341613"},
+{PD: "하루", Channel: "", Addr: "HARU_TV"},
 {PD: "바삭바삭", Channel: "", Addr: "341808"},
 {PD: "해냐차", Channel: "", Addr: "345197"},
 {PD: "James Corbett", Channel: "", Addr: "318061"},
