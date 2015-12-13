@@ -760,7 +760,12 @@ class LodaPlayer {
 		else if (this.PluginCount = 1 && this.ExternalCount = 0 && this.InternalCount = 1) {
 
 			If Go is not Integer
-				InputURL := "https://video-cdn.streamup.com/app/" . Go . "s-channel/playlist.m3u8"
+			{
+				If (Go == "롱스포츠")
+					InputURL := "https://video-cdn.streamup.com/app/rongsportss-channel/playlist.m3u8"
+				Else
+					nputURL := "https://video-cdn.streamup.com/app/" . Go . "s-stream/playlist.m3u8"
+			}
 			Else
 				InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8"
 			LatterT := "", forVerify := "", Teleport := ""
