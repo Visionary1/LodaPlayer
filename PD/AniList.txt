@@ -1,10 +1,10 @@
 [
 {PD: "망둥어", Channel: "", Addr: "387679"},
 {PD: "구리뱅이", Channel: "", Addr: "387411"},
-{PD: "아라라기상", Channel: "", Addr: "387415"},
+{PD: "아라라기상", Channel: "", Addr: "Araragi_tv"},
 {PD: "yeori", Channel: "", Addr: "318073"},
 {PD: "PD 어둠의볶음밥", Channel: "", Addr: "323431"},
-{PD: "알타비스타", Channel: "", Addr: "320834"},
+{PD: "알타비스타-", Channel: "", Addr: "ALTAVISTA"},
 {PD: "현돌이", Channel: "", Addr: "354181"},
 {PD: "SuDaL NIM", Channel: "", Addr: "318840"},
 {PD: "하루", Channel: "", Addr: "341613"},
