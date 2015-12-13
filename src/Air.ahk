@@ -789,7 +789,7 @@ class LodaPlayer {
 			if this.CustomCount = 0
 			{
 				if Go is not Integer
-					Stream.Navigate("https://streamup.com/" . rongsports . "/embeds/chatonly")
+					Stream.Navigate("https://streamup.com/" . Go . "/embeds/chatonly")
 				Else
 					Stream.Navigate("https://livehouse.in/en/channel/" . Go . "/chatroom")
 			}
@@ -797,7 +797,7 @@ class LodaPlayer {
 			{
 				ClipHistory := Clipboard
 				If Go is not Integer
-					Clipboard := "https://streamup.com/" . rongsports . "/embeds/chatonly"
+					Clipboard := "https://streamup.com/" . Go . "/embeds/chatonly"
 				Else
 					Clipboard := "https://livehouse.in/en/channel/" . Go . "/chatroom"
 				ControlFocus,, % "ahk_id " this.ChromeChild
