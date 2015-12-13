@@ -717,14 +717,21 @@ class LodaPlayer {
 		if (this.InternalCount = 1 && this.PluginCount = 0 && this.ExternalCount = 0) {
 			if (this.CustomCount = 0)
 			{
-				Stream.Navigate(this.BaseAddr . Go, 0x0400)  ;navTrustedForActiveX = 0x0400,
+				If Go is not Integer
+					Stream.Navigate("https://streamup.com/" . Go, 0x0400)
+				Else
+					Stream.Navigate(this.BaseAddr . Go, 0x0400)  ;navTrustedForActiveX = 0x0400,
 				while !(Stream.readyState=4 && Stream.document.readyState="complete") 
 					Sleep, 10
 			}
 			
 			else if (this.CustomCount = 1)
 			{
-				ClipHistory := Clipboard, Clipboard := this.BaseAddr . Go
+				ClipHistory := Clipboard
+				If Go is not Integer
+					Clipboard := "https://streamup.com/" . Go
+				Else
+					Clipboard := this.BaseAddr . Go
 				ControlFocus,, % "ahk_id " this.ChromeChild
 				ControlSend,, {F11}, % "ahk_id " this.ChromeChild
 				Sleep, 30
@@ -742,13 +749,20 @@ class LodaPlayer {
 		else if (this.ExternalCount = 1 && this.CustomCount = 0 && this.PluginCount = 0) {
 			iePopUp := ComObjCreate("InternetExplorer.Application")
 			iePopUp.Visible := true, iePopUp.MenuBar := false, iePopUp.StatusBar := false, iePopUp.ToolBar := false, iePopUp.Width := A_ScreenWidth * 0.7, iePopUp.Height := A_ScreenHeight * 0.7
-			iePopUp.Navigate(this.BaseAddr . Go, 0x20)  ; navBrowserBar = 0x20,
+			If Go is not Integer
+				iePopUp.Navigate("https://streamup.com/" . Go, 0x20)
+			Else
+				iePopUp.Navigate(this.BaseAddr . Go, 0x20)  ; navBrowserBar = 0x20,
 			iePopUp := ""
 			return FreeMemory()
 		}
 		
 		else if (this.PluginCount = 1 && this.ExternalCount = 0 && this.InternalCount = 1) {
-			InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8"
+
+			If Go is not Integer
+				InputURL := "https://video-cdn.streamup.com/app/" . Go . "s-channel/playlist.m3u8"
+			Else
+				InputURL := "http://" . DefaultServer "/" . Go . "/video/playlist.m3u8"
 			LatterT := "", forVerify := "", Teleport := ""
 			ControlFocus,, % "ahk_id " this.PotChild
 			SendInput, {Ctrl Down}u{Ctrl Up}  ;ControlSend,, {Ctrl Down}u{Ctrl Up}, % "ahk_id " this.PotChild
@@ -768,10 +782,19 @@ class LodaPlayer {
 			ControlClick, Button7, ahk_id %Teleport%,,,, NA   ; 확인(&O)
 			
 			if this.CustomCount = 0
-				Stream.Navigate("https://livehouse.in/en/channel/" . Go . "/chatroom")
+			{
+				if Go is not Integer
+					Stream.Navigate("https://streamup.com/" . rongsports . "/embeds/chatonly")
+				Else
+					Stream.Navigate("https://livehouse.in/en/channel/" . Go . "/chatroom")
+			}
 			if this.CustomCount = 1
 			{
-				ClipHistory := Clipboard, Clipboard := "https://livehouse.in/en/channel/" . Go . "/chatroom"
+				ClipHistory := Clipboard
+				If Go is not Integer
+					Clipboard := "https://streamup.com/" . rongsports . "/embeds/chatonly"
+				Else
+					Clipboard := "https://livehouse.in/en/channel/" . Go . "/chatroom"
 				ControlFocus,, % "ahk_id " this.ChromeChild
 				ControlSend,, {F11}, % "ahk_id " this.ChromeChild
 				Sleep, 30
