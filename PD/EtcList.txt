@@ -1,6 +1,6 @@
 ﻿[
 {PD: "롱스포츠", Channel: "", Addr: "rongsports"},
-{PD: "이리도", Channel: "", Addr: "365821"},
+{PD: "이리도", Channel: "", Addr: "erido"},
 {PD: "더으락", Channel: "", Addr: "325628"},
 {PD: "ikoma", Channel: "", Addr: "317679"},
 {PD: "로솔", Channel: "", Addr: "329829"},
