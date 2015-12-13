@@ -16,9 +16,9 @@ OnlineList := "", Film := "", Ani := "", Show := "", Etc := "", ComObjError(fals
 /*
 whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
 */
-Noti := new CleanNotify("로다 플레이어 Air", "~" , (A_ScreenWidth / 3), (A_ScreenHeight / 6), "vc hc", "P")
+Noti := new CleanNotify("로다 플레이어 Air", "방송 확인중..." , (A_ScreenWidth / 3), (A_ScreenHeight / 6), "vc hc", "P")
 ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
-;Noti.Mod("", "방송 확인 완료, 프로그램 로딩 중...")
+Noti.Mod("", "방송 확인 완료, 프로그램 로딩 중...")
 Init := new LodaPlayer()
 Noti.Destroy(), Noti := ""
 Init.RegisterCloseCallback(Func("PlayerClose"))
@@ -761,7 +761,7 @@ class LodaPlayer {
 
 			If Go is not Integer
 			{
-				If (Go == "롱스포츠")
+				If (Go = "rongsports")
 					InputURL := "https://video-cdn.streamup.com/app/rongsportss-channel/playlist.m3u8"
 				Else
 					nputURL := "https://video-cdn.streamup.com/app/" . Go . "s-stream/playlist.m3u8"
