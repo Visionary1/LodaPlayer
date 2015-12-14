@@ -1,8 +1,8 @@
 [
 {PD: "망둥어", Channel: "", Addr: "mangdoong"},
-{PD: "구리뱅이", Channel: "", Addr: "387411"},
+{PD: "구리뱅이", Channel: "", Addr: "Guri"},
 {PD: "아라라기상", Channel: "", Addr: "Araragi_tv"},
-{PD: "쿄우♥", Channel: "", Addr: "387906"},
+{PD: "kyou", Channel: "", Addr: "kyou"},
 {PD: "구리뱅이", Channel: "", Addr: "387411"},
 {PD: "yeori", Channel: "", Addr: "318073"},
 {PD: "PD 어둠의볶음밥", Channel: "", Addr: "dark-friedrice"},
