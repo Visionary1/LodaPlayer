@@ -2,6 +2,7 @@
 {PD: "THOMTV", Channel: "", Addr: "318288"},
 {PD: "FOX&Tails TV", Channel: "", Addr: "318870"},
 {PD: "WARP", Channel: "", Addr: "318512"},
+{PD: "요리저리", Channel: "", Addr: "389676"},
 {PD: "마스터", Channel: "", Addr: "328250"},
 {PD: "요리저리", Channel: "", Addr: "373353"},
 {PD: "사공TV", Channel: "", Addr: "338631"},

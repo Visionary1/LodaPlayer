@@ -1,6 +1,6 @@
 ﻿[
 {PD: "홍삼원", Channel: "", Addr: "hong-samone"},
-{PD: "Navy", Channel: "", Addr: "322254"},
+{PD: "Navy", Channel: "", Addr: "navy"},
 {PD: "똥보라기", Channel: "", Addr: "389355"},
 {PD: "이리저리", Channel: "", Addr: "besavored"},
 {PD: "풍파고등학교", Channel: "", Addr: "324901"},
@@ -11,7 +11,7 @@
 {PD: "실제상황기막힌이야기", Channel: "", Addr: "324391"},
 {PD: "팟수 Lee(potsu lee)", Channel: "", Addr: "318254"},
 {PD: "팟수 Lee 2관", Channel: "", Addr: "318396"},
-{PD: "호,뭐?!심슨!!", Channel: "", Addr: "HomerSimpson"},
+{PD: "호,뭐?!심슨!!", Channel: "", Addr: "389752"},
 {PD: "키메", Channel: "", Addr: "318215"},
 {PD: "정은지", Channel: "", Addr: "336352"},
 {PD: "친절한상근씨", Channel: "", Addr: "334645"},
