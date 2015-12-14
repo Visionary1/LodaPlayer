@@ -1,7 +1,7 @@
 ﻿[
 {PD: "홍삼원", Channel: "", Addr: "hong-samone"},
 {PD: "Navy", Channel: "", Addr: "322254"},
-{PD: "해보라기", Channel: "", Addr: "361341"},
+{PD: "똥보라기", Channel: "", Addr: "389355"},
 {PD: "이리저리", Channel: "", Addr: "besavored"},
 {PD: "풍파고등학교", Channel: "", Addr: "324901"},
 {PD: "PD Bara", Channel: "", Addr: "321080"},
