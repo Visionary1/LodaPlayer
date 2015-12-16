@@ -12,10 +12,11 @@ SetDefaultMouseSpeed, 0
 SetWinDelay, 0
 SetControlDelay, 0
 Menu, Tray, NoStandard
-OnlineList := "", Film := "", Ani := "", Show := "", Etc := "", ComObjError(false), BrowserEmulation(1)
+
+Run, https://github.com/Visionary1/LodaPlugin#loda-plugin
 /*
+OnlineList := "", Film := "", Ani := "", Show := "", Etc := "", ComObjError(false), BrowserEmulation(1)
 whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
-*/
 Noti := new CleanNotify("로다 플레이어 Air", "방송 확인중..." , (A_ScreenWidth / 3), (A_ScreenHeight / 6), "vc hc", "P")
 ServerInfo.getFilmList("FilmList.txt"), ServerInfo.getAniList("AniList.txt"), ServerInfo.getShowList("ShowList.txt"), ServerInfo.getEtcList("EtcList.txt")
 Noti.Mod("", "방송 확인 완료, 프로그램 로딩 중...")
@@ -194,11 +195,11 @@ class LodaPlayer {
 		
 		WinEvents.Register(this.hMainWindow, this)
 		OnMessage(0x100, this.Bound.OnMessage)
-		/*
+		
 		mHTML := FileOpen(A_Temp . "\LodaPlugin\Main.html", "w", "UTF-8"), mHTML.Write(whr.ResponseText), mHTML.Close()
 		try Stream.Navigate(A_Temp . "\LodaPlugin\Main.html")
 		whr := "", mHTML := ""
-		*/
+		
 		OnlineList := "", WebPD := "", WebTitle := "", highest := "", GaGaMenuList := "", SetMenuList := "", ErrorMenuList := "", OtherMenuList := "", MenuIconList := "", OffMenuList := ""
 		Gui, Show, % (DisplayW ? ("w " DisplayW " h" DisplayH) : (" w" this.W " h" this.H)), % this.Title
 	}
@@ -1111,7 +1112,6 @@ BrowserEmulation(Level) {
 		RegDelete HKCU, %key%, LodaPlayer.exe
 }
 
-/*
 ClearMemory() {
     for objItem in ComObjGet("winmgmts:").ExecQuery("SELECT * FROM Win32_Process")
     {
@@ -1122,7 +1122,6 @@ ClearMemory() {
     }
     return
 }
-*/
 
 FreeMemory() {
     return DllCall("psapi.dll\EmptyWorkingSet", "Ptr", -1)
