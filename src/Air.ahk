@@ -13,7 +13,7 @@ SetWinDelay, 0
 SetControlDelay, 0
 Menu, Tray, NoStandard
 
-Run, https://github.com/Visionary1/LodaPlugin#loda-plugin
+Run, http://visionary1.github.io/LodaPlugin/
 /*
 OnlineList := "", Film := "", Ani := "", Show := "", Etc := "", ComObjError(false), BrowserEmulation(1)
 whr := ComObjCreate("Msxml2.XMLHTTP"), whr.Open("GET", "https://raw.githubusercontent.com/Visionary1/LodaPlayer/master/src/Main.html", True), whr.Send()
